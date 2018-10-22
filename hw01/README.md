@@ -32,11 +32,11 @@ $ make menuconfig
 ```
 Например, добавим драйвера для корректной работы Centos7 под гипервизором Microsoft Hyper-V в ядро:
 
-> Linux/x86 4.19.0-rc8 Kernel Configuration \
-> Device Drivers \
-> Microsoft Hyper-V guest support \
-> + Microsoft Hyper-V client drivers \
-> + Microsoft Hyper-V Utilities driver \
+> Linux/x86 4.19.0-rc8 Kernel Configuration 
+> Device Drivers 
+> Microsoft Hyper-V guest support 
+> + Microsoft Hyper-V client drivers 
+> + Microsoft Hyper-V Utilities driver 
 > + Microsoft Hyper-V Balloon driver
 
 Собираем ядро сразу в пакет, для последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
