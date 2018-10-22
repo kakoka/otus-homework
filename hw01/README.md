@@ -1,34 +1,34 @@
 Выясним что у нас за система:
 ```console
-uname -a
+$ uname -a
 ```
 >Linux localhost.localdomain 3.10.0-862.14.4.el7.x86_64 #1 SMP Wed Sep 26 15:12:11 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 
 ```console
-cat /etc/centos-release
+$ cat /etc/centos-release
 ```
 
 >CentOS Linux release 7.5.1804 (Core)
 
-Скачиваем ядро из kernel.org:
+Скачиваем ядро из kernel.org, распаковываем его, копируем конфиг текущего ядра в директорию с исходниками нового ядра:
 
 ```console
 cd /usr/src/kernels/ && \
 wget https://git.kernel.org/torvalds/t/linux-4.19-rc8.tar.gz && \
-tar -zxvf linux-4.19-rc8.tar.gz && cd linux-4.19-rc8.tar.gz && \
+tar -zxvf linux-4.19-rc8.tar.gz && cd linux-4.19-rc8 && \
 cp /boot/config-'uname -r' .config
 ```
 
 Ставим окружение для сборки:
 
 ```console
-sudo yum install -y ncurses-devel gcc make rpm-build redhat-rpm-config
+$ sudo yum install -y ncurses-devel gcc make rpm-build redhat-rpm-config
 ```
 
 Запускаем конфигурирование опций для сборки ядра:
 
 ```console
-make menuconfig
+$ make menuconfig
 ```
 Добавим модули для гипервизора Microsoft в ядро:
 
@@ -42,7 +42,7 @@ make menuconfig
 Собираем ядро сразу в пакет, для возможной последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
 
 ```console
-time make -j4 rpm-pkg
+$ time make -j4 rpm-pkg
 ```
 
 Ругается из за отсутвия исходнков openssl
@@ -54,21 +54,21 @@ time make -j4 rpm-pkg
 Доставим нужный пакет:
 
 ```console
-yum install openssl-devel
+$sudo yum install openssl-devel
 ```
 
 Еще раз:
 
 ```console
-time make -j4 rpm-pkg
+$ time make -j4 rpm-pkg
 ```
 
 >Processing files: kernel-4.19.0_rc8-1.x86_64 \
 >... \
->Wrote: /root/rpmbuild/SRPMS/kernel-4.19.0_rc8-1.src.rpm \
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm \
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm \
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm 
+>Wrote: ~/rpmbuild/SRPMS/kernel-4.19.0_rc8-1.src.rpm \
+>Wrote: ~/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm \
+>Wrote: ~/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm \
+>Wrote: ~/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm 
 
 >real    32m57.255s \
 >user    22m54.364s \
