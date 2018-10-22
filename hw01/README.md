@@ -1,4 +1,4 @@
-Выясним что у нас за система:
+Выясним, что у нас за система:
 ```console
 $ uname -a
 ```
@@ -10,7 +10,7 @@ $ cat /etc/centos-release
 
 >CentOS Linux release 7.5.1804 (Core)
 
-Скачиваем ядро из kernel.org, распаковываем его, копируем конфиг текущего ядра в директорию с исходниками нового ядра:
+Скачиваем ядро из kernel.org, распаковываем его, копируем конфигурацию текущего ядра в директорию с исходниками ядра для сборки:
 
 ```console
 cd /usr/src/kernels/ && \
@@ -30,7 +30,7 @@ $ sudo yum install -y ncurses-devel gcc make rpm-build redhat-rpm-config
 ```console
 $ make menuconfig
 ```
-Добавим модули для гипервизора Microsoft в ядро:
+Например, добавим драйвера для корректной работы Centos7 под гипервизором Microsoft Hyper-V в ядро:
 
 > Linux/x86 4.19.0-rc8 Kernel Configuration \
 > Device Drivers \
@@ -39,13 +39,13 @@ $ make menuconfig
 > + Microsoft Hyper-V Utilities driver \
 > + Microsoft Hyper-V Balloon driver
 
-Собираем ядро сразу в пакет, для возможной последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
+Собираем ядро сразу в пакет, для последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
 
 ```console
 $ time make -j4 rpm-pkg
 ```
 
-Ругается из за отсутвия исходнков openssl
+Сборка оканчивается ошибкой из за отсутвия исходнков openssl.
 
 >scripts/extract-cert.c:21:25: фатальная ошибка: openssl/bio.h: No such file or directory \
 >#include <openssl/bio.h> \
