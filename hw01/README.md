@@ -10,10 +10,6 @@ cat /etc/centos-release
 
 >CentOS Linux release 7.5.1804 (Core)
 
-```console
-cat /etc/centos-release
-```
-
 Скачиваем ядро из kernel.org:
 
 ```console
@@ -34,6 +30,7 @@ sudo yum install -y ncurses-devel gcc make rpm-build redhat-rpm-config
 ```console
 make menuconfig
 ```
+Добавим модули для гипервизора Microsoft в ядро:
 
 > Linux/x86 4.19.0-rc8 Kernel Configuration
 > Device Drivers
@@ -42,9 +39,10 @@ make menuconfig
 > + Microsoft Hyper-V Utilities driver
 > + Microsoft Hyper-V Balloon driver
 
+Собираем ядро сразу в пакет, для возможной последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
 
 ```console
-make -j4 binrpm-pkg
+time make -j4 rpm-pkg
 ```
 
 Ругается из за отсутвия исходнков openssl
@@ -59,20 +57,21 @@ make -j4 binrpm-pkg
 yum install openssl-devel
 ```
 
-Собираем ядро сразу в пакет (для последующей установки на > 1 машину), попутно узнаем сколько времени займет сборка ядра:
+Еще раз:
 
 ```console
 time make -j4 rpm-pkg
 ```
 
->Processing files: kernel-4.19.0_rc8-1.x86_64
->...
->Wrote: /root/rpmbuild/SRPMS/kernel-4.19.0_rc8-1.src.rpm
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm
+>Processing files: kernel-4.19.0_rc8-1.x86_64 \
+>... \
+>Wrote: /root/rpmbuild/SRPMS/kernel-4.19.0_rc8-1.src.rpm \
+>Wrote: /root/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm \
+>Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm \
+>Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm \
 
->>>real    32m57.255s
-user    22m54.364s
-sys     6m37.832s
-<<<
+>real    32m57.255s \
+>user    22m54.364s \
+>sys     6m37.832s 
+
+Все прошло успешно, можно добавлять ядро в загрузчик.
