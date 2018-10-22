@@ -1,3 +1,4 @@
+Выясним что у нас за система:
 ```console
 uname -a
 ```
@@ -71,6 +72,7 @@ time make -j4 rpm-pkg
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm
 
->real    32m57.255s
->user    22m54.364s
->sys     6m37.832s
+>>>real    32m57.255s
+user    22m54.364s
+sys     6m37.832s
+<<<
