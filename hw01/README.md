@@ -54,7 +54,7 @@ $ time make -j4 rpm-pkg
 Доставим нужный пакет:
 
 ```console
-$sudo yum install openssl-devel
+$ sudo yum install openssl-devel
 ```
 
 Еще раз:
@@ -69,9 +69,9 @@ $ time make -j4 rpm-pkg
 >Wrote: ~/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm \
 >Wrote: ~/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm \
 >Wrote: ~/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm 
-
+>
 >real    32m57.255s \
 >user    22m54.364s \
 >sys     6m37.832s 
 
-Все прошло успешно, можно добавлять ядро в загрузчик.
+Сборка прошла успешно, можно добавлять ядро в загрузчик.
