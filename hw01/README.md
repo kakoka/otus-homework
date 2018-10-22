@@ -32,11 +32,11 @@ make menuconfig
 ```
 Добавим модули для гипервизора Microsoft в ядро:
 
-> Linux/x86 4.19.0-rc8 Kernel Configuration
-> Device Drivers
-> Microsoft Hyper-V guest support
-> + Microsoft Hyper-V client drivers
-> + Microsoft Hyper-V Utilities driver
+> Linux/x86 4.19.0-rc8 Kernel Configuration \
+> Device Drivers \
+> Microsoft Hyper-V guest support \
+> + Microsoft Hyper-V client drivers \
+> + Microsoft Hyper-V Utilities driver \
 > + Microsoft Hyper-V Balloon driver
 
 Собираем ядро сразу в пакет, для возможной последующей установки на больше, чем на одну машину. Попутно узнаем сколько времени займет сборка ядра:
@@ -47,8 +47,8 @@ time make -j4 rpm-pkg
 
 Ругается из за отсутвия исходнков openssl
 
->scripts/extract-cert.c:21:25: фатальная ошибка: openssl/bio.h: No such file or directory
->#include <openssl/bio.h>
+>scripts/extract-cert.c:21:25: фатальная ошибка: openssl/bio.h: No such file or directory \
+>#include <openssl/bio.h> \
 >компиляция прервана.
 
 Доставим нужный пакет:
@@ -68,7 +68,7 @@ time make -j4 rpm-pkg
 >Wrote: /root/rpmbuild/SRPMS/kernel-4.19.0_rc8-1.src.rpm \
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm \
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm \
->Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm \
+>Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm 
 
 >real    32m57.255s \
 >user    22m54.364s \
