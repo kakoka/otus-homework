@@ -13,7 +13,7 @@ cat /etc/centos-release
 cat /etc/centos-release
 ```
 
-Скачиваем ядро kernel.org:
+Скачиваем ядро из kernel.org:
 
 ```console
 cd /usr/src/kernels/ && \
@@ -48,11 +48,9 @@ make -j4 binrpm-pkg
 
 Ругается из за отсутвия исходнков openssl
 
->>>
-scripts/extract-cert.c:21:25: фатальная ошибка: openssl/bio.h: No such file or directory
-#include <openssl/bio.h>
-компиляция прервана.
->>>
+>scripts/extract-cert.c:21:25: фатальная ошибка: openssl/bio.h: No such file or directory
+>#include <openssl/bio.h>
+>компиляция прервана.
 
 Доставим нужный пакет:
 
@@ -72,12 +70,6 @@ time make -j4 rpm-pkg
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-4.19.0_rc8-1.x86_64.rpm
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-headers-4.19.0_rc8-1.x86_64.rpm
 >Wrote: /root/rpmbuild/RPMS/x86_64/kernel-devel-4.19.0_rc8-1.x86_64.rpm
->Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.GjdDzO
->+ umask 022
->+ cd /root/rpmbuild/BUILD
->+ cd kernel-4.19.0_rc8
->+ rm -rf /root/rpmbuild/BUILDROOT/kernel-4.19.0_rc8-1.x86_64
->+ exit 0
 
 >real    32m57.255s
 >user    22m54.364s
