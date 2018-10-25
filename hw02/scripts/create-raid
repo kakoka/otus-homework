@@ -1,0 +1,12 @@
+#!/bin/bash -e
+for d in /dev/sd{b,c,d,e,f,g,h,i}; do parted -s $d mktable gpt; done
+for d in /dev/sd{b,c,d,e,f,g,h,i}; do parted -s $d mkpart primary 0% 100%; done
+mdadm --create /dev/md1 -l 5 -n 4 /dev/sd{b,c,d,e}1
+mdadm --create /dev/md2 -l 5 -n 4 /dev/sd{f,g,h,i}1
+mdadm --create /dev/md0 -l 0 -n 2 /dev/md{1,2}
+parted -s /dev/md0 mktable gpt
+parted -s /dev/md0 mkpart primary ext4 0% 100%
+mkdir -p /raid
+mkfs.ext4 /dev/md0p1
+mount /dev/md0p1 /raid
+df -h /raid
