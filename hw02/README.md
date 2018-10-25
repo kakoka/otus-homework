@@ -42,7 +42,11 @@ $ lshw -short | grep disk
 
 ```sh
 for d in /dev/sd{b,c,d,e,f,g,h,i}; do parted -s $d mktable gpt; done && \
-for d in /dev/sd{b,c,d,e,f,g,h,i}; do parted -s $d mkpart primary 0% 20% && parted -s $d mkpart primary 20% 90% && parted -s $d mkpart 90% 100%; done
+for d in /dev/sd{b,c,d,e,f,g,h,i}; do \
+parted -s $d mkpart primary 0% 20% && \
+parted -s $d mkpart primary 20% 90% && \
+parted -s $d mkpart 90% 100%; \
+done
 ```
 
 #### 2. Соберем RAID 50 на размеченных разделах дисков.
