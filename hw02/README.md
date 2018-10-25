@@ -85,13 +85,13 @@ $ mdmon -F -a
 $ watch -n .1 cat /proc/mdstat
 ```
 
->Personalities : [raid6] [raid5] [raid4] [raid0] 
->md3 : active raid0 md1[1] md0[0]
->      284672 blocks super 1.2 512k chunks
->md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0]
->      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
->md0 : active raid5 sde1[4](F) sdd1[2] sdb1[0]
->      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3] [U_U_]
+>Personalities : [raid6] [raid5] [raid4] [raid0] \
+>md3 : active raid0 md1[1] md0[0] \
+>      284672 blocks super 1.2 512k chunks \
+>md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0] \
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU] \
+>md0 : active raid5 sde1[4](F) sdd1[2] \
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/2] [U_U_]
 
 Удалим их:
 
@@ -120,9 +120,9 @@ $ mdadm --assemble --scan && \
 lsblk /dev/md3
 ```
 
->NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
->md3       9:3    0  278M  0 raid0 
->`-md3p1 259:0    0  278M  0 md    /raid
+>NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT \
+>md3       9:3    0  278M  0 raid0 \
+>`-md3p1 259:0    0  278M  0 md    /raid \
 
 ```sh
 $ mount /dev/md3p1 /raid
@@ -130,8 +130,8 @@ $ mount /dev/md3p1 /raid
 
 Cмотрим `ls -lah /raid` 
 
->-rw-r--r--. 1 root root 10240 Oct 24 16:05 file1
->...
+>-rw-r--r--. 1 root root 10240 Oct 24 16:05 file1 \
+>... \
 >-rw-r--r--. 1 root root 10240 Oct 24 16:05 file10
 
 Наши файлы на месте.
