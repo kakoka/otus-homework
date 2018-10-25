@@ -26,17 +26,15 @@ $ lsscsi
 $ lshw -short | grep disk
 ```
 
->>>
-/0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK \
-/0/100/d/0          /dev/sdb   disk        262MB VBOX HARDDISK \
-/0/100/d/1          /dev/sdc   disk        262MB VBOX HARDDISK \
-/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK \
-/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK \
-/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK \
-/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK \
-/0/100/d/6          /dev/sdh   disk        262MB VBOX HARDDISK \
-/0/100/d/7          /dev/sdi   disk        262MB VBOX HARDDISK 
->>>
+>/0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK \
+>/0/100/d/0          /dev/sdb   disk        262MB VBOX HARDDISK \
+>/0/100/d/1          /dev/sdc   disk        262MB VBOX HARDDISK \
+>/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK \
+>/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK \
+>/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK \
+>/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK \
+>/0/100/d/6          /dev/sdh   disk        262MB VBOX HARDDISK \
+>/0/100/d/7          /dev/sdi   disk        262MB VBOX HARDDISK 
 
 Видим 8 дисков по 262 мегабайта, создадим на них RAID50.
 
@@ -66,10 +64,9 @@ mkdir -p /raid && mount /dev/md3p1 /raid && \
 for i in $(seq 1 10); do touch file /raid/file$i && truncate -s 10240 /raid/file$i; done && \
 df -h /raid
 ```
->>>
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/md3p1      262M  2.1M  242M   1% /raid
->>>
+
+>Filesystem      Size  Used Avail Use% Mounted on
+>/dev/md3p1      262M  2.1M  242M   1% /raid
 
 Добавим конфигурационный файл для mdadm 
 
@@ -83,15 +80,14 @@ $ mdadm /dev/md0 --fail /dev/sdc1 && mdadm /dev/md0 --fail /dev/sdb1
 $ mdmon -F -a 
 $ watch -n .1 cat /proc/mdstat
 ```
->>>
-Personalities : [raid6] [raid5] [raid4] [raid0] 
-md3 : active raid0 md1[1] md0[0]
-      284672 blocks super 1.2 512k chunks
-md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0]
-      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
-md0 : active raid5 sde1[4](F) sdd1[2] sdb1[0]
-      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3] [U_U_]
->>>
+
+>Personalities : [raid6] [raid5] [raid4] [raid0] 
+>md3 : active raid0 md1[1] md0[0]
+>      284672 blocks super 1.2 512k chunks
+>md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0]
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU]
+>md0 : active raid5 sde1[4](F) sdd1[2] sdb1[0]
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/3] [U_U_]
 
 Удалим их:
 
@@ -120,11 +116,9 @@ $ mdadm --assemble --scan && \
 lsblk /dev/md3
 ```
 
->>>
-NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-md3       9:3    0  278M  0 raid0 
-`-md3p1 259:0    0  278M  0 md    /raid
->>>
+>NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+>md3       9:3    0  278M  0 raid0 
+>`-md3p1 259:0    0  278M  0 md    /raid
 
 ```sh
 $ mount /dev/md3p1 /raid
@@ -132,19 +126,9 @@ $ mount /dev/md3p1 /raid
 
 Cмотрим `ls -lah /raid` 
 
->>>
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file1
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file10
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file2
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file3
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file4
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file5
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file6
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file7
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file8
--rw-r--r--. 1 root root 10240 Oct 24 16:05 file9
-drwx------. 2 root root 12288 Oct 24 14:50 lost+found
->>>
+>-rw-r--r--. 1 root root 10240 Oct 24 16:05 file1
+>...
+>-rw-r--r--. 1 root root 10240 Oct 24 16:05 file10
 
 Наши файлы на месте.
 
