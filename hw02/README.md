@@ -1,3 +1,5 @@
+#### 0. Подготовка
+
 В Centos7 нет поддержки файловых систем ext2-4, поэтому поставим пакет e2fsprogs:
 ```sh
 $ sudo -i
@@ -10,14 +12,14 @@ $ yum install e2fsprogs
 $ lsscsi
 ```
 
->[0:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sda 
->[3:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdb 
->[4:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdc 
->[5:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdd 
->[6:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sde 
->[7:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdf 
->[8:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdg 
->[9:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdh 
+>[0:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sda \
+>[3:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdb \
+>[4:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdc \
+>[5:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdd \
+>[6:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sde \
+>[7:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdf \
+>[8:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdg \
+>[9:0:0:0]    disk    ATA      VBOX HARDDISK    1.0   /dev/sdh \
 >[10:0:0:0]   disk    ATA      VBOX HARDDISK    1.0   /dev/sdi 
 
 ```sh
@@ -25,15 +27,15 @@ $ lshw -short | grep disk
 ```
 
 >>>
-/0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK
-/0/100/d/0          /dev/sdb   disk        262MB VBOX HARDDISK
-/0/100/d/1          /dev/sdc   disk        262MB VBOX HARDDISK
-/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK
-/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK
-/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK
-/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK
-/0/100/d/6          /dev/sdh   disk        262MB VBOX HARDDISK
-/0/100/d/7          /dev/sdi   disk        262MB VBOX HARDDISK
+/0/100/1.1/0.0.0    /dev/sda   disk        42GB VBOX HARDDISK \
+/0/100/d/0          /dev/sdb   disk        262MB VBOX HARDDISK \
+/0/100/d/1          /dev/sdc   disk        262MB VBOX HARDDISK \
+/0/100/d/2          /dev/sdd   disk        262MB VBOX HARDDISK \
+/0/100/d/3          /dev/sde   disk        262MB VBOX HARDDISK \
+/0/100/d/4          /dev/sdf   disk        262MB VBOX HARDDISK \
+/0/100/d/5          /dev/sdg   disk        262MB VBOX HARDDISK \
+/0/100/d/6          /dev/sdh   disk        262MB VBOX HARDDISK \
+/0/100/d/7          /dev/sdi   disk        262MB VBOX HARDDISK 
 >>>
 
 Видим 8 дисков по 262 мегабайта, создадим на них RAID50.
