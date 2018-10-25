@@ -74,7 +74,9 @@ df -h /raid
 
 Добавим конфигурационный файл для mdadm 
 
-mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm/mdadm.conf
+```sh
+$ mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> /etc/mdadm/mdadm.conf
+```
 
 #### 3. Ломаем и чиним RAID50.
 
@@ -90,8 +92,8 @@ $ watch -n .1 cat /proc/mdstat
 >      284672 blocks super 1.2 512k chunks \
 >md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0] \
 >      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU] \
->md0 : active raid5 sde1[4](F) sdd1[2] \
->      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/2] [U_U_]
+>md0 : active raid5 sde1[4] sdd1[2] \
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/2] [UU__]
 
 Удалим их:
 
@@ -138,4 +140,4 @@ Cмотрим `ls -lah /raid`
 
 #### 4. Vagrantfile и скрипт для создания RAID 
 
-В Vagrantfile добавлено еще 4 диска, файл для создания raid при создании виртуальной машины находится в scripts/create-raid и добавлен в Vagrantfile.
+В Vagrantfile добавлено еще 4 диска. Файл для автоматического создания raid при создании виртуальной машины находится в scripts/create-raid и добавлен в Vagrantfile.
