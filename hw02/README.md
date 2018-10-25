@@ -93,7 +93,7 @@ $ watch -n .1 cat /proc/mdstat
 >md1 : active raid5 sdi1[4] sdh1[2] sdg1[1] sdf1[0] \
 >      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/4] [UUUU] \
 >md0 : active raid5 sde1[4] sdd1[2] \
->      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/2] [UU__]
+>      144384 blocks super 1.2 level 5, 512k chunk, algorithm 2 [4/2] [__UU]
 
 Удалим их:
 
