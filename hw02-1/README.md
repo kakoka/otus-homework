@@ -110,6 +110,8 @@ $ grub2-mkconfig -o /boot/grub2/grub.cfg
 $ cat /boot/grub2/grub.cfg | grep 1e8d7143-5b7a-4203-9fdb-a79f2fc7779a
 ```
 
+>linux16 /boot/vmlinuz-3.10.0-862.14.4.el7.x86_64 root=UUID=1e8d7143-5b7a-4203-9fdb-a79f2fc7779a ro rhgb quiet rd.auto=1
+
 и устанавливаем
 
 ```sh
