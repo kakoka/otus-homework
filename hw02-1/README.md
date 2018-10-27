@@ -88,10 +88,11 @@ $ dracut /boot/initramfs-$(uname -r).img $(uname -r)
 
 ##### 2.4 Конфигурируем и устанавливаем Grub.
 
-Необходимо добавить опцию rd.auto = 1, цитата из документации:
+Необходимо добавить в конфигурацию загрузчика опцию rd.auto = 1, потому что, цитата из документации:
 
 > rd.auto=1. enable autoassembly of special devices like cryptoLUKS, dmraid, mdraid or lvm
 
+позволяет запускаться с разных вариантов томов (raid, lvm и тд).
 
 ```sh
 $ echo "GRUB_CMDLINE_LINUX='rhgb quiet rd.auto=1'" >> /etc/default/grub
@@ -103,7 +104,7 @@ $ echo "GRUB_CMDLINE_LINUX='rhgb quiet rd.auto=1'" >> /etc/default/grub
 $ grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-проверяем
+проверяем на месте ли UUID raid:
 
 ```sh
 $ cat /boot/grub2/grub.cfg | grep 1e8d7143-5b7a-4203-9fdb-a79f2fc7779a
