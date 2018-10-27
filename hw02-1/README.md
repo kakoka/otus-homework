@@ -1,4 +1,4 @@
-#### 0. Vagrantfile
+#### 0. Vagrantfile.
 
 В VirtualBox будем делать старт Centos7 с RAID1, для этого добавим диск такого же размера как и тот, на котором она установлена.
 В Vagrantfile изменим две строки:
@@ -21,7 +21,7 @@
 vb.customize ['createhd', '--filename', dconf[:dfile], '--variant', 'Standard', '--size', dconf[:size]]
 ```
 
-#### 1. Разметка диска
+#### 1. Разметка диска.
 
 Сделаем копию разделов на второй диск:
 
@@ -35,9 +35,9 @@ $ sfdisk -d /dev/sda | sfdisk --force /dev/sdb
 $ parted /dev/sdb set 1 raid on
 ```
 
-#### 2. Перенос системы на riad
+#### 2. Перенос системы на riad.
 
-##### 2.1 Собираем raid1 и форматируем и синхронизируем его с исходной системой.
+##### 2.1 Собираем raid1, форматируем и синхронизируем его с исходной системой.
 
 ```sh
 $ mdadm --zero-superblock --force /dev/sdb1
@@ -45,7 +45,7 @@ $ mdadm --create /dev/md0 --level=1 --raid-disks=2 missing /dev/sdb1
 $ mkfs.ext4 /dev/md0
 ```
 
-Cмотрим, что запустилось `cat /proc/mdstat` и найдем UUID `blkid | grep md0`:
+Проверим, что raid запустился `cat /proc/mdstat` и найдем UUID /dev/md0 `blkid | grep md0`:
 
 > /dev/md0: UUID="1e8d7143-5b7a-4203-9fdb-a79f2fc7779a" TYPE="ext4"
 
@@ -53,7 +53,7 @@ Cмотрим, что запустилось `cat /proc/mdstat` и найдем 
 $ mount /dev/md0 /mnt/
 ```
 
-##### 2.2 Сихронизируем файлы на диске между исходынм диском и raid. Меняем окружение, chroot нужен для подготовки старта с md0.
+##### 2.2 Синхронизируем файлы на диске между исходынм диском и raid. Меняем окружение, chroot нужен для подготовки старта с md0.
 
 ```sh
 $ rsync --progress -av --exclude /proc --exclude /run --exclude /dev --exclude /sys --exclude /mnt  / /mnt/
@@ -79,15 +79,14 @@ $ mdadm --examine --scan >> /etc/mdadm/mdadm.conf
 $ cat /etc/mdadm/mdadm.conf
 ```
 
-Собираем новый initrd с поддержкой загрузки с raid
+Собираем новый initrd с поддержкой загрузки с raid:
 
 ```sh
 $ mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.old
 $ dracut /boot/initramfs-$(uname -r).img $(uname -r)
 ```
 
-
-##### 2.4 Конфигурируем и устанавливаем Grub
+##### 2.4 Конфигурируем и устанавливаем Grub.
 
 Необходимо добавить опцию rd.auto = 1, цитата из документации:
 
@@ -95,44 +94,44 @@ $ dracut /boot/initramfs-$(uname -r).img $(uname -r)
 
 
 ```sh
-echo "GRUB_CMDLINE_LINUX='rhgb quiet rd.auto=1'" >> /etc/default/grub
+$ echo "GRUB_CMDLINE_LINUX='rhgb quiet rd.auto=1'" >> /etc/default/grub
 ```
 
 Собираем конфиг:
 
 ```sh
-grub2-mkconfig -o /boot/grub2/grub.cfg
+$ grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
 проверяем
 
 ```sh
-cat /boot/grub2/grub.cfg | grep 1e8d7143-5b7a-4203-9fdb-a79f2fc7779a
+$ cat /boot/grub2/grub.cfg | grep 1e8d7143-5b7a-4203-9fdb-a79f2fc7779a
 ```
 
 и устанавливаем
 
 ```sh
-grub2-install /dev/sda
-grub2-install /dev/sdb
+$ grub2-install /dev/sda
+$ grub2-install /dev/sdb
 ```
 
-# покидаем chroot
-
-exit && reboot
-
+покидаем chroot
+```sh
+$ exit && reboot
+```
 #### 3. После перезагрузки
 
 Убеждаемся что мы стартовали с raid:
 
 ```sh
-df -h
+$ df -h
 ```
 
 >Filesystem      Size  Used Avail Use% Mounted on \
 >/dev/md0         40G  4.0G   34G  11% /
 
-и добавляем исходный диск в raid
+и добавляем исходный диск в raid:
 
 ```sh
 $ parted /dev/sda set 1 raid on
@@ -153,4 +152,3 @@ $ watch -d -n1 "cat /proc/mdstat"
 >      41908224 blocks super 1.2 [2/1] [_U] \
 >      [===>.................]  recovery = 15.7% (6598272/41908224) finish=2.9min speed=199876K/sec \
 >unused devices: <none>
-
