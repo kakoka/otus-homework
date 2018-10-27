@@ -125,7 +125,7 @@ $ exit && reboot
 ```
 #### 3. После перезагрузки
 
-Убеждаемся что мы стартовали с raid:
+Убеждаемся, что мы загрузились с raid (/dev/md0):
 
 ```sh
 $ df -h
@@ -134,7 +134,7 @@ $ df -h
 >Filesystem      Size  Used Avail Use% Mounted on \
 >/dev/md0         40G  4.0G   34G  11% /
 
-и добавляем исходный диск в raid:
+и добавляем исходный диск /dev/sda в raid:
 
 ```sh
 $ parted /dev/sda set 1 raid on
