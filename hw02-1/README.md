@@ -32,7 +32,7 @@ $ sfdisk -d /dev/sda | sfdisk --force /dev/sdb
 Изменим тип раздела на Linux raid:
 
 ```sh
-$ parted /dev/sda set 1 raid on
+$ parted /dev/sdb set 1 raid on
 ```
 
 #### 2. Перенос системы на riad
