@@ -53,7 +53,9 @@ $ mkfs.ext4 /dev/md0
 $ mount /dev/md0 /mnt/
 ```
 
-##### 2.2 Синхронизируем файлы на диске между исходынм диском и raid. Меняем окружение, chroot нужен для подготовки старта с md0.
+##### 2.2 Синхронизируем файлы на диске между исходным диском и raid. 
+
+Меняем рабочее окружение, chroot нужен для подготовки старта с md0.
 
 ```sh
 $ rsync --progress -av --exclude /proc --exclude /run --exclude /dev --exclude /sys --exclude /mnt  / /mnt/
