@@ -94,7 +94,7 @@ lvm lvreduce --config 'global {locking_type=1}' -y -r -L -12G /dev/vg0/lvm_root
 # df -hT
 ```
 
->Filesystem               Type      Size  Used Avail Use% Mounted on
+>Filesystem               Type      Size  Used Avail Use% Mounted on \
 >/dev/mapper/vg0-lvm_root ext4      7.8G  2.9G  4.5G  40% /
 
 Том с файловой системой уменьшился до заданного значения. 
