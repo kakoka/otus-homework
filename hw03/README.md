@@ -103,12 +103,12 @@ lvm lvreduce --config 'global {locking_type=1}' -y -r -L -12G /dev/vg0/lvm_root
 ```sh
 # journalctl -b-1
 ```
->>>
-Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Resizing the filesystem on /dev/mapper/vg0-lvm_root to 2097152 (4k) blocks. \
-Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: The filesystem on /dev/mapper/vg0-lvm_root is now 2097152 blocks long. \
-Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Size of logical volume vg0/lvm_root changed from 20.00 GiB (5120 extents) to 8.00 GiB (2048 extents). \
-Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Logical volume vg0/lvm_root successfully resized.
->>>
+
+>Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Resizing the filesystem on /dev/mapper/vg0-lvm_root to 2097152 (4k) blocks. \
+>Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: The filesystem on /dev/mapper/vg0-lvm_root is now 2097152 blocks long. \
+>Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Size of logical volume vg0/lvm_root changed from 20.00 GiB (5120 extents) to 8.00 GiB (2048 extents). \
+>Oct 29 21:17:15 otuslinux dracut-pre-mount[465]: Logical volume vg0/lvm_root successfully resized.
+
 
 Наблюдаем, что размер уменьшился до заданных 8 гигабайт.
 
