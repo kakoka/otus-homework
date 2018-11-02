@@ -59,7 +59,7 @@ physical volume (PV) - размером в 40G, далее volume group (VG) - v
 ```sh
 # df -h
 ```
->Filesystem                Size  Used Avail Use% Mounted on
+>Filesystem                Size  Used Avail Use% Mounted on \
 >/dev/mapper/vg0-lvm_root   20G  3.0G   16G  17% /
 
 Внутри скрипта команда для изменения размера раздела:
