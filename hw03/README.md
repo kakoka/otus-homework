@@ -19,9 +19,7 @@ physical volume (PV) - размером в 40G, далее volume group (VG) - v
 
 Так как у нас используется SELinix, то, цитата:
 
->>>
-The recommended method for relabeling a file system is to reboot the machine. This allows the init process to perform the relabeling, ensuring that applications have the correct labels when they are started and that they are started in the right order. If you relabel a file system without rebooting, some processes may continue running with an incorrect context. Manually ensuring that all the daemons are restarted and running in the correct context can be difficult.
->>>
+>The recommended method for relabeling a file system is to reboot the machine. This allows the init process to perform the relabeling, ensuring that applications have the correct labels when they are started and that they are started in the right order. If you relabel a file system without rebooting, some processes may continue running with an incorrect context. Manually ensuring that all the daemons are restarted and running in the correct context can be difficult.
 
 ```sh
 # touch /mnt/.autorelabel
