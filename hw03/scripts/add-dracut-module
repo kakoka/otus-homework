@@ -1,0 +1,9 @@
+mkdir /usr/lib/dracut/modules.d/91resizeroot
+touch /usr/lib/dracut/modules.d/91resizeroot/module-setup.sh
+touch /usr/lib/dracut/modules.d/91resizeroot/resizeroot-local.sh
+
+echo "#!/bin/bash check() { return 0 } depends() { return 0 } install() { inst_hook pre-mount 00 `$moddir/resizeroot-local.sh`}" > /usr/lib/dracut/modules.d/91resizeroot/module-setup.sh
+echo "#!/bin/sh resize_local() { lvm lvreduce --config 'global {locking_type=1}' -y -r -L -12G /dev/vg0/lvm_root } resize_local" > /usr/lib/dracut/modules.d/91resizeroot/resizeroot-local.sh
+
+mkdir /var/log/journal && chown :systemd-journal /var/log/journal
+systemctl restart systemd-journald

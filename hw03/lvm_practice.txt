@@ -1,0 +1,1021 @@
+Script started on Thu Nov  1 22:35:48 2018
+]0;root@otuslinux:~[?1034h[root@otuslinux ~]# lvcreate -n lvm-home -L 5G vg0
+  Logical volume "lvm-home" created.
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs.xfs de  /. dev/
+Display all 149 possibilities? (y or n)
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs.xfs /dev/vg0/lvm-home /mnt     
+meta-data=/dev/vg0/lvm-home      isize=512    agcount=4, agsize=327680 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=1310720, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/h lvm-home /mnt
+]0;root@otuslinux:~[root@otuslinux ~]# rsync -av /home/ mn  /mnt/
+sending incremental file list
+./
+vagrant/
+vagrant/.bash_history
+vagrant/.bash_logout
+vagrant/.bash_profile
+vagrant/.bashrc
+vagrant/.ssh/
+vagrant/.ssh/authorized_keys
+
+sent 1,277 bytes  received 126 bytes  2,806.00 bytes/sec
+total size is 839  speedup is 0.60
+]0;root@otuslinux:~[root@otuslinux ~]# umount /mnt
+]0;root@otuslinux:~[root@otuslinux ~]# mount /umount /mntrsync -av /home/ /mnt/[root@otuslinux ~]# mount /dev/vg0/lvm-home /mnt   home/[root@otuslinux ~]# [8Prsync -av /home/ /mnt/[root@otuslinux ~]# [8@mount /dev/vg0/lvm-home /home/                              rm -rf /home/
+rm: cannot remove '/home/': Device or resource busy
+]0;root@otuslinux:~[root@otuslinux ~]# rm -rf /home/*
+]0;root@otuslinux:~[root@otuslinux ~]# rm -rf /home/*[K[2Pumount /mntrsync -av /home/ /mnt/[root@otuslinux ~]# mount /dev/vg0/lvm-home /mnt   home
+]0;root@otuslinux:~[root@otuslinux ~]# ll hom   /g home/
+total 0
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]#  echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab
+]0;root@otuslinux:~[root@otuslinux ~]# more /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Sun Sep 30 19:58:21 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /                       xfs    defaults        1 1
+/swapfile none swap defaults 0 0
+ /home xfs defaults 0 0
+]0;root@otuslinux:~[root@otuslinux ~]# nano /etc/fstab 
+[?1049h[1;57r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                           File: /etc/fstab                                                             [4;1H(B[m#[5d# /etc/fstab[6d# Created by anaconda on Sun Sep 30 19:58:21 2018[7d#[8d# Accessible filesystems, by reference, are maintained under '/dev/disk'[9d# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info[10d#[11dUUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /[11;67Hxfs    defaults[11;90H1 1[12d/swapfile none swap defaults 0 0[13d /home xfs defaults 0 0[55;52H(B[0;7m[ Read 11 lines ][56d^G(B[m Get Help[56;21H(B[0;7m^O(B[m WriteOut[56;41H(B[0;7m^R(B[m Read File[56;61H(B[0;7m^Y(B[m Prev Page[56;81H(B[0;7m^K(B[m Cut Text[56;101H(B[0;7m^C(B[m Cur Pos[57d(B[0;7m^X(B[m Exit[57;21H(B[0;7m^J(B[m Justify[57;41H(B[0;7m^W(B[m Where Is[57;61H(B[0;7m^V(B[m Next Page[57;81H(B[0;7m^U(B[m UnCut Text[101G(B[0;7m^T(B[m To Spell[3d[4d[5d[6d[7d[8d[9d[10d[11d[12d[13d[1;111H(B[0;7mModified[13d(B[m[1P[A[A[A[A[A[A[A[A[A[A[55d(B[0;7mSave modified buffer (ANSWERING "No" WILL DESTROY CHANGES) ?                                                            [56;1H Y(B[m Yes[K[57d(B[0;7m N(B[m No  [57;17H(B[0;7m^C(B[m Cancel[K[55;62H(B[0;7mFile Name to Write: /etc/fstab                              [56d^G(B[m Get Help[56;31H(B[0;7mM-D(B[m DOS Format[56;61H(B[0;7mM-A(B[m Append[56;91H(B[0;7mM-B(B[m Backup File[57d(B[0;7m^C(B[m Cancel	[14X[57;31H(B[0;7mM-M(B[m Mac Format[57;61H(B[0;7mM-P(B[m Prepend[55;31H[56d[39;49m(B[m[J[1;111H(B[0;7m        [55;51H(B[m[1K (B[0;7m[ Wrote 11 lines ](B[m[K[57;120H[57;1H[?1049l[?1l>]0;root@otuslinux:~[root@otuslinux ~]# blkid 
+/dev/mapper/vg0-lvm_root: UUID="1b615c91-2ba1-4877-a06d-fa5d14844aac" TYPE="xfs" 
+/dev/md0: UUID="YSeJwg-7LJn-vr6I-fYak-bgeT-MYpB-K9NAm2" TYPE="LVM2_member" 
+/dev/sdb1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="0bd4fb53-44b2-ad65-9f05-5df20da1d576" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/sda1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="7bb13c09-ef17-d937-f595-aafc8d5007f4" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/mapper/vg0-lvm--home: UUID="205e4d4b-3a88-4339-8cf4-a0e2eae65f97" TYPE="xfs" 
+]0;root@otuslinux:~[root@otuslinux ~]#  lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home/VolGroup00[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1@v[1@g[1@0/[1P[1P[1P[1P[1P[1P[1@l[1@v[1@m_[1P[1P[1P[1Pe[K-snap1[1P[1@5
+  Snapshot origin LV lvm-snap not found in Volume group vg0.
+]0;root@otuslinux:~[root@otuslinux ~]# touch /home/test{1..15}
+]0;root@otuslinux:~[root@otuslinux ~]# ll/h   h /home/
+total 0
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test1
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test10
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test11
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test12
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test13
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test14
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test15
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test2
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test3
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test4
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test5
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test6
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test7
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test8
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test9
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]# ll /home/touch /home/test{1..15}[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap
+  Snapshot origin LV lvm-snap not found in Volume group vg0.
+]0;root@otuslinux:~[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap11 [1P[1P
+  Snapshot origin LV lvm-snap1 not found in Volume group vg0.
+]0;root@otuslinux:~[root@otuslinux ~]#  lvcreate -L 5MB -s -n home_snap /dev/vg0/lvm-snap1      -home
+  Rounding up size to full physical extent 8.00 MiB
+  Logical volume "home_snap" created.
+]0;root@otuslinux:~[root@otuslinux ~]# ll /home/
+total 0
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test1
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test10
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test11
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test12
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test13
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test14
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test15
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test2
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test3
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test4
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test5
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test6
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test7
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test8
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test9
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]# rm -f /home/test(1  {5..15}
+]0;root@otuslinux:~[root@otuslinux ~]# rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/
+total 0
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test1
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test2
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test3
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test4
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]# umount /home/
+]0;root@otuslinux:~[root@otuslinux ~]# lvconvert --merge /dev/vg0/home_snap 
+  Merging of volume vg0/home_snap started.
+  vg0/lvm-home: Merged: 100.00%
+
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# lvconvert --merge /dev/vg0/home_snap [root@otuslinux ~]# [24Pumount /home/[4Pll /home/rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/[4@umount /home/lvconvert --merge /dev/vg0/home_snap [root@otuslinux ~]# [Kmount /home/
+mount: mount point xfs does not exist
+]0;root@otuslinux:~[root@otuslinux ~]# mount /home/ 
+mount: mount point xfs does not exist
+]0;root@otuslinux:~[root@otuslinux ~]# more /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Sun Sep 30 19:58:21 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /                       xfs    defaults        1 1
+/swapfile none swap defaults 0 0
+/home xfs defaults 0 0
+]0;root@otuslinux:~[root@otuslinux ~]# more /etc/fstab [5Punt /home/lvconvert --merge /dev/vg0/home_snap [root@otuslinux ~]# [24Pumount /home/[4Pll /home/rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/ lvcreate -L 5MB -s -n home_snap /dev/vg0/lvm-homesnap1[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# ll /home/[Ktouch /home/test{1..15}[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# blkid [Knano /etc/fstab more /etc/fstab  echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab[root@otuslinux ~]# ll /home/[Kmount /dev/vg0/lvm-home /home
+]0;root@otuslinux:~[root@otuslinux ~]# ll ho  /home/
+total 0
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test1
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test10
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test11
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test12
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test13
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test14
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test15
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test2
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test3
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test4
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test5
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test6
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test7
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test8
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test9
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]# etc   nano /etc/fstab 
+[?1049h[1;57r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                           File: /etc/fstab                                                             [4;1H(B[m#[5d# /etc/fstab[6d# Created by anaconda on Sun Sep 30 19:58:21 2018[7d#[8d# Accessible filesystems, by reference, are maintained under '/dev/disk'[9d# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info[10d#[11dUUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /[11;67Hxfs    defaults[11;90H1 1[12d/swapfile none swap defaults 0 0[13d/home xfs defaults 0 0[55;52H(B[0;7m[ Read 11 lines ][56d^G(B[m Get Help[56;21H(B[0;7m^O(B[m WriteOut[56;41H(B[0;7m^R(B[m Read File[56;61H(B[0;7m^Y(B[m Prev Page[56;81H(B[0;7m^K(B[m Cut Text[56;101H(B[0;7m^C(B[m Cur Pos[57d(B[0;7m^X(B[m Exit[57;21H(B[0;7m^J(B[m Justify[57;41H(B[0;7m^W(B[m Where Is[57;61H(B[0;7m^V(B[m Next Page[57;81H(B[0;7m^U(B[m UnCut Text[101G(B[0;7m^T(B[m To Spell[3d[4d[5d[6d[7d[8d[9d[10d[11d[12d[13d[1;111H(B[0;7mModified[13d(B[m/dev/vg0/lvm-home/home xfs defaults 0 0[55d[K[13;18H /home xfs defaults 0 0[13;19H[55d(B[0;7mSave modified buffer (ANSWERING "No" WILL DESTROY CHANGES) ?                                                            [56;1H Y(B[m Yes[K[57d(B[0;7m N(B[m No  [57;17H(B[0;7m^C(B[m Cancel[K[55;62H(B[0;7mFile Name to Write: /etc/fstab                              [56d^G(B[m Get Help[56;31H(B[0;7mM-D(B[m DOS Format[56;61H(B[0;7mM-A(B[m Append[56;91H(B[0;7mM-B(B[m Backup File[57d(B[0;7m^C(B[m Cancel	[14X[57;31H(B[0;7mM-M(B[m Mac Format[57;61H(B[0;7mM-P(B[m Prepend[55;31H[56d[39;49m(B[m[J[1;111H(B[0;7m        [55;51H(B[m[1K (B[0;7m[ Wrote 11 lines ](B[m[K[57;120H[57;1H[?1049l[?1l>]0;root@otuslinux:~[root@otuslinux ~]# nano /etc/fstab [7Pll /home/mount /dev/vg0/lvm-home /home[root@otuslinux ~]# mo[13Pre /etc/fstab [5Punt /homere /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Sun Sep 30 19:58:21 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /                       xfs    defaults        1 1
+/swapfile none swap defaults 0 0
+/dev/vg0/lvm-home /home xfs defaults 0 0
+]0;root@otuslinux:~[root@otuslinux ~]# umount /home/ 
+]0;root@otuslinux:~[root@otuslinux ~]# umount /homemore /etc/fstab nano /etc/fstab [7Pll /home/mount /dev/vg0/lvm-home /home[root@otuslinux ~]# mo[13Pre /etc/fstab [5Punt /home
+]0;root@otuslinux:~[root@otuslinux ~]# ll hom   /home/
+total 0
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test1
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test10
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test11
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test12
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test13
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test14
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test15
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test2
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test3
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test4
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test5
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test6
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test7
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test8
+-rw-r--r--. 1 root    root     0 Nov  1 23:01 test9
+drwx------. 3 vagrant vagrant 95 Nov  1 10:27 [0m[38;5;27mvagrant[0m
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate l /home/mount /home[1@umount /homemore /etc/fstab nano /etc/fstab [7Pll /home/mount /dev/vg0/lvm-home /home[root@otuslinux ~]# mo[13Pre /etc/fstab [5Punt /home/lvconvert --merge /dev/vg0/home_snap [root@otuslinux ~]# [24Pumount /home/[4Pll /home/rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/ lvcreate -L 5MB -s -n home_snap /dev/vg0/lvm-homesnap1[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# ll /home/[Ktouch /home/test{1..15}[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# blkid [Knano /etc/fstab [10Pblkid  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snapap[1P[1P[1P[1P[1P[1P[1P[1P[1P[1@l[1@o[1@o[1@p[1@s /dev/vg0/lvm-snap       oops[1P[1@1[1P[1@500MB[1P[1P[1P[1P[1@G[1@b[1P
+  Snapshot origin LV loops not found in Volume group vg0.
+]0;root@otuslinux:~[root@otuslinux ~]#  lvcreate -L 5G -s -n loops /dev/vg0/loops[root@otuslinux ~]# ll /home/[Kmount /home[1@umount /homemore /etc/fstab nano /etc/fstab [7Pll /home/mount /dev/vg0/lvm-home /home[root@otuslinux ~]# mo[13Pre /etc/fstab [5Punt /home/lvconvert --merge /dev/vg0/home_snap [root@otuslinux ~]# [24Pumount /home/[4Pll /home/rm -f /home/test{5..15}[root@otuslinux ~]# [14Pll /home/ lvcreate -L 5MB -s -n home_snap /dev/vg0/lvm-homesnap1[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# ll /home/[Ktouch /home/test{1..15}[root@otuslinux ~]#  lvcreate -L 500MB -s -n home_snap /dev/vg0/lvm-snap[root@otuslinux ~]# blkid [Knano /etc/fstab more /etc/fstab  echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab[root@otuslinux ~]# ll /home/[Kmount /dev/vg0/lvm-home /home[root@otuslinux ~]# [15Prm -rf /home/*mount /dev/vg0/lvm-home /home[root@otuslinux ~]# ll /home/[Kmount /dev/vg0/lvm-home /home[root@otuslinux ~]# [15Prm -rf /home/*[K[2Pumount /mntrsync -av /home/ /mnt/[root@otuslinux ~]# mount /dev/vg0/lvm-home /mnt[root@otuslinux ~]# m[2Pkfs.xfs /dev/vg0/lvm-home /mnt[root@otuslinux ~]# [1Plvcreate -n lvm-home -L 5G vg0[1P[1P[1P[1P[1P[1P[1P[1P[1@l[1@o[1@o[1@p[1@s -
+WARNING: xfs_external_log signature detected on /dev/vg0/loops at offset 12288. Wipe it? [y/n]: n
+  Aborted wiping of xfs_external_log.
+  1 existing signature left on the device.
+  Logical volume "loops" created.
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate -n loops -L 5G vg0[root@otuslinux ~]# [Kvgcreate vg1   
+  No command with matching syntax recognised.  Run 'vgcreate --help' for more information.
+  Correct command syntax is:
+  vgcreate VG_new PV ...
+
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate --help
+  vgcreate - Create a volume group
+
+  vgcreate VG_new PV ...
+	[ -A|--autobackup y|n ]
+	[ -c|--clustered y|n ]
+	[ -l|--maxlogicalvolumes Number ]
+	[ -p|--maxphysicalvolumes Number ]
+	[ -M|--metadatatype lvm2|lvm1 ]
+	[ -s|--physicalextentsize Size[m|UNIT] ]
+	[ -f|--force ]
+	[ -Z|--zero y|n ]
+	[    --addtag Tag ]
+	[    --alloc contiguous|cling|cling_by_tags|normal|anywhere|inherit ]
+	[    --metadataprofile String ]
+	[    --labelsector Number ]
+	[    --metadatasize Size[m|UNIT] ]
+	[    --pvmetadatacopies 0|1|2 ]
+	[    --vgmetadatacopies all|unmanaged|Number ]
+	[    --reportformat basic|json ]
+	[    --dataalignment Size[k|UNIT] ]
+	[    --dataalignmentoffset Size[k|UNIT] ]
+	[    --shared ]
+	[    --systemid String ]
+	[    --locktype sanlock|dlm|none ]
+	[ COMMON_OPTIONS ]
+
+  Common options for lvm:
+	[ -d|--debug ]
+	[ -h|--help ]
+	[ -q|--quiet ]
+	[ -v|--verbose ]
+	[ -y|--yes ]
+	[ -t|--test ]
+	[    --commandprofile String ]
+	[    --config String ]
+	[    --driverloaded y|n ]
+	[    --lockopt String ]
+	[    --longhelp ]
+	[    --profile String ]
+	[    --version ]
+
+  Use --longhelp to show all options and advanced commands.
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate --help[Kvg /dev/md0 
+  Can't open /dev/md0 exclusively.  Mounted filesystem?
+]0;root@otuslinux:~[root@otuslinux ~]# ps vs
+  PV         VG  Fmt  Attr PSize  PFree 
+  /dev/md0   vg0 lvm2 a--  39.96g 21.96g
+]0;root@otuslinux:~[root@otuslinux ~]# vgs
+  VG  #PV #LV #SN Attr   VSize  VFree 
+  vg0   1   3   0 wz--n- 39.96g 21.96g
+]0;root@otuslinux:~[root@otuslinux ~]# vgspvsvgcreate vg /dev/md0           1 
+  No command with matching syntax recognised.  Run 'vgcreate --help' for more information.
+  Correct command syntax is:
+  vgcreate VG_new PV ...
+
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate vg1 pv
+  Device pv not found.
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate vg1 pv  /dev/md0 /dev/md0          
+  Can't open /dev/md0 exclusively.  Mounted filesystem?
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate vg1 /dev/md0 pv[K[Ks[Kpvsvgcreate vg /dev/md0 [6P--help[Klvcreate -n loops -L 5G vg0
+  Logical Volume "loops" already exists in volume group "vg0"
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate -n loops -L 5G vg0[root@otuslinux ~]# [5Pvgcreate vg1 /dev/md0 pv[K[Ks[Kpvsvgcreate vg /dev/md0 [6P--help[Klvcreate -n loops -L 5G vg0[root@otuslinux ~]#  lvcreate -L 5G -s -n loops /dev/vg0/loops
+  Logical Volume "loops" already exists in volume group "vg0"
+]0;root@otuslinux:~[root@otuslinux ~]# lvs
+  LV       VG  Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  loops    vg0 -wi-a----- 5.00g                                                    
+  lvm-home vg0 -wi-ao---- 5.00g                                                    
+  lvm_root vg0 -wi-ao---- 8.00g                                                    
+]0;root@otuslinux:~[root@otuslinux ~]# ls /dev/loop-control 
+[0m[48;5;232;38;5;3m/dev/loop-control[0m
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs.xfs /dev/vo g0/loops 
+mkfs.xfs: /dev/vg0/loops appears to contain an existing filesystem (xfs_external_log).
+mkfs.xfs: Use the -f option to force overwrite.
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs.xfs /dev/vg0/loops [root@otuslinux ~]# [3Pls /dev/loop-control vs[Ks /dev/loop-control mkfs.xfs /dev/vg0/loops [root@otuslinux ~]# [Kll /dev/vg0/loops 
+lrwxrwxrwx. 1 root root 7 Nov  1 23:19 [0m[38;5;51m/dev/vg0/loops[0m -> [48;5;232;38;5;11m../dm-2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# mkdir /loops
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/loops 
+mount: can't find /dev/vg0/loops in /etc/fstab
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/loops /loops
+mount: unknown filesystem type 'xfs_external_log'
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/loops /loops[K[9Pkdir /loopsll /dev/vg0/loops [6@mkfs.xfs /dev/vg0/loops [root@otuslinux ~]# [6Pll /dev/vg0/loops [6Pmkdir /loopsount /dev/vg0/loops /loops[root@otuslinux ~]# [Klvremove /dev/vg0/loops 
+Do you really want to remove active logical volume vg0/loops? [y/n]: y
+  Logical volume "loops" successfully removed
+]0;root@otuslinux:~[root@otuslinux ~]# lvs
+  LV       VG  Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lvm-home vg0 -wi-ao---- 5.00g                                                    
+  lvm_root vg0 -wi-ao---- 8.00g                                                    
+]0;root@otuslinux:~[root@otuslinux ~]# lvsremove /dev/vg0/loops [root@otuslinux ~]# mount /dev/vg0/loops /loops[K[9Pkdir /loopsll /dev/vg0/loops [6@mkfs.xfs /dev/vg0/loops [root@otuslinux ~]# [3Pls /dev/loop-control vs[K[39@ lvcreate -L 5G -s -n loops /dev/vg0/loopsate -L 5
+  Snapshot origin LV loops not found in Volume group vg0.
+]0;root@otuslinux:~[root@otuslinux ~]#  lvcreate -L 5G -s -n loops /dev/vg0/loops[root@otuslinux ~]# lvs[Kremove /dev/vg0/loops [root@otuslinux ~]# mount /dev/vg0/loops /loops[K[9Pkdir /loopsll /dev/vg0/loops [6@mkfs.xfs /dev/vg0/loops [root@otuslinux ~]# [3Pls /dev/loop-control vs[K[39@ lvcreate -L 5G -s -n loops /dev/vg0/loops[root@otuslinux ~]# [15Plvcreate -n loops -L 5G vg0[root@otuslinux ~]# [5Pvgcreate vg1 /dev/md0 pv[K[Ks[Kpvsvgcreate vg /dev/md0 [6P--help[Klvcreate -n loops -L 5G vg0
+WARNING: xfs_external_log signature detected on /dev/vg0/loops at offset 12288. Wipe it? [y/n]: y
+  Wiping xfs_external_log signature on /dev/vg0/loops.
+  Logical volume "loops" created.
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate -n loops -L 5G vg0[root@otuslinux ~]#  lvcreate -L 5G -s -n loops /dev/vg0/loops[root@otuslinux ~]# [15Plvcreate -n loops -L 5G vg0[root@otuslinux ~]# [Klvs
+  LV       VG  Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  loops    vg0 -wi-a----- 5.00g                                                    
+  lvm-home vg0 -wi-ao---- 5.00g                                                    
+  lvm_root vg0 -wi-ao---- 8.00g                                                    
+]0;root@otuslinux:~[root@otuslinux ~]# mkdi  fs.xfs /dev/vg0/loops 
+meta-data=/dev/vg0/loops         isize=512    agcount=4, agsize=327680 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=1310720, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+]0;root@otuslinux:~[root@otuslinux ~]# moune t /dev/vg0/loops /loops/
+]0;root@otuslinux:~[root@otuslinux ~]# dd if=/dev/zero of=/loops/loopfile1 bs=1M count 1000
+dd: unrecognized operand 'count'
+Try 'dd --help' for more information.
+]0;root@otuslinux:~[root@otuslinux ~]# dd if=/dev/zero of=/loops/loopfile1 bs=1M count 1000[1P[1@=
+1000+0 records in
+1000+0 records out
+1048576000 bytes (1.0 GB) copied, 3.26069 s, 322 MB/s
+]0;root@otuslinux:~[root@otuslinux ~]# dd if=/dev/zero of=/loops/loopfile1 bs=1M count=10001[1P[1@2
+1000+0 records in
+1000+0 records out
+1048576000 bytes (1.0 GB) copied, 3.34524 s, 313 MB/s
+]0;root@otuslinux:~[root@otuslinux ~]# ll lo  ./  l /loops/
+total 2048000
+-rw-r--r--. 1 root root 1048576000 Nov  1 23:24 loopfile1
+-rw-r--r--. 1 root root 1048576000 Nov  1 23:24 loopfile2
+]0;root@otuslinux:~[root@otuslinux ~]# lso  osetup /dev/loop1 /loops/loopfile1
+]0;root@otuslinux:~[root@otuslinux ~]# losetup /dev/loop1 /loops/loopfile1[1P[1@2 /loops/loopfile1 2
+]0;root@otuslinux:~[root@otuslinux ~]# blkid 
+/dev/mapper/vg0-lvm_root: UUID="1b615c91-2ba1-4877-a06d-fa5d14844aac" TYPE="xfs" 
+/dev/md0: UUID="YSeJwg-7LJn-vr6I-fYak-bgeT-MYpB-K9NAm2" TYPE="LVM2_member" 
+/dev/sdb1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="0bd4fb53-44b2-ad65-9f05-5df20da1d576" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/sda1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="7bb13c09-ef17-d937-f595-aafc8d5007f4" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/mapper/vg0-lvm--home: UUID="205e4d4b-3a88-4339-8cf4-a0e2eae65f97" TYPE="xfs" 
+/dev/mapper/vg0-loops: UUID="938d2ecf-c734-4d2e-af9a-b64a639eba81" TYPE="xfs" 
+]0;root@otuslinux:~[root@otuslinux ~]# lsblk 
+NAME                MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                   8:0    0   40G  0 disk  
+`-sda1                8:1    0   40G  0 part  
+  `-md0               9:0    0   40G  0 raid1 
+    |-vg0-lvm_root  253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home 253:1    0    5G  0 lvm   /home
+    `-vg0-loops     253:2    0    5G  0 lvm   /loops
+sdb                   8:16   0   40G  0 disk  
+`-sdb1                8:17   0   40G  0 part  
+  `-md0               9:0    0   40G  0 raid1 
+    |-vg0-lvm_root  253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home 253:1    0    5G  0 lvm   /home
+    `-vg0-loops     253:2    0    5G  0 lvm   /loops
+loop1                 7:1    0 1000M  0 loop  
+loop2                 7:2    0 1000M  0 loop  
+]0;root@otuslinux:~[root@otuslinux ~]# pvcreate /dev/md0     loo        lo  /          ls/  /dev/lo
+log           loop-control  loop1         loop2         
+[root@otuslinux ~]# ls /dev/loop*
+[0m[48;5;232;38;5;3m/dev/loop-control[0m  [48;5;232;38;5;11m/dev/loop1[0m  [48;5;232;38;5;11m/dev/loop2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# pvcreate /dev/md0     l               vgre  create /dev/loo                 pvcreate /dev/loop1 /dev/loop2
+  Physical volume "/dev/loop1" successfully created.
+  Physical volume "/dev/loop2" successfully created.
+]0;root@otuslinux:~[root@otuslinux ~]# vgcreate / vg_loope      1 /dev/loop1 /dev/loop2/loop2
+  Volume group "vg1" successfully created
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate -l L 900M -m1 -n lv-var vg1
+  Logical volume "lv-var" created.
+]0;root@otuslinux:~[root@otuslinux ~]# lvs
+  LV       VG  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  loops    vg0 -wi-ao----   5.00g                                                    
+  lvm-home vg0 -wi-ao----   5.00g                                                    
+  lvm_root vg0 -wi-ao----   8.00g                                                    
+  lv-var   vg1 rwi-a-r--- 900.00m                                    75.08           
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs
+mkfs         mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs     
+[root@otuslinux ~]# mkfs.ext4 /dev/vg1/lv-var 
+mke2fs 1.42.9 (28-Dec-2013)
+Discarding device blocks:   4096/230400             done                            
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+57600 inodes, 230400 blocks
+11520 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=236978176
+8 block groups
+32768 blocks per group, 32768 fragments per group
+7200 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: 0/8   done                            
+Writing inode tables: 0/8   done                            
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: 0/8   done
+
+]0;root@otuslinux:~[root@otuslinux ~]# du -hs /vaa r
+137M	/var
+]0;root@otuslinux:~[root@otuslinux ~]# rsayn     mount /dev/vg1/lv-var /mnt
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# rsynx c -avHPSAX /var/ /mnt/
+sent 129,784,205 bytes  received 72,997 bytes  19,978,031.08 bytes/sec
+total size is 129,466,578  speedup is 1.00
+]0;root@otuslinux:~[root@otuslinux ~]#  mkdir /tmp/oldvar && mv /var/* /tmp/oldvar
+mv: cannot move '/var/tmp' to '/tmp/oldvar/tmp': Device or resource busy
+]0;root@otuslinux:~[root@otuslinux ~]# ll /tmp/
+total 12
+-rwx------.  1 root    root    3341 Sep 30 20:02 [0m[38;5;34mks-script-loZN2x[0m
+-rwx------.  1 root    root     836 Sep 30 20:03 [38;5;34mks-script-pBJ0R0[0m
+drwxr-xr-x. 17 root    root     227 Nov  1 23:32 [38;5;27moldvar[0m
+drwx------.  3 root    root      17 Nov  1 10:56 [38;5;27msystemd-private-8f974f4a4d1e41f1a8311f352937436b-chronyd.service-0RI7Qt[0m
+drwx------.  3 root    root      17 Nov  1 10:10 [38;5;27msystemd-private-e1717ef0e10e4a669232fa4bf069b6a6-chronyd.service-Fm5uMJ[0m
+-rwx--x--x.  1 vagrant vagrant  157 Nov  1 10:28 [38;5;34mvagrant-shell[0m
+-rw-------.  1 root    root       0 Sep 30 19:58 yum.log
+]0;root@otuslinux:~[root@otuslinux ~]# umount /mnt
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg1/v lv-var /var
+]0;root@otuslinux:~[root@otuslinux ~]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab
+]0;root@otuslinux:~[root@otuslinux ~]# nano /etc/fstab 
+[?1049h[1;57r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                           File: /etc/fstab                                                             [4;1H(B[m#[5d# /etc/fstab[6d# Created by anaconda on Sun Sep 30 19:58:21 2018[7d#[8d# Accessible filesystems, by reference, are maintained under '/dev/disk'[9d# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info[10d#[11dUUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /[11;67Hxfs    defaults[11;90H1 1[12d/swapfile none swap defaults 0 0[13d/dev/vg0/lvm-home /home xfs defaults 0 0[14dUUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" /var ext4 defaults 0 0[55;52H(B[0;7m[ Read 12 lines ][56d^G(B[m Get Help[56;21H(B[0;7m^O(B[m WriteOut[56;41H(B[0;7m^R(B[m Read File[56;61H(B[0;7m^Y(B[m Prev Page[56;81H(B[0;7m^K(B[m Cut Text[56;101H(B[0;7m^C(B[m Cur Pos[57d(B[0;7m^X(B[m Exit[57;21H(B[0;7m^J(B[m Justify[57;41H(B[0;7m^W(B[m Where Is[57;61H(B[0;7m^V(B[m Next Page[57;81H(B[0;7m^U(B[m UnCut Text[101G(B[0;7m^T(B[m To Spell[3d[4d[5d[6d[7d[8d[9d[10d[11d[12d[13d[14d[15d[A[A[A[A[A[A[A[A[A[A[A[A[55d[K[3d[4d[5d[6d[7d[8d[9d[10d[11d[12d[13d[14d[15d[56d[J[57;120H[57;1H[?1049l[?1l>]0;root@otuslinux:~[root@otuslinux ~]# y
+bash: y: command not found
+]0;root@otuslinux:~[root@otuslinux ~]# lsblk 
+NAME                   MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                      8:0    0   40G  0 disk  
+`-sda1                   8:1    0   40G  0 part  
+  `-md0                  9:0    0   40G  0 raid1 
+    |-vg0-lvm_root     253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home    253:1    0    5G  0 lvm   /home
+    `-vg0-loops        253:2    0    5G  0 lvm   /loops
+sdb                      8:16   0   40G  0 disk  
+`-sdb1                   8:17   0   40G  0 part  
+  `-md0                  9:0    0   40G  0 raid1 
+    |-vg0-lvm_root     253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home    253:1    0    5G  0 lvm   /home
+    `-vg0-loops        253:2    0    5G  0 lvm   /loops
+loop1                    7:1    0 1000M  0 loop  
+|-vg1-lv--var_rmeta_0  253:3    0    4M  0 lvm   
+| `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+`-vg1-lv--var_rimage_0 253:4    0  900M  0 lvm   
+  `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+loop2                    7:2    0 1000M  0 loop  
+|-vg1-lv--var_rmeta_1  253:5    0    4M  0 lvm   
+| `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+`-vg1-lv--var_rimage_1 253:6    0  900M  0 lvm   
+  `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+]0;root@otuslinux:~[root@otuslinux ~]# lsblk y[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# [15Pumount /mnt[3Pll /tmp/ mkdir /tmp/oldvar && mv /var/* /tmp/oldvar[root@otuslinux ~]# [17Prsync -avHPSAX /var/ /mnt/[root@otuslinux ~]# mount /dev/vg1/lv-var /mnt[root@otuslinux ~]# [15Pdu -hs /varmkfs.ext4 /dev/vg1/lv-var [root@otuslinux ~]# lvs[Kcreate -L 900M -m1 -n lv-var vg1[root@otuslinux ~]# vgcreate vg1 /dev/loop1 /dev/loop2[root@otuslinux ~]# [4Ppvcreate /dev/loop1 /dev/loop2[root@otuslinux ~]# [17Pls /dev/loop*[7Pblk blkid losetup /dev/loop2 /loops/loopfile21 /loops/loopfile1[root@otuslinux ~]# ll /loops/[Kdd if=/dev/zero of=/loops/loopfile2 bs=1M count=10001 bs=1M count=1000 1000[root@otuslinux ~]# [24Pmount /dev/vg0/loops /loops/[root@otuslinux ~]# m[4Pkfs.xfs /dev/vg0/loops [root@otuslinux ~]# lvs[Kcreate -n loops -L 5G vg0G vg[1P[1P[1P[1P[1P[1@b[1@r[1P[1@t[1@r[1@f[1@s
+  Logical volume "btrfs" created.
+]0;root@otuslinux:~[root@otuslinux ~]# lvcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Ky[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# [15Pumount /mnt[3Pll /tmp/ mkdir /tmp/oldvar && mv /var/* /tmp/oldvar[root@otuslinux ~]# [17Prsync -avHPSAX /var/ /mnt/[root@otuslinux ~]# mount /dev/vg1/lv-var /mnt[root@otuslinux ~]# [15Pdu -hs /varmkfs.ext4 /dev/vg1/lv-var [root@otuslinux ~]# lvs[Kcreate -L 900M -m1 -n lv-var vg1[root@otuslinux ~]# vgcreate vg1 /dev/loop1 /dev/loop2[root@otuslinux ~]# [4Ppvcreate /dev/loop1 /dev/loop2[root@otuslinux ~]# [17Pls /dev/loop*[7Pblk blkid lsblk blkid losetup /dev/loop2 /loops/loopfile2[root@otuslinux ~]# blkid [Klsblk  /dev/loop*pvcreate /dev/loop1 /dev/loop2                br                lvs
+  LV       VG  Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  btrfs    vg0 -wi-a-----   5.00g                                                    
+  loops    vg0 -wi-ao----   5.00g                                                    
+  lvm-home vg0 -wi-ao----   5.00g                                                    
+  lvm_root vg0 -wi-ao----   8.00g                                                    
+  lv-var   vg1 rwi-aor--- 900.00m                                    100.00          
+]0;root@otuslinux:~[root@otuslinux ~]# mkdir op  /top   opt
+mkdir: cannot create directory '/opt': File exists
+]0;root@otuslinux:~[root@otuslinux ~]# mkdir /opt[Kll /opt/
+total 0
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/btrfs /op    /dev/vg0/btrfs                    btrfds  ds  s
+]0;root@otuslinux:~[root@otuslinux ~]# yum search btrfs[1@install btrfs-progs
+Failed to set locale, defaulting to C
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirror.reconn.ru
+ * extras: mirror.reconn.ru
+ * updates: mirror.reconn.ru
+Resolving Dependencies
+--> Running transaction check
+---> Package btrfs-progs.x86_64 0:4.9.1-1.el7 will be installed
+--> Processing Dependency: liblzo2.so.2()(64bit) for package: btrfs-progs-4.9.1-1.el7.x86_64
+--> Running transaction check
+---> Package lzo.x86_64 0:2.06-8.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================================
+ Package                        Arch                      Version                         Repository               Size
+========================================================================================================================
+Installing:
+ btrfs-progs                    x86_64                    4.9.1-1.el7                     base                    678 k
+Installing for dependencies:
+ lzo                            x86_64                    2.06-8.el7                      base                     59 k
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package (+1 Dependent package)
+
+Total download size: 737 k
+Installed size: 4.1 M
+Is this ok [y/d/N]: y
+Downloading packages:
+(1/2): lzo-2.06-8.el7.x86_64.rpm                                                                 |  59 kB  00:00:00     
+(2/2): btrfs-progs-4.9.1-1.el7.x86_64.rpm     7% [==-                                 ]  0.0 B/s |  59 kB  --:--:-- ETA (2/2): btrfs-progs-4.9.1-1.el7.x86_64.rpm                                                        | 678 kB  00:00:00     
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   1.4 MB/s | 737 kB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : lzo-2.06-8.el7.x86_64 [                                                                            ] 1/2  Installing : lzo-2.06-8.el7.x86_64 [#############################                                               ] 1/2  Installing : lzo-2.06-8.el7.x86_64 [###########################################################                 ] 1/2  Installing : lzo-2.06-8.el7.x86_64 [#############################################################               ] 1/2  Installing : lzo-2.06-8.el7.x86_64 [#####################################################################       ] 1/2  Installing : lzo-2.06-8.el7.x86_64 [########################################################################### ] 1/2  Installing : lzo-2.06-8.el7.x86_64                                                                                1/2 
+  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [                                                                   ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#                                                                  ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##                                                                 ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [####                                                               ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [######                                                             ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [########                                                           ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##########                                                         ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###########                                                        ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [############                                                       ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##############                                                     ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###############                                                    ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [################                                                   ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#################                                                  ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##################                                                 ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###################                                                ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [####################                                               ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#####################                                              ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [######################                                             ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#######################                                            ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [########################                                           ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#########################                                          ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##########################                                         ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###########################                                        ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [############################                                       ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#############################                                      ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##############################                                     ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [################################                                   ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##################################                                 ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [####################################                               ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [######################################                             ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [########################################                           ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#########################################                          ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##########################################                         ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [############################################                       ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##############################################                     ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###############################################                    ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [################################################                   ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#################################################                  ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##################################################                 ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [###################################################                ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [####################################################               ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [######################################################             ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#######################################################            ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [########################################################           ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#########################################################          ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##########################################################         ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [############################################################       ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [##############################################################     ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [################################################################   ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [#################################################################  ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64 [################################################################## ] 2/2  Installing : btrfs-progs-4.9.1-1.el7.x86_64                                                                       2/2 
+  Verifying  : lzo-2.06-8.el7.x86_64                                                                                1/2 
+  Verifying  : btrfs-progs-4.9.1-1.el7.x86_64                                                                       2/2 
+
+Installed:
+  btrfs-progs.x86_64 0:4.9.1-1.el7                                                                                      
+
+Dependency Installed:
+  lzo.x86_64 0:2.06-8.el7                                                                                               
+
+Complete!
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs
+btrfs               btrfs-debug-tree    btrfs-image         btrfs-select-super  btrfsck
+btrfs-convert       btrfs-find-root     btrfs-map-logical   btrfs-zero-log      btrfstune
+[root@otuslinux ~]# btrfs
+usage: btrfs [--help] [--version] <group> [<group>...] <command> [<args>]
+
+Command groups:
+  subvolume         manage subvolumes: create, delete, list, etc
+  filesystem        overall filesystem tasks and information
+  balance           balance data across devices, or change block groups using filters
+  device            manage and query devices in the filesystem
+  scrub             verify checksums of data and metadata
+  rescue            toolbox for specific rescue operations
+  inspect-internal  query various internal information
+  property          modify properties of filesystem objects
+  quota             manage filesystem quota settings
+  qgroup            manage quota groups
+  replace           replace a device in the filesystem
+
+Commands:
+  check             Check structural integrity of a filesystem (unmounted).
+  restore           Try to restore files from a damaged filesystem (unmounted)
+  send              Send the subvolume(s) to stdout.
+  receive           Receive subvolumes from a stream
+  help              Display help information
+  version           Display btrfs-progs version
+
+For an overview of a given command use 'btrfs command --help'
+or 'btrfs [command...] --help --full' to print all available options.
+Any command name can be shortened as far as it stays unambiguous,
+however it is recommended to use full command names in scripts.
+All command groups have their manual page named 'btrfs-<group>'.
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs     modprobe btr  trfs
+]0;root@otuslinux:~[root@otuslinux ~]# mksf  fs.
+mkfs.btrfs   mkfs.cramfs  mkfs.ext2    mkfs.ext3    mkfs.ext4    mkfs.minix   mkfs.xfs     
+[root@otuslinux ~]# mkfs.btrfs /dev/vg/ 0/btrfs 
+btrfs-progs v4.9.1
+See http://btrfs.wiki.kernel.org for more information.
+
+Label:              (null)
+UUID:               bf65c8b5-2927-4d36-97af-e2f7a52d1f87
+Node size:          16384
+Sector size:        4096
+Filesystem size:    5.00GiB
+Block group profiles:
+  Data:             single            8.00MiB
+  Metadata:         DUP             256.00MiB
+  System:           DUP               8.00MiB
+SSD detected:       no
+Incompat features:  extref, skinny-metadata
+Number of devices:  1
+Devices:
+   ID        SIZE  PATH
+    1     5.00GiB  /dev/vg0/btrfs
+
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/btrfs /opt
+]0;root@otuslinux:~[root@otuslinux ~]# mount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[12Podprobe btrfs[9Pbtrfs[18@yum install btrfs-progs[7Psearch btrfs[1@install btrfsbtrfs[Kll /opt/mkdir /optlvs[Kcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Ky[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# nano /etc/fstab [Ky[K blkid 
+/dev/mapper/vg0-lvm_root: UUID="1b615c91-2ba1-4877-a06d-fa5d14844aac" TYPE="xfs" 
+/dev/md0: UUID="YSeJwg-7LJn-vr6I-fYak-bgeT-MYpB-K9NAm2" TYPE="LVM2_member" 
+/dev/sdb1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="0bd4fb53-44b2-ad65-9f05-5df20da1d576" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/sda1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="7bb13c09-ef17-d937-f595-aafc8d5007f4" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/mapper/vg0-lvm--home: UUID="205e4d4b-3a88-4339-8cf4-a0e2eae65f97" TYPE="xfs" 
+/dev/mapper/vg0-loops: UUID="938d2ecf-c734-4d2e-af9a-b64a639eba81" TYPE="xfs" 
+/dev/loop1: UUID="seBbHf-Rf2T-hevI-iE1s-XRWF-UK3N-cmLzBK" TYPE="LVM2_member" 
+/dev/loop2: UUID="Mqpb2D-tYxK-S9dz-Li1w-LVei-LJrs-9e37Qc" TYPE="LVM2_member" 
+/dev/mapper/vg1-lv--var_rimage_0: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg1-lv--var_rimage_1: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg1-lv--var: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg0-btrfs: UUID="bf65c8b5-2927-4d36-97af-e2f7a52d1f87" UUID_SUB="5ea30e45-1ffe-4960-a62c-4d370cd1fca7" TYPE="btrfs" 
+]0;root@otuslinux:~[root@otuslinux ~]# blkid mount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[12Podprobe btrfs[9Pbtrfs[18@yum install btrfs-progs[7Psearch btrfs[1@install btrfsbtrfs[Kll /opt/mkdir /optlvs[Kcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Kvcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lvs[Kmkdir /opt[2Pll /opt/[3Pbtrfs[12@yum install btrfs[1Psearch btrfs[7@install btrfs-progs[root@otuslinux ~]# btrfs[K[9@modprobe btrfskfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[1Pount /dev/vg0/btrfs /opt[root@otuslinux ~]# blkid [K[Kblkid mount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[12Podprobe btrfs[9Pbtrfs[18@yum install btrfs-progs[7Psearch btrfs[1@install btrfsbtrfs[Kll /opt/mkdir /optlvs[Kcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Ky[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[1P[1P[1P[1@b[1@t[1@r[1@f[1@s: | awk '{print $2}'` /var[1P[1P[1P[1@o[1@p[1@t ext4[1P[1P[1P[1P[1@b[1@t[1@r[1@f[1@s defaults 0 0" >> /etc/fstab
+]0;root@otuslinux:~[root@otuslinux ~]# more /etc/fstab 
+
+#
+# /etc/fstab
+# Created by anaconda on Sun Sep 30 19:58:21 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=1b615c91-2ba1-4877-a06d-fa5d14844aac /                       xfs    defaults        1 1
+/swapfile none swap defaults 0 0
+/dev/vg0/lvm-home /home xfs defaults 0 0
+UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" /var ext4 defaults 0 0
+UUID="bf65c8b5-2927-4d36-97af-e2f7a52d1f87" /opt btrfs defaults 0 0
+]0;root@otuslinux:~[root@otuslinux ~]# df -h
+Filesystem                 Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root   8.0G  2.9G  5.1G  37% /
+devtmpfs                   487M     0  487M   0% /dev
+tmpfs                      496M     0  496M   0% /dev/shm
+tmpfs                      496M  6.8M  490M   2% /run
+tmpfs                      496M     0  496M   0% /sys/fs/cgroup
+tmpfs                      100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home  5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops      5.0G  548M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var    870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs      5.0G   17M  4.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# df -hT
+Filesystem                Type      Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root  xfs       8.0G  2.9G  5.1G  37% /
+devtmpfs                  devtmpfs  487M     0  487M   0% /dev
+tmpfs                     tmpfs     496M     0  496M   0% /dev/shm
+tmpfs                     tmpfs     496M  6.8M  490M   2% /run
+tmpfs                     tmpfs     496M     0  496M   0% /sys/fs/cgroup
+tmpfs                     tmpfs     100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home xfs       5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops     xfs       5.0G  548M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var   ext4      870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs     btrfs     5.0G   17M  4.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# df -hT[Kmore /etc/fstab echo "`blkid | grep btrfs: | awk '{print $2}'` /opt btrfs defaults 0 0" >> /etc/fstab[root@otuslinux ~]# blkid [Kmount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[12Podprobe btrfs[9Pbtrfs[18@yum install btrfs-progs[7Psearch btrfs[1@install btrfsbtrfs[Kll /opt/mkdir /optlvs[Kcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Kvcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Ky[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# [15Pumount /mnt[3Pll /tmp/ mkdir /tmp/oldvar && mv /var/* /tmp/oldvar[root@otuslinux ~]# [17Prsync -avHPSAX /var/ /mnt/[root@otuslinux ~]# mount /dev/vg1/lv-var /mnt[root@otuslinux ~]# [15Pdu -hs /varmkfs.ext4 /dev/vg1/lv-var [root@otuslinux ~]# lvs[Kcreate -L 900M -m1 -n lv-var vg1[root@otuslinux ~]# vgcreate vg1 /dev/loop1 /dev/loop2[root@otuslinux ~]# [4Ppvcreate /dev/loop1 /dev/loop2[root@otuslinux ~]# [17Pls /dev/loop*[7Pblk blkid losetup /dev/loop2 /loops/loopfile21 /loops/loopfile1[root@otuslinux ~]# ll /loops/[Kdd if=/dev/zero of=/loops/loopfile2 bs=1M count=1000[1P[1@3
+1000+0 records in
+1000+0 records out
+1048576000 bytes (1.0 GB) copied, 4.19143 s, 250 MB/s
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs devidd if=/dev/zero of=/loops/loopfile3 bs=1M count=1000[root@otuslinux ~]# df -hT[K[Kmore /etc/fstab echo "`blkid | grep btrfs: | awk '{print $2}'` /opt btrfs defaults 0 0" >> /etc/fstab[root@otuslinux ~]# blkid [Kmount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs [root@otuslinux ~]# m[12Podprobe btrfs[9Pbtrfs[18@yum install btrfs-progs[7Psearch btrfs[1@install btrfsbtrfs[Kll /opt/mkdir /optlvs[Kcreate -n btrfs -L 5G vg0[root@otuslinux ~]# lsblk [Ky[Knano /etc/fstab echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab[root@otuslinux ~]# mount /dev/vg1/lv-var /var[K[root@otuslinux ~]# [15Pumount /mnt[3Pll /tmp/ mkdir /tmp/oldvar && mv /var/* /tmp/oldvar[root@otuslinux ~]# [17Prsync -avHPSAX /var/ /mnt/[root@otuslinux ~]# mount /dev/vg1/lv-var /mnt[root@otuslinux ~]# [15Pdu -hs /varmkfs.ext4 /dev/vg1/lv-var [root@otuslinux ~]# lvs[Kcreate -L 900M -m1 -n lv-var vg1[root@otuslinux ~]# vgcreate vg1 /dev/loop1 /dev/loop2[root@otuslinux ~]# [4Ppvcreate /dev/loop1 /dev/loop2[root@otuslinux ~]# [17Pls /dev/loop*[7Pblk blkid losetup /dev/loop2 /loops/loopfile2[1P[1@3 /loops/loopfile2 3
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device add /dev/lo  vg0/btrfs /dev/lo
+log           loop-control  loop1         loop2         loop3         
+[root@otuslinux ~]# btrfs device add /dev/vg0/btrfs /dev/loop3
+ERROR: not a btrfs filesystem: /dev/loop3
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device add /dev/vg0/btrfs /dev/loop3[root@otuslinux ~]# [7Plosetup /dev/loop3 /loops/loopfile3[root@otuslinux ~]# dd if=/dev/zero of=/loops/loopfile3 bs=1M count=1000[root@otuslinux ~]# df -hT[K[Kmore /etc/fstab echo "`blkid | grep btrfs: | awk '{print $2}'` /opt btrfs defaults 0 0" >> /etc/fstab[root@otuslinux ~]# blkid [Kmount /dev/vg0/btrfs /opt[root@otuslinux ~]# blkid [Kmount /dev/vg0/btrfs /opt[root@otuslinux ~]# mkfs.btrfs /dev/vg0/btrfs           de  lo
+log           loop-control  loop1         loop2         loop3         
+[root@otuslinux ~]# mkfs.btrfs /dev/loop3
+btrfs-progs v4.9.1
+See http://btrfs.wiki.kernel.org for more information.
+
+Performing full device TRIM /dev/loop3 (1000.00MiB) ...
+Label:              (null)
+UUID:               2211225e-de07-49c1-bc10-9080383025eb
+Node size:          16384
+Sector size:        4096
+Filesystem size:    1000.00MiB
+Block group profiles:
+  Data:             single            8.00MiB
+  Metadata:         DUP              50.00MiB
+  System:           DUP               8.00MiB
+SSD detected:       no
+Incompat features:  extref, skinny-metadata
+Number of devices:  1
+Devices:
+   ID        SIZE  PATH
+    1  1000.00MiB  /dev/loop3
+
+]0;root@otuslinux:~[root@otuslinux ~]# mkfs.btrfs /dev/loop3[21@btrfs device add /dev/vg0/btrfs /dev/loop3
+ERROR: not a btrfs filesystem: /dev/loop3
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device add /dev/vg0/btrfs /dev/loop3[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P /dev/loop3 /otp  pt
+/dev/loop3 appears to contain an existing filesystem (btrfs).
+ERROR: use the -f option to force overwrite of /dev/loop3
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device add /dev/loop3 /opt add [1@-[1@f[1@ 
+Performing full device TRIM /dev/loop3 (1000.00MiB) ...
+]0;root@otuslinux:~[root@otuslinux ~]# df -hT
+Filesystem                Type      Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root  xfs       8.0G  2.9G  5.1G  37% /
+devtmpfs                  devtmpfs  487M     0  487M   0% /dev
+tmpfs                     tmpfs     496M     0  496M   0% /dev/shm
+tmpfs                     tmpfs     496M  6.8M  490M   2% /run
+tmpfs                     tmpfs     496M     0  496M   0% /sys/fs/cgroup
+tmpfs                     tmpfs     100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home xfs       5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops     xfs       5.0G  552M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var   ext4      870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs     btrfs     6.0G   17M  5.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device stat /opt
+[/dev/mapper/vg0-btrfs].write_io_errs    0
+[/dev/mapper/vg0-btrfs].read_io_errs     0
+[/dev/mapper/vg0-btrfs].flush_io_errs    0
+[/dev/mapper/vg0-btrfs].corruption_errs  0
+[/dev/mapper/vg0-btrfs].generation_errs  0
+[/dev/loop3].write_io_errs    0
+[/dev/loop3].read_io_errs     0
+[/dev/loop3].flush_io_errs    0
+[/dev/loop3].corruption_errs  0
+[/dev/loop3].generation_errs  0
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device stat /opt[root@otuslinux ~]# df -hT[Kbtrfs device add -f /dev/loop3 /opt[1P[1P[1P[1@d[1@e[1@l[1@e[1@t[1@e
+btrfs device delete: invalid option -- 'f'
+usage: btrfs device delete <device>|<devid> [<device>|<devid>...] <path>
+
+    Remove a device from a filesystem
+
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device delete -f /dev/loop3 /opt[16Pstat /opt[root@otuslinux ~]# df -hT[K
+Filesystem                Type      Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root  xfs       8.0G  2.9G  5.1G  37% /
+devtmpfs                  devtmpfs  487M     0  487M   0% /dev
+tmpfs                     tmpfs     496M     0  496M   0% /dev/shm
+tmpfs                     tmpfs     496M  6.8M  490M   2% /run
+tmpfs                     tmpfs     496M     0  496M   0% /sys/fs/cgroup
+tmpfs                     tmpfs     100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home xfs       5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops     xfs       5.0G  552M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var   ext4      870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs     btrfs     6.0G   17M  5.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# df -hTbtrfs device delete -f /dev/loop3 /opt[1P[1P[1P
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs device delete /dev/loop3 /opt[root@otuslinux ~]# df -hT[K
+Filesystem                Type      Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root  xfs       8.0G  2.9G  5.1G  37% /
+devtmpfs                  devtmpfs  487M     0  487M   0% /dev
+tmpfs                     tmpfs     496M     0  496M   0% /dev/shm
+tmpfs                     tmpfs     496M  6.8M  490M   2% /run
+tmpfs                     tmpfs     496M     0  496M   0% /sys/fs/cgroup
+tmpfs                     tmpfs     100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home xfs       5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops     xfs       5.0G  552M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var   ext4      870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs     btrfs     5.0G   17M  4.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# df -hTbtrfs device delete /dev/loop3 /opt              opt[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1@f[1@i[1@le[1@e[1@s[1@y[1@s[1@te[1@e[1@m[1@ [1P[1@d[1@f
+Data, single: total=8.00MiB, used=64.00KiB
+System, DUP: total=8.00MiB, used=16.00KiB
+Metadata, DUP: total=256.00MiB, used=112.00KiB
+GlobalReserve, single: total=16.00MiB, used=0.00B
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs filesystem show --mounted
+Label: none  uuid: bf65c8b5-2927-4d36-97af-e2f7a52d1f87
+	Total devices 1 FS bytes used 192.00KiB
+	devid    1 size 5.00GiB used 536.00MiB path /dev/mapper/vg0-btrfs
+
+]0;root@otuslinux:~[root@otuslinux ~]# btrfsch k /opt
+ERROR: not a regular file or block device: /opt
+ERROR: cannot open file system
+]0;root@otuslinux:~[root@otuslinux ~]# btrfsck /opt   dev/lo v g  vg0/btrfs 
+ERROR: /dev/vg0/btrfs is currently mounted, aborting
+]0;root@otuslinux:~[root@otuslinux ~]# onount        umount .opt    /opt
+]0;root@otuslinux:~[root@otuslinux ~]# umount /optbtrfsck /dev/vg0/btrfs 
+Checking filesystem on /dev/vg0/btrfs
+UUID: bf65c8b5-2927-4d36-97af-e2f7a52d1f87
+checking extents
+checking free space cache
+checking fs roots
+checking csums
+checking root refs
+found 196608 bytes used err is 0
+total csum bytes: 0
+total tree bytes: 131072
+total fs tree bytes: 32768
+total extent tree bytes: 16384
+btree space waste bytes: 124760
+file data blocks allocated: 65536
+ referenced 65536
+]0;root@otuslinux:~[root@otuslinux ~]# btrfsck /dev/vg0/btrfs [root@otuslinux ~]# [Kmount /opt
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume list /opt
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume create /opt/vol1
+Create subvolume '/opt/vol1'
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume create /opt/vol1 2
+Create subvolume '/opt/vol2'
+]0;root@otuslinux:~[root@otuslinux ~]# ll /ot pt/
+total 0
+drwxr-xr-x. 1 root root 0 Nov  1 23:50 [0m[38;5;27mvol1[0m
+drwxr-xr-x. 1 root root 0 Nov  1 23:50 [38;5;27mvol2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# cd   p /ets c/[abc]* /opt/vol1
+cp: omitting directory '/etc/alternatives'
+cp: omitting directory '/etc/audisp'
+cp: omitting directory '/etc/audit'
+cp: omitting directory '/etc/bash_completion.d'
+cp: omitting directory '/etc/binfmt.d'
+cp: omitting directory '/etc/chkconfig.d'
+cp: omitting directory '/etc/cifs-utils'
+cp: omitting directory '/etc/cron.d'
+cp: omitting directory '/etc/cron.daily'
+cp: omitting directory '/etc/cron.hourly'
+cp: omitting directory '/etc/cron.monthly'
+cp: omitting directory '/etc/cron.weekly'
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt/vol1
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt/vol1[12@cp /etc/[abc]* /opt/vol1[root@otuslinux ~]# [16Pll /opt/btrfs subvolume create /opt/vol22     [1P[1P[1P[1P[1P[1P[1@l[1@i[1@s[1@t
+ID 257 gen 14 top level 5 path vol1
+ID 258 gen 11 top level 5 path vol2
+]0;root@otuslinux:~[root@otuslinux ~]# mkdir /opt_subvol
+]0;root@otuslinux:~[root@otuslinux ~]# mount 0 -o subvolid=257 /dev/vg  vg0/btrfs /opt_subvol/
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt_subvol/
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt_subvol/[34@mount -o subvolid=257 /dev/vg0/btrfs /opt_subvol/        
+mount: /dev/mapper/vg0-btrfs is already mounted or /opt busy
+       /dev/mapper/vg0-btrfs is already mounted on /opt
+       /dev/mapper/vg0-btrfs is already mounted on /opt_subvol
+]0;root@otuslinux:~[root@otuslinux ~]# mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [26Pll /opt_subvol/[34@mount -o subvolid=257 /dev/vg0/btrfs /opt_subvol/[root@otuslinux ~]# ll /opt_subvol/[Kmount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [Kbtrfs subvolume set-default 258 /opt
+]0;root@otuslinux:~[root@otuslinux ~]# ll opt   /opt
+total 0
+drwxr-xr-x. 1 root root 282 Nov  1 23:51 [0m[38;5;27mvol1[0m
+drwxr-xr-x. 1 root root   0 Nov  1 23:50 [38;5;27mvol2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs sublovule        volume get-f default /mnt/    opt
+ID 258 gen 11 top level 5 path vol2
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt
+total 0
+drwxr-xr-x. 1 root root 282 Nov  1 23:51 [0m[38;5;27mvol1[0m
+drwxr-xr-x. 1 root root   0 Nov  1 23:50 [38;5;27mvol2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [26Pll /opt_subvol/mount -o subvolid=257 /dev/vg0/btrfs /opt[1P[1@8
+mount: /dev/mapper/vg0-btrfs is already mounted or /opt busy
+       /dev/mapper/vg0-btrfs is already mounted on /opt
+       /dev/mapper/vg0-btrfs is already mounted on /opt_subvol
+]0;root@otuslinux:~[root@otuslinux ~]# mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [26Pll /opt_subvol/mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [5Pbtrfs subvolume set-default 258 /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[34@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# [Kmount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# [Kmount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt
+ID 258 gen 11 top level 5 path vol2
+]0;root@otuslinux:~[root@otuslinux ~]# ll /ot pt
+total 0
+drwxr-xr-x. 1 root root 282 Nov  1 23:51 [0m[38;5;27mvol1[0m
+drwxr-xr-x. 1 root root   0 Nov  1 23:50 [38;5;27mvol2[0m
+]0;root@otuslinux:~[root@otuslinux ~]# umount /opt
+]0;root@otuslinux:~[root@otuslinux ~]# umount /opt[4Pll /opt[25@btrfs subvolume get-default /opt[4@set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt
+]0;root@otuslinux:~[root@otuslinux ~]# mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# umount /opt[K[4Pll /opt[25@btrfs subvolume get-default /opt[4@set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt
+total 0
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt[29@btrfs subvolume set-default 258 /opt[1P[1P[1P[1@g[1@e[1@t-default [1P[1P[1P[1P
+ID 258 gen 11 top level 5 path vol2
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# ll /opt[K
+total 0
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# umount /opt[K[4Pll /opt[25@btrfs subvolume get-default /opt[4@set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# [5Pbtrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [26Pll /opt_subvol/[34@mount -o subvolid=257 /dev/vg0/btrfs /opt_subvol/[root@otuslinux ~]# m[32Pkdir /opt_subvolount -o subvolid=257 /dev/vg0/btrfs /opt_subvol/[root@otuslinux ~]# m[32Pkdir /opt_subvolbtrfs subvolume list /opt[root@otuslinux ~]# [8Pmkdir /opt_subvolount -o subvolid=257 /dev/vg0/btrfs /opt_subvol/[root@otuslinux ~]# m[32Pkdir /opt_subvolr[1P[1P[1P[1P[1P[1@u[1@m[1@o[1@u[1@n[1@t
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs sun bvolume list /opt
+ID 257 gen 14 top level 5 path vol1
+ID 258 gen 17 top level 5 path vol2
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# 
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume list /opt[root@otuslinux ~]# [7Pumount /opt_subvol[11Pll /opt[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[1P[1@7
+mount: /dev/mapper/vg0-btrfs is already mounted or /opt busy
+       /dev/mapper/vg0-btrfs is already mounted on /opt
+]0;root@otuslinux:~[root@otuslinux ~]# umount /opt
+]0;root@otuslinux:~[root@otuslinux ~]# umount /opt[30@mount -o subvolid=257 /dev/vg0/btrfs /opt
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt[34@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# umount /opt[K[30@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [16Pbtrfs subvolume list /opt[root@otuslinux ~]# [7Pumount /opt_subvol[11Pll /opt[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[25@btrfs subvolume get-default /opt[root@otuslinux ~]# ll /opt[K[29@btrfs subvolume set-default 258 /opt[root@otuslinux ~]# [5@mount -o subvolid=258 /dev/vg0/btrfs /opt[root@otuslinux ~]# [5Pbtrfs subvolume set-default 258 /opt58[1P[1@7
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume set-default 257 /opt[root@otuslinux ~]# ll /opt[K[34@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# umount /opt[K[30@mount -o subvolid=257 /dev/vg0/btrfs /opt[root@otuslinux ~]# [16Pbtrfs subvolume list /opt[root@otuslinux ~]# [7Pumount /opt_subvol[11Pll /opt[25@btrfs subvolume get-default /opt
+ID 257 gen 14 top level 5 path vol1
+]0;root@otuslinux:~[root@otuslinux ~]# ll op  /opt
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt[25@btrfs subvolume get-default /opt[4@set-default 257 /opt[1P[1@8
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume set-default 258 /opt[root@otuslinux ~]# ll /opt[K
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# btrg d s f fs subvolume snapshot /opt /tmp/ 
+ERROR: not a btrfs filesystem: /tmp
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume snapshot /opt /tmp   opt
+opt/        opt_subvol/ 
+[root@otuslinux ~]# btrfs subvolume snapshot /opt /opt_subvol/
+ERROR: not a btrfs filesystem: /opt_subvol/
+]0;root@otuslinux:~[root@otuslinux ~]# btrfs subvolume snapshot /opt /opt_subvol/        
+Create a snapshot of '/opt' in '/opt/opt'
+]0;root@otuslinux:~[root@otuslinux ~]# ls   l /opt/opt/
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt/opt/btrfs subvolume snapshot /opt /optnapshot [1@-[1@r[1@ /opt /opt/red  a only
+Create a readonly snapshot of '/opt' in '/opt/ronly'
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+drwxr-xr-x. 1 root root   282 Nov  1 23:51 [0m[38;5;27mopt[0m
+drwxr-xr-x. 1 root root   288 Nov  2 00:03 [38;5;27mronly[0m
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt/ronly/
+total 56
+-rw-r--r--. 1 root root    16 Nov  1 23:51 adjtime
+-rw-r--r--. 1 root root  1518 Nov  1 23:51 aliases
+-rw-r--r--. 1 root root 12288 Nov  1 23:51 aliases.db
+-rw-------. 1 root root   541 Nov  1 23:51 anacrontab
+-rw-r--r--. 1 root root  2853 Nov  1 23:51 bashrc
+-rw-r--r--. 1 root root    38 Nov  1 23:51 centos-release
+-rw-r--r--. 1 root root    51 Nov  1 23:51 centos-release-upstream
+-rw-r--r--. 1 root root  1108 Nov  1 23:51 chrony.conf
+-rw-r-----. 1 root root   481 Nov  1 23:51 chrony.keys
+-rw-------. 1 root root     0 Nov  1 23:51 cron.deny
+-rw-r--r--. 1 root root   451 Nov  1 23:51 crontab
+-rw-------. 1 root root     0 Nov  1 23:51 crypttab
+-rw-r--r--. 1 root root  1620 Nov  1 23:51 csh.cshrc
+-rw-r--r--. 1 root root   866 Nov  1 23:51 csh.login
+drwxr-xr-x. 1 root root     0 Nov  2 00:04 [0m[38;5;27mopt[0m
+]0;root@otuslinux:~[root@otuslinux ~]# ll /opt/ronly/[1P[1P[1@r[1@m /opt/ronly/s as 
+adjtime     aliases     aliases.db  anacrontab  
+[root@otuslinux ~]# rm /opt/ronly/adjtime 
+rm: remove regular file '/opt/ronly/adjtime'? y
+rm: cannot remove '/opt/ronly/adjtime': Read-only file system
+]0;root@otuslinux:~[root@otuslinux ~]# lsblk 
+NAME                   MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                      8:0    0   40G  0 disk  
+`-sda1                   8:1    0   40G  0 part  
+  `-md0                  9:0    0   40G  0 raid1 
+    |-vg0-lvm_root     253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home    253:1    0    5G  0 lvm   /home
+    |-vg0-loops        253:2    0    5G  0 lvm   /loops
+    `-vg0-btrfs        253:8    0    5G  0 lvm   /opt
+sdb                      8:16   0   40G  0 disk  
+`-sdb1                   8:17   0   40G  0 part  
+  `-md0                  9:0    0   40G  0 raid1 
+    |-vg0-lvm_root     253:0    0    8G  0 lvm   /
+    |-vg0-lvm--home    253:1    0    5G  0 lvm   /home
+    |-vg0-loops        253:2    0    5G  0 lvm   /loops
+    `-vg0-btrfs        253:8    0    5G  0 lvm   /opt
+loop1                    7:1    0 1000M  0 loop  
+|-vg1-lv--var_rmeta_0  253:3    0    4M  0 lvm   
+| `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+`-vg1-lv--var_rimage_0 253:4    0  900M  0 lvm   
+  `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+loop2                    7:2    0 1000M  0 loop  
+|-vg1-lv--var_rmeta_1  253:5    0    4M  0 lvm   
+| `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+`-vg1-lv--var_rimage_1 253:6    0  900M  0 lvm   
+  `-vg1-lv--var        253:7    0  900M  0 lvm   /var
+loop3                    7:3    0 1000M  0 loop  
+]0;root@otuslinux:~[root@otuslinux ~]# df -hT
+Filesystem                Type      Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-lvm_root  xfs       8.0G  2.9G  5.1G  37% /
+devtmpfs                  devtmpfs  487M     0  487M   0% /dev
+tmpfs                     tmpfs     496M     0  496M   0% /dev/shm
+tmpfs                     tmpfs     496M  6.8M  490M   2% /run
+tmpfs                     tmpfs     496M     0  496M   0% /sys/fs/cgroup
+tmpfs                     tmpfs     100M     0  100M   0% /run/user/1000
+/dev/mapper/vg0-lvm--home xfs       5.0G   33M  5.0G   1% /home
+/dev/mapper/vg0-loops     xfs       5.0G  552M  4.5G  11% /loops
+/dev/mapper/vg1-lv--var   ext4      870M  143M  667M  18% /var
+/dev/mapper/vg0-btrfs     btrfs     5.0G   17M  4.5G   1% /opt
+]0;root@otuslinux:~[root@otuslinux ~]# blkid 
+/dev/mapper/vg0-lvm_root: UUID="1b615c91-2ba1-4877-a06d-fa5d14844aac" TYPE="xfs" 
+/dev/md0: UUID="YSeJwg-7LJn-vr6I-fYak-bgeT-MYpB-K9NAm2" TYPE="LVM2_member" 
+/dev/sdb1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="0bd4fb53-44b2-ad65-9f05-5df20da1d576" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/sda1: UUID="5a682183-0b57-7143-3e59-7b04bdc4ad56" UUID_SUB="7bb13c09-ef17-d937-f595-aafc8d5007f4" LABEL="otuslinux:0" TYPE="linux_raid_member" 
+/dev/mapper/vg0-lvm--home: UUID="205e4d4b-3a88-4339-8cf4-a0e2eae65f97" TYPE="xfs" 
+/dev/mapper/vg0-loops: UUID="938d2ecf-c734-4d2e-af9a-b64a639eba81" TYPE="xfs" 
+/dev/loop1: UUID="seBbHf-Rf2T-hevI-iE1s-XRWF-UK3N-cmLzBK" TYPE="LVM2_member" 
+/dev/loop2: UUID="Mqpb2D-tYxK-S9dz-Li1w-LVei-LJrs-9e37Qc" TYPE="LVM2_member" 
+/dev/mapper/vg1-lv--var_rimage_0: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg1-lv--var_rimage_1: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg1-lv--var: UUID="ce0fbcb0-f97f-4b05-a567-913b5a5d4221" TYPE="ext4" 
+/dev/mapper/vg0-btrfs: UUID="bf65c8b5-2927-4d36-97af-e2f7a52d1f87" UUID_SUB="5ea30e45-1ffe-4960-a62c-4d370cd1fca7" TYPE="btrfs" 
+]0;root@otuslinux:~[root@otuslinux ~]# ^C
+]0;root@otuslinux:~[root@otuslinux ~]# exit
+exit
+
+Script done on Fri Nov  2 00:05:58 2018

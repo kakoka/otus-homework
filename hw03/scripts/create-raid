@@ -1,0 +1,29 @@
+#!/bin/bash -e
+# create RAID10 + LVM and move rootfs on it
+
+sfdisk -d /dev/sda | sfdisk --force /dev/sdb && \
+parted /dev/sdb set 1 raid on && \
+mdadm --zero-superblock --force /dev/sdb1 && \
+mdadm --create /dev/md0 --level=1 --raid-disks=2 --metadata=1.2 missing /dev/sdb1 && \
+pvcreate /dev/md0 && vgcreate vg0 /dev/md0 && lvcreate -L 20G -n lvm_root vg0 && \
+mkfs.xfs /dev/vg0/lvm_root && \
+mount /dev/vg0/lvm_root /mnt && \
+mkdir /etc/mdamd && mdadm --examine --scan >> /etc/mdadm.conf && \
+echo "GRUB_CMDLINE_LINUX='rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=vg0 rg.lvm.lv=lvm_root'" >> /etc/default/grub && \
+echo "GRUB_PRELOAD_MODULES='mdraid1x lvm'" >> /etc/default/grub && \
+rsync --progress -av --exclude /proc --exclude /run --exclude /dev --exclude /sys --exclude /mnt  / /mnt/ && \
+mkdir /mnt/{proc,run,sys,dev,mnt} && \
+mount --bind /proc /mnt/proc && mount --bind /dev /mnt/dev && mount --bind /sys /mnt/sys && mount --bind /run /mnt/run
+
+# Under chroot
+#
+# chroot /mnt/ 
+#
+# sed -i.bak '/UUID/d' /etc/fstab && blkid | grep vg0-lvm_root | awk -F\" '{print "UUID="$2" / ext4 defaults 0 0"}' >> /etc/fstab
+# mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.old && dracut /boot/initramfs-$(uname -r).img $(uname -r) && \
+# grub2-mkconfig -o /boot/grub2/grub.cfg && \
+# grub2-install /dev/sda && \
+# grub2-install /dev/sdb && \
+# touch /mnt/.autorelabel
+# exit
+# reboot
