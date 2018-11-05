@@ -30,7 +30,7 @@ TODO: сделать приватный репозитарий.
 
 Этот способ позволяет запустить шелл, указав это директивно. Перед переключеним контекста на дальнейший старт системы после загрузки ядра и монтирования файловых систем.
 
->linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root `rw init=/sysroot/bin/sh` rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos \ 
+>linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root `rw init=/sysroot/bin/sh` rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos 
 > rg.lvm.lv=root rg.lvm.lv=swap rg.lvm.lv=boot 
 
 2. rd.break
@@ -50,7 +50,7 @@ TODO: сделать приватный репозитарий.
 
 >allow dropping to a shell, if root mounting fails
 
->linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos \
+>linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos
 >rg.lvm.lv=root rg.lvm.lv=swap rg.lvm.lv=boot `rd.shell`
 
 #### 2. Переименование VolumeGroup
