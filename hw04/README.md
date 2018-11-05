@@ -78,7 +78,7 @@ $ dracut -f
 
 #### 3. Модуль initrd
 
-Полезный модуль, который делает изменение размера тома lvm с ext4 и xfs сделан в [домашнем задании №3, часть 1](https://github.com/kakoka/otus-homework/tree/master/hw03#1-%D1%83%D0%BC%D0%B5%D0%BD%D1%8C%D1%88%D0%B8%D1%82%D1%8C-ext4--%D0%B4%D0%BE-8-gb)
+Полезный модуль, который делает изменение размера тома lvm с ext4 и xfs сделан в [домашнем задании №3, часть 1 и 2](https://github.com/kakoka/otus-homework/tree/master/hw03#1-%D1%83%D0%BC%D0%B5%D0%BD%D1%8C%D1%88%D0%B8%D1%82%D1%8C-ext4--%D0%B4%D0%BE-8-gb)
 
 #### 4. Перемещаем /boot на LVM, используем grub2
 
