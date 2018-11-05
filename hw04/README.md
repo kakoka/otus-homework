@@ -40,7 +40,7 @@ TODO: сделать приватный репозитарий.
 
 В данном случае, указан хук `pre-mount` - "перед монированием файловой системы".
 
-Хуки inird подробно описаны в документации по dracut.
+Хуки dracut подробно описаны в документации по dracut.
 
 3. rd.shell
 
@@ -48,8 +48,7 @@ TODO: сделать приватный репозитарий.
 
 >allow dropping to a shell, if root mounting fails
 
->linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos
->rg.lvm.lv=root rg.lvm.lv=swap rg.lvm.lv=boot `rd.shell`
+>linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos rg.lvm.lv=root rg.lvm.lv=swap rg.lvm.lv=boot `rd.shell`
 
 #### 2. Переименование VolumeGroup
 
