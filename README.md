@@ -1,4 +1,4 @@
-# Otus Linux Administrator course - homeworks
+# Otus Linux Administrator course - домашние работы.
 
 * [Homework #1. Сборка ядра Linux](https://github.com/kakoka/otus-homework/tree/master/hw01)
 * [Homework #2. Дисковая подсистема, работа с mdadm.](https://github.com/kakoka/otus-homework/tree/master/hw02)
