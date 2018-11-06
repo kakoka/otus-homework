@@ -160,7 +160,7 @@ lvm lvremove --config 'global {locking_type=1}' --yes -f /dev/vg0/temp_xfs
 >Filesystem               Type      Size  Used Avail Use% Mounted on \
 >/dev/mapper/vg0-lvm_root xfs       8.0G  2.9G  5.1G  37% /
 
-Ну и в конце не забудем про `dracut --omit resizerootxfs -f`.
+После перезагрузки системы не забудем убрать модуль из dracut `dracut --omit resizerootxfs -f`.
 
 #### 3. Практика по LVM.
 
