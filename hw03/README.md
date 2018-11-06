@@ -177,8 +177,8 @@ lvm lvrename --config 'global {locking_type=1}' --yes -f vg0 temp_xfs lvm_root
 
 #### 3. Практика по LVM.
 
-Результаты по пунктам:
-
+Задания по пунктам:
+<pre>
 - выделить том под /home
 - выделить том под /var
 - /var - сделать в lvm mirror
@@ -193,8 +193,9 @@ lvm lvrename --config 'global {locking_type=1}' --yes -f vg0 temp_xfs lvm_root
 - залоггировать работу можно с помощью утилиты script
 
 * на нашей куче дисков попробовать поставить btrfs/zfs - с кешем, снэпшотами - разметить здесь каталог /opt
+</pre>
 
-находятся в файле `lvm_practice.txt`.
+Результаты непосильных трудов находятся в файле `lvm_practice.txt`.
 
 Из интересного, хочется отметить, что при добавлении дисков в Vagrantfile так и не удалось добиться того, что бы они отображались в системе при `vagrant reload`.
 
