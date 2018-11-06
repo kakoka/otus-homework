@@ -50,6 +50,8 @@ TODO: сделать приватный репозитарий.
 
 >linux16 /vmlinuz-3.10.0-862.14.4.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet rd.auto=1 rd.lvm=1 rd.lvm.vg=centos rg.lvm.lv=root rg.lvm.lv=swap rg.lvm.lv=boot `rd.shell`
 
+После любого из перечисленных действий можно, если это нобходимо, подмонтировать раздел на котором находится root, сделать туда `chroot` и произвести нужные нам действия.
+
 #### 2. Переименование VolumeGroup
 
 Посмотрим именование группы томов - `vgs`:
