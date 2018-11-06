@@ -155,6 +155,19 @@ lvm lvremove --config 'global {locking_type=1}' --yes -f /dev/vg0/temp_xfs
 
 Отметим, во первых, что xfsdump работает только со смонтированными томами, во-вторых, нужно сохранить uuid (не факт, что нужно, но без этого у меня почему-то не завелось). Укажем его явно при создании новой файловой системы. Во вторых, можно уменьшить скрипт, удалив том lvm_root и переименовать раздел temp_xfs в lvm_root - `lvm lvrename vg0 temp_xfs lvm_root`.
 
+```sh
+mkdir /mnt
+lvm lvcreate --config 'global {locking_type=1}' -n temp_xfs -L 8G vg0
+mkfs.xfs -f /dev/vg0/temp_xfs
+mount /dev/vg0/temp_xfs /tmp
+mount /dev/vg0/lvm_root /mnt
+xfsdump -J - /mnt | xfsrestore -J - /tmp
+umount /tmp
+umount /mnt
+lvm lvremove --config 'global {locking_type=1}' --yes -f /dev/vg0/lvm_root
+lvm lvrename --config 'global {locking_type=1}' --yes -f vg0 temp_xfs lvm_root
+```
+
 После перезагрузки, наблюдаем вывод `df -hT`:
 
 >Filesystem               Type      Size  Used Avail Use% Mounted on \
