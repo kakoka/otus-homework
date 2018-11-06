@@ -53,8 +53,8 @@ Vagrant.configure("2") do |config|
               cp ~vagrant/.ssh/auth* ~root/.ssh
 	      yum install -y mdadm smartmontools hdparm gdisk e2fsprogs lvm2 nano	      
   	  SHELL
-          #box.vm.provision :shell, path:"scripts/add-dracut-module"
- 	  #box.vm.provision :shell, path:"scripts/create-raid"
+          box.vm.provision :shell, path:"scripts/add-dracut-module"
+ 	  box.vm.provision :shell, path:"scripts/create-raid"
       end
   end
 end
