@@ -179,6 +179,8 @@ lvm lvrename --config 'global {locking_type=1}' --yes -f vg0 temp_xfs lvm_root
 
 <details>
 <summary>Задания по пунктам:</summary>
+  
+<pre>
 - выделить том под /home
 - выделить том под /var
 - /var - сделать в lvm mirror
@@ -193,7 +195,7 @@ lvm lvrename --config 'global {locking_type=1}' --yes -f vg0 temp_xfs lvm_root
 - залоггировать работу можно с помощью утилиты script
 
 * на нашей куче дисков попробовать поставить btrfs/zfs - с кешем, снэпшотами - разметить здесь каталог /opt
-</details>
+</pre></details>
 
 Результаты непосильных трудов находятся в файле `lvm_practice.txt`.
 
