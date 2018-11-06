@@ -108,6 +108,10 @@ $ nano /etc/fstab
 
 Заменим строчку в /etc/fstab:
 
+> /dev/sda1 /boot ext4 defaults 1 2
+
+на
+
 > /dev/mapper/centos-boot /boot ext4 defaults 1 2
 
 ```sh
