@@ -1,53 +1,52 @@
 #!/bin/bash
 
+###############################
+#							  #
+# Web log email notify script #
+#							  #
+###############################
+
+# sed
+# find
+
+# config section
 IFS=$' '
-LOCKFILE=lock
+pidfile=/var/run/wlen.pid
 LOGDIR=logs
 LISTDIR=list
-recipient="root@localhost"
-COUNT=2
+recipient="kakoka@localhost"
+COUNT=7
 
-IP_LIST=()
-IP_ADDR=()
-ERRORS=()
-HTTP_STATUS=()
+# functions
 
-kit_cut (){
- 	cat $file | while read p; do echo "$file: $p"; done
-
-}
-
-cut_kit (){
-	toArr=$(echo $file | awk '{print toupper($0)}' | sed 's/LIST\///')
-	echo ${!toArr}
- 	cat $file | while read p; do echo "$file: $p" && ${!toArr}+=$p; done
- 	}
-
-email_generate (){
-	for file in $LISTDIR/*
-	do
-		case $file in
-			$LISTDIR/ip_list) kit_cut; cut_kit ;;
-			$LISTDIR/ip_addr) kit_cut ;;
-			$LISTDIR/http_status) kit_cut ;;
-			$LISTDIR/errors) kit_cut ;;
-		esac
-	done
-}
-
-
-
-
-email_template="Subject: hourly web server report 
+send_email()
+{
+		(		
+cat - <<END
+Subject: hourly web server report 
 From: no-reply@localhost
-To: %s
+To: $recipient
 Content-Type: text/plain
-We have $q $w $e
-"
 
-# if [ -d !$LOGDIR ]
-# 	mkdir $LOGDIR
-# fi
+We have some ip addresses:
+count ip-address
+${IP_LIST[@]}
+
+We have some urls:
+count url
+${IP_ADDR[@]}
+
+We have some http codes:
+count code
+${HTTP_STATUS[@]}
+
+We have some errors:
+${IP_ADDR[@]}
+END
+) | /usr/sbin/sendmail $1
+}
+
+# here we start
 
 if [ ! -d $LISTDIR ]
 then
@@ -61,28 +60,12 @@ then
 else
 	echo "$$" > $LOCKFILE
 	trap 'rm -f $LOCKFILE; exit $?' INT TERM EXIT
-	awk '{print $1}' $LOGDIR/access.log | sort | uniq -c | sort -nr | head -$COUNT > $LISTDIR/ip_list
-	awk '{print $7}' $LOGDIR/access.log | sort | uniq -c | sort -nr | head -$COUNT > $LISTDIR/ip_addr
-	awk '{print $9}' $LOGDIR/access.log | sort | uniq -c | sort -nr > $LISTDIR/http_status
-	cat $LOGDIR/error.log | sort | uniq -c | head -$COUNT > $LISTDIR/errors
-	#if [ email_generate ]
-	email_generate
-		rm -r $LOCKFILE
-		trap - INT TERM EXIT
-		echo "END"
-	# else
-	# 	rm -r $LOCKFILE
-	# 	trap - INT TERM EXIT
-	# 	echo "mail sender error"
-	# 	exit 1
-	# fi
+	IP_LIST+=(`awk -v dt=$(date --date="1 hour ago" +"%d/%m/%Y:%H") '$1==dt{print $1}' $LOGDIR/access.log | sort | uniq -c | sort -nr | head -$COUNT`)
+	IP_ADDR+=(`awk '{print $7}' $LOGDIR/access.log | sort | uniq -c | sort -nr | head -$COUNT`)
+	HTTP_STATUS+=(`awk '{print $9}' $LOGDIR/access.log | sort | uniq -c | sort -nr | head -$COUNT`)
+	ERRORS+=(`cat $LOGDIR/error.log | sort | uniq -c | head -$COUNT`)
+	send_email $recipient
+	rm -r $LOCKFILE
+	trap - INT TERM EXIT
+	echo "END"
 fi
-
-
-
-
-
-# function send_email()
-# {
-# mail -a /tmp/{ip_list,ip_addr,ip_code} "web log report" root@localhost < $  #,ip_errs} # use mail template
-# }
