@@ -40,7 +40,7 @@ awk -F" " '{print $1}' access.log | sort | uniq -c | sort -nr | head -20
 awk -F" " '{print $7}' access.log | sort | uniq -c | sort -nr | head -20
 ```
 
-### 3. Все ошибки
+#### 3. Все ошибки
 
 ```bash
 cat error.log | grep "$errd"
