@@ -5,4 +5,4 @@
 * [Homework #2*. Дисковая подсистема, перенос системы на  raid.](https://github.com/kakoka/otus-homework/tree/master/hw02-1)
 * [Homework #3. Файловые системы и LVM.](https://github.com/kakoka/otus-homework/tree/master/hw03)
 * [Homework #4. Загрузка системы.](https://github.com/kakoka/otus-homework/tree/master/hw04)
-* [Homework #5. Bash, awk, sed и друиге.](https://github.com/kakoka/otus-homework/tree/master/hw05)
+* [Homework #5. Bash, awk, sed и другие.](https://github.com/kakoka/otus-homework/tree/master/hw05)
