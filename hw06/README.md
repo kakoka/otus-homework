@@ -35,7 +35,7 @@ $ sudo journalctl -f -u monitor-timer
 ```
 
 <details>
-  <summary>Лог</summary>>
+  <summary>Лог</summary>
 <pre>
 Nov 09 14:25:04 otuslinux systemd[1]: Started SSH wrong username montitoring, run        every 30 seconds.
 Nov 09 14:25:04 otuslinux systemd[1]: Starting SSH wrong username montitoring, run        every 30 seconds...
@@ -49,4 +49,7 @@ Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:57 otuslinux sshd[17999]:
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 14:01:41 otuslinux sshd[18414]: input_userauth_request: invalid user aaaa [preauth]
 </pre>
 <br />
-#### 2.
+
+#### 2. Второй
+
+
