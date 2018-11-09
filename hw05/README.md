@@ -18,7 +18,7 @@ recipient="vagrant@localhost" # укажем адрес, куда посылат
 COUNT=30                      # укажем количество записей, которые будут включены в письмо
 
 # date setup                  # установим дату, начиная от текущей, за которую нам нужны сведения 
-                              # "1 hour ago" - по условиям задания      
+                              # можно поставить "1 hour ago" - по условиям задания      
 hourago="85 hours ago"
 dlog="`date +"%d/%b/%Y %H:%M:%S"`"
 datt="`date +"%d/%b/%Y:%H"`"
@@ -51,7 +51,7 @@ cat error.log | grep "$errd"
 awk -F" " '{print $9}' access.log | sort | uniq -c | sort -nr
 ```
 
-Добавляем к этим запросам фильтрацию по дате и указание откуда брать файлы логов:
+Добавляем к этим запросам фильтрацию по дате ($dacc) и указание откуда брать файлы логов ($LOGDIR), параметр количества записеей ($COUNT):
 
 ```bash
 cat $LOGDIR/access.log | grep "$dacc" | awk '{print $1}' | sort | uniq -c | sort -nr | head -$COUNT
@@ -70,3 +70,31 @@ dacc="`date --date="$hourago" +"%d/%b/%Y:%H"`
 * */1 * * *  root /bin/sh /web_log_email_notify.sh >/var/log/wlen.log 2>&1
 </pre>
 с перенаправлением лога самого скрипта в файл.
+Можно сделать так, что бы параметры запуска скрипта задавались из командой строки. Например:
+
+```bash
+web_log_email_notify.sh -l LOGDIR -c COUNT -e recipient
+```
+
+Следовательно, необходимо добавить в скрипт проверку в виде примерно такой конструкции:
+
+```bash
+while [ -n "$1" ]
+do
+case "$1" in
+  -l) LOGDIR="$2"
+    echo "-l value $LOGDIR"
+    shift;;
+  -c) COUNT="$2"
+    echo "-c value $COUNT"
+    shift;;
+  -e) recipient="$2"
+    echo "-e value $recipient";;
+  --) shift
+    break ;;
+  *) echo "$1 is not a true value or option";;
+esac
+shift
+done
+```
+В общем, можно улучшать бесконечно :)
