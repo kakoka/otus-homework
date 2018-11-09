@@ -58,7 +58,7 @@ END
 
 if [ -e $PIDFILE ]
 then
-    echo "$dlog --> Script is running!" > $LOGFILE 2>&1
+    echo "$dlog --> Script is running!" >> $LOGFILE 2>&1
     exit 1
 else
         echo "$$" > $PIDFILE
@@ -70,5 +70,5 @@ else
         send_email $recipient
         rm -r $PIDFILE
         trap - INT TERM EXIT
-        echo "$dlog --> Success" > $LOGFILE 2>&1
+        echo "$dlog --> Success" >> $LOGFILE 2>&1
 fi
