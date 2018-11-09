@@ -2,7 +2,9 @@
 
 #### 0. Установим epel
 
+```bash
 yum -y install epel-release
+```
 
 #### 1. Таймер
 
@@ -37,13 +39,9 @@ $ sudo journalctl -f -u monitor-timer
 <details>
   <summary>Лог</summary>
 <pre>
-Nov 09 14:25:04 otuslinux systemd[1]: Started SSH wrong username montitoring, run        every 30 seconds.
-Nov 09 14:25:04 otuslinux systemd[1]: Starting SSH wrong username montitoring, run        every 30 seconds...
-Nov 09 14:25:04 otuslinux systemd[1]: monitor-timer.service: main process exited, code=exited, status=203/EXEC
-Nov 09 14:25:04 otuslinux systemd[1]: Unit monitor-timer.service entered failed state.
 Nov 09 14:25:04 otuslinux systemd[1]: monitor-timer.service failed.
-Nov 09 14:26:58 otuslinux systemd[1]: Started SSH wrong username montitoring, run        every 30 seconds.
-Nov 09 14:26:58 otuslinux systemd[1]: Starting SSH wrong username montitoring, run        every 30 seconds...
+Nov 09 14:26:58 otuslinux systemd[1]: Started SSH wrong username montitoring, run every 30 seconds.
+Nov 09 14:26:58 otuslinux systemd[1]: Starting SSH wrong username montitoring, run every 30 seconds...
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:09 otuslinux sshd[17997]: input_userauth_request: invalid user sfd [preauth]
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:57 otuslinux sshd[17999]: input_userauth_request: invalid user sfd [preauth]
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 14:01:41 otuslinux sshd[18414]: input_userauth_request: invalid user aaaa [preauth]
