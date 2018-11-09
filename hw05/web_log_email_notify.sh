@@ -7,9 +7,9 @@
 # config section
 
 IFS=$' '
-PIDFILE=wlen.pid
+PIDFILE=/var/run/wlen.pid
 LOGDIR=logs
-LOGFILE=wlen.log
+LOGFILE=/var/log/wlen.log
 recipient="vagrant@localhost"
 COUNT=30
 
