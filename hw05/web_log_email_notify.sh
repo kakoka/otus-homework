@@ -11,7 +11,8 @@ PIDFILE=/var/run/wlen.pid
 LOGDIR=logs
 LOGFILE=/var/log/wlen.log
 recipient="vagrant@localhost"
-COUNT=30
+XCOUNT=30
+YCOUNT=30
 
 # date setup
 hourago="85 hours ago"
@@ -63,10 +64,10 @@ then
 else
         echo "$$" > $PIDFILE
         trap 'rm -f $PIDFILE; exit $?' INT TERM EXIT
-        IP_LIST+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $1}' | sort | uniq -c | sort -nr | head -$COUNT`)
-        IP_ADDR+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $7}' | sort | uniq -c | sort -nr | head -$COUNT`)
-        HTTP_STATUS+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $9}' | sort | uniq -c | sort -nr | head -$COUNT`)
-        ERRORS+=(`cat $LOGDIR/error.log | grep "$errd" | head -$COUNT`)
+        IP_LIST+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $1}' | sort | uniq -c | sort -nr | head -$XCOUNT`)
+        IP_ADDR+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $7}' | sort | uniq -c | sort -nr | head -$YCOUNT`)
+        HTTP_STATUS+=(`cat $LOGDIR/access.log | grep "$dacc" | awk '{print $9}' | sort | uniq -c | sort -nr`)
+        ERRORS+=(`cat $LOGDIR/error.log | grep "$errd"`)
         send_email $recipient
         rm -r $PIDFILE
         trap - INT TERM EXIT
