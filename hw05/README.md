@@ -76,7 +76,7 @@ dacc="`date --date="$hourago" +"%d/%b/%Y:%H"`
 mail -u vagrant
 ```
 <details>
-  <summary> >u 42 no-reply@localhost.l  Fri Nov  9 12:10  34/789   "hourly web server report"</summary>
+  <summary> > U 42 no-reply@localhost.l  Fri Nov  9 12:10  34/789   "hourly web server report"</summary>
 <pre>
 Message 42:
 From root@otuslinux.localdomain  Fri Nov  9 12:14:35 2018
@@ -119,7 +119,7 @@ We have some errors:
 ...
 </pre>
 </details>
-
+<br />
 Можно сделать так, что бы параметры запуска скрипта задавались из командой строки. Например:
 
 ```bash
