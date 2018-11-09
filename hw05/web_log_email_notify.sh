@@ -9,11 +9,13 @@
 IFS=$' '
 PIDFILE=wlen.pid
 LOGDIR=logs
+LOGFILE=wlen.log
 recipient="vagrant@localhost"
 COUNT=30
 
 # date setup
 hourago="85 hours ago"
+dlog="`date +"%d/%b/%Y %H:%M:%S"`"
 datt="`date +"%d/%b/%Y:%H"`"
 dacc="`date --date="$hourago" +"%d/%b/%Y:%H"`"
 derr="`date --date="$hourago" +"%Y/%m/%d-%H"`"
@@ -56,7 +58,7 @@ END
 
 if [ -e $PIDFILE ]
 then
-    echo "isRunning!"
+    echo "$dlog --> Script is running!" > $logfile 2>&1
     exit 1
 else
         echo "$$" > $PIDFILE
@@ -68,5 +70,5 @@ else
         send_email $recipient
         rm -r $PIDFILE
         trap - INT TERM EXIT
-        echo "END"
+        echo "$dlog --> Success" > $logfile 2>&1
 fi
