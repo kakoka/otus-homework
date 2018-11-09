@@ -72,6 +72,69 @@ dacc="`date --date="$hourago" +"%d/%b/%Y:%H"`
 </pre>
 с перенаправлением лога самого скрипта в файл.
 
+```bash
+mail -u vagrant
+```
+<details>
+  <summary>U 42 no-reply@localhost.l  Fri Nov  9 12:10  34/789   "hourly web server report"</summary>
+<pre>
+Message 42:
+From root@otuslinux.localdomain  Fri Nov  9 12:14:35 2018
+Return-Path: <root@otuslinux.localdomain>
+X-Original-To: vagrant@localhost
+Delivered-To: vagrant@localhost.localdomain
+Subject: hourly web server report
+From: no-reply@localhost.localdomain
+To: vagrant@localhost.localdomain
+Content-Type: text/plain
+Date: Fri,  9 Nov 2018 12:14:35 +0000 (UTC)
+Status: R
+
+From the last hour there is some stats from web server
+
+Report from 05/Nov/2018:06 to 09/Nov/2018:12.
+
+We have some ip addresses:
+count ip-address
+1542 88.198.204.16
+ 409 5.101.113.64
+ 145 173.234.153.122
+ 114 87.250.224.77
+ 111 5.9.61.232
+ 92 78.157.225.246
+ 88 194.106.112.211
+ 85 176.9.9.92
+ 80 66.249.76.101
+ 76 192.162.242.225
+ 74 207.46.13.40
+ 68 40.77.167.165
+ 61 157.55.39.218
+ 57 157.55.39.252
+ 55 178.184.179.209
+ 42 81.162.119.129
+ 41 93.170.187.59
+ 37 94.142.234.253
+ 34 66.249.66.14
+ 34 178.120.76.220
+ 30 141.105.55.6
+ 29 195.218.182.115
+ 29 107.167.107.117
+ 27 185.116.141.75
+ 26 90.188.47.121
+ 26 176.52.96.174
+ 25 80.83.238.12
+ 25 80.83.234.54
+ 25 37.21.250.249
+ 24 46.243.172.147
+
+and we have some urls:
+count url
+ 339 /css/fonts/ptserif.css
+ 339 /css/fonts/ptsanscaption.css
+ 221 /json/get_section_page
+</pre>
+</details>
+
 Можно сделать так, что бы параметры запуска скрипта задавались из командой строки. Например:
 
 ```bash
