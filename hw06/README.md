@@ -39,7 +39,6 @@ $ sudo journalctl -f -u monitor-timer
 <details>
   <summary>Лог</summary>
 <pre>
-Nov 09 14:25:04 otuslinux systemd[1]: monitor-timer.service failed.
 Nov 09 14:26:58 otuslinux systemd[1]: Started SSH wrong username montitoring, run every 30 seconds.
 Nov 09 14:26:58 otuslinux systemd[1]: Starting SSH wrong username montitoring, run every 30 seconds...
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:09 otuslinux sshd[17997]: input_userauth_request: invalid user sfd [preauth]
