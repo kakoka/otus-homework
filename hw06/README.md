@@ -47,7 +47,7 @@ Nov 09 14:26:58 otuslinux systemd[1]: Starting SSH wrong username montitoring, r
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:09 otuslinux sshd[17997]: input_userauth_request: invalid user sfd [preauth]
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 12:34:57 otuslinux sshd[17999]: input_userauth_request: invalid user sfd [preauth]
 Nov 09 14:26:58 otuslinux monitor[18753]: Nov  9 14:01:41 otuslinux sshd[18414]: input_userauth_request: invalid user aaaa [preauth]
-</pre>
+</pre></details>
 <br />
 
 #### 2. Второй
