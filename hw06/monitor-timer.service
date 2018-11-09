@@ -1,0 +1,9 @@
+[Unit]
+Description=SSH wrong username montitoring, run	every 30 seconds
+Wants=monitor-timer.timer
+
+[Service]
+ExecStart=/usr/sbin/monitor
+
+[Install]
+WantedBy=monitor-timer.target

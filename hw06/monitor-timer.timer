@@ -1,0 +1,9 @@
+[Unit]
+Description=SSH monitor timer
+
+[Timer]
+OnUnitActiveSec=30
+Unit=monitor-timer.target
+
+[Install]
+WantedBy=basic.target

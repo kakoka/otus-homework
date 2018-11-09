@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. /etc/sysconfig/monitor
+
+#echo "$LOGFILE"
+#echo "$WORD"
+
+cat $LOGFILE | grep "$WORD"
+
+#pidfile="/var/run/monitor.pid"
+#lock="/var/lock/monitor.lock"
+
