@@ -1,9 +1,11 @@
 [Unit]
-Description=SSH wrong username montitoring, run	every 30 seconds
+Description=SSH wrong username monitoring, run every 30 seconds
 Wants=monitor-timer.timer
 
 [Service]
-ExecStart=/usr/sbin/monitor
+Type=notify
+EnvironmentFile=/etc/sysconfig/monitor
+ExecStart=/bin/bash -c '/bin/cat $LOGFILE | /bin/grep $WORD'
 
 [Install]
 WantedBy=monitor-timer.target

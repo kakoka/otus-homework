@@ -1,8 +1,10 @@
+
 [Unit]
 Description=SSH monitor timer
 
 [Timer]
 OnUnitActiveSec=30
+OnCalendar=*:*:30
 Unit=monitor-timer.target
 
 [Install]
