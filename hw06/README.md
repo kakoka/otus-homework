@@ -101,7 +101,7 @@ $ systemctl start spawn-fcgi
 
 >[Unit] \
 > Description=Apache httpd server %I \
-> ...
+> ... \
 >[Service] \
 > ExecStart=/usr/sbin/httpd $OPTIONS -f I% DFOREGROUND
 
