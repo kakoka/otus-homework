@@ -52,13 +52,11 @@ $ yum -y install httpd.x86_64 spawn-fcgi php.x86_64
 ```bash
 $ vi /etc/sysconfig/spawn-fcgi
 $ vi /etc/systemd/system/spawn-fcgi.service
+$ systemctl enable spawn-fcgi.service
+$ systemctl start spawn-fcgi
 ```
 
-systemctl enable spawn-fcgi.service
-systemctl start spawn-fcgi
-
 <pre>
-systemctl status spawn-fcgi.service
 ● spawn-fcgi.service - Start and stop FastCGI processes
    Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; enabled; vendor preset: disabled)
    Active: active (running) since Sat 2018-11-10 19:53:20 UTC; 3s ago
@@ -75,8 +73,8 @@ systemctl status spawn-fcgi.service
 
 Не сразу все завелось как нужно из-за прав, разрешений, наличия файлов и тд, `systemctl status spawn-fcgi.service` выдавал разные ошибки:
 
-> Nov 10 19:09:07 otuslinux spawn-fcgi[29908]: spawn-fcgi: child exited with: 2
-> Nov 10 19:09:07 otuslinux spawn-fcgi[29908]: spawn-fcgi: child exited with: 8
+> Nov 10 19:09:07 otuslinux spawn-fcgi[29908]: spawn-fcgi: child exited with: 2 \
+> Nov 10 19:09:07 otuslinux spawn-fcgi[29908]: spawn-fcgi: child exited with: 8 \
 > Nov 10 19:09:07 otuslinux spawn-fcgi[29908]: spawn-fcgi: child exited with: 13
 
 <details>
@@ -101,19 +99,19 @@ systemctl status spawn-fcgi.service
 
 Дополнил файл `httpd@.service`:
 
->[Unit]
-> Description=Apache httpd server %I
->[Service]
+>[Unit] \
+> Description=Apache httpd server %I \
+> ...
+>[Service] \
 > ExecStart=/usr/sbin/httpd $OPTIONS -f I% DFOREGROUND
 
-Опция `-f %I` позволит добавлять разные файлы конфигурации в `/etc/httpd/conf`, например node1, node2, node3 перед стартом httpd:
+Опция `-f %I` позволит добавлять разные файлы конфигурации в `/etc/httpd/conf`, например `node1`, `node2`, `node3` перед стартом httpd:
 
 ```bash
 systemctl start httpd@node1.service
 ```
 
-Можно так же делать это через EnvironmentFile, добавлять модификатор %I к нему, для достижение того же самого эффекта.
+Можно так же делать это через `EnvironmentFile`, добавлять модификатор `%I` к нему, для достижения того же самого эффекта.
 
 #### 4. Jira
 
- 
