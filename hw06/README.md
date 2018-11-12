@@ -157,7 +157,7 @@ $ systemd-cgls
   │ └─9494 /bin/java -Djava.util.logging.config.file=/root/atlassian-jira-software-7.12.3-standalone/conf/logging.properties ...
 </pre>
 
-![It works!]()
+![It works!](https://github.com/kakoka/otus-homework/blob/master/hw06/jira.png)
 
 ##### PS. 
 
