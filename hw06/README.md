@@ -115,3 +115,50 @@ systemctl start httpd@node1.service
 
 #### 4. Jira
 
+Скачаем с сайта oracle.com и установим java:
+
+```bash
+$ wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.rpm && yum -y localinstall jdk-8u191-linux-x64.rpm
+```
+
+Добавим в .profile:
+
+```bash
+export JAVA_HOME=/usr/java/jdk1.8.0_191-amd64
+export JRE_HOME=/usr/java/jdk1.8.0_191-amd64/jre
+
+```
+
+Скачаем также и Atlassian Jira, распакуем ее:
+
+```bash
+$ wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.12.3.tar.gz
+$ tar -zxvf atlassian-jira-software-7.12.3.tar.gz && cd atlassian-jira-software-7.12.3-standalone/
+```
+
+Смотрим в каталог `bin/`. Найдем файлы, которые отвечают за запуск и остановку сервиса: `start-jira.sh` и `stop-jira.sh`. 
+Для старта Jira необходимо весьма не малое количество опций :) - возьмем их все (надеюсь что все) и положим в `/etc/sysconfig/jira`.
+Сделаем две переменные `$OPTIONS_START` и `$OPTIONS_STOP`. В секции `[Service]` Unit-файла используем их:
+
+```bash
+ExecStart=/bin/java $OPTIONS_START
+ExecStop=/bin/java $OPTIONS_STOP
+``` 
+
+```bash
+$ systemctl enable jira.service
+$ systemctl start jira
+$ systemd-cgls
+```
+
+<pre>
+└─system.slice
+  ├─jira.service
+  │ └─9494 /bin/java -Djava.util.logging.config.file=/root/atlassian-jira-software-7.12.3-standalone/conf/logging.properties ...
+</pre>
+
+![It works!]()
+
+##### PS. 
+
+Конечно, можно добавить группу и пользователя `jira`, положить саму Jira в `/usr/local/jira`, сделать `/opt/jira` домашним каталогом Jira и т.д. В общем, java приложение можно запустить как сервис, и это работает в systemd.

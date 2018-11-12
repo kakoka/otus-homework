@@ -1,0 +1,15 @@
+
+[Unit]
+Description=Atlassian Jira
+After=network.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/etc/sysconfig/jira
+ExecStart=/bin/java $OPTIONS_START
+ExecStop=/bin/java $OPTIONS_STOP
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
