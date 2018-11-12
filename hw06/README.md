@@ -46,8 +46,7 @@ $ yum -y install httpd.x86_64 spawn-fcgi php.x86_64
 ```
 Делаем `cat /etc/init.d/spawn-fcgi`, смотрим на то, что в нем написано.
 
-Юнит-файл будет типа `forking`, посколько нужно порождать и своевременно завершать процессы.
-В `/etc/sysconfig/spawn-fcgi` опции запуска spawn-fcgi: количество процессов и тд. 
+Юнит-файл будет типа `forking`, 4 workera. В `/etc/sysconfig/spawn-fcgi` опции запуска spawn-fcgi - количество процессов и тд. 
 
 ```bash
 $ vi /etc/sysconfig/spawn-fcgi
@@ -95,9 +94,9 @@ $ systemctl start spawn-fcgi
 #define EACCES      13  /* Permission denied */
 <pre></details>
 
-#### 3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигурационными файлами
+#### 3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигурационными файлами.
 
-Дополнил файл `httpd@.service`:
+Дополним файл `httpd@.service`:
 
 >[Unit] \
 > Description=Apache httpd server %I \
@@ -111,7 +110,7 @@ $ systemctl start spawn-fcgi
 systemctl start httpd@node1.service
 ```
 
-Можно так же делать это через `EnvironmentFile`, добавлять модификатор `%I` к нему, для достижения того же самого эффекта.
+Можно так же делать это через `EnvironmentFile`, добавлять модификатор `%I` в описании [Service] к нему, для достижения того же самого эффекта.
 
 #### 4. Jira
 
@@ -163,4 +162,6 @@ It works! (:
 
 ##### PS. 
 
-Конечно, можно добавить группу и пользователя `jira`, положить саму Jira в `/usr/local/jira`, сделать `/opt/jira` домашним каталогом Jira и т.д. В общем, java приложение можно запустить как сервис, и это работает в systemd.
+Конечно, можно добавить группу и пользователя `jira`, положить саму Jira в `/usr/local/jira`, сделать `/opt/jira` домашним каталогом Jira и т.д. В общем, java приложение можно запустить как сервис, и это работает в systemd. Пришлось добавить в Vagrantfile проборос порта, ибо VirtualBox внутри Ubuntu, внутри Hyper-V (что делать, бывает не такое :). Заодно был поднят phpvirtualbox на Ubuntu.
+
+![phpvirtualbox](https://github.com/kakoka/otus-homework/blob/master/hw06/phpbox.png)
