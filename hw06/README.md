@@ -164,4 +164,4 @@ It works! (:
 
 Конечно, можно добавить группу и пользователя `jira`, положить саму Jira в `/usr/local/jira`, сделать `/opt/jira` домашним каталогом Jira и т.д. В общем, java приложение можно запустить как сервис, и это работает в systemd. Пришлось добавить в Vagrantfile проборос порта, ибо VirtualBox внутри Ubuntu, внутри Hyper-V (что делать, бывает не такое :). Заодно был поднят phpvirtualbox на Ubuntu.
 
-![phpvirtualbox](https://github.com/kakoka/otus-homework/blob/master/hw06/phpbox.png)
+![phpvirtualbox](https://github.com/kakoka/otus-homework/blob/master/hw06/phpvbox.png)
