@@ -125,7 +125,7 @@ $ wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%
 ```bash
 export JAVA_HOME=/usr/java/jdk1.8.0_191-amd64
 export JRE_HOME=/usr/java/jdk1.8.0_191-amd64/jre
-
+export JIRA_HOME=/root/jira
 ```
 
 Скачаем также и Atlassian Jira, распакуем ее:
