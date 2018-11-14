@@ -14,7 +14,7 @@ $ useradd -g myusers kolya
 Добавим правило в /etc/security/time.conf:
 
 ```bash
-sshd;*;!vagrant;!Wk0000-2400
+sshd;*;!admin;!Wk0000-2400
 ```
 
 Добавим правило в /etc/pam.d/system-auth
@@ -32,4 +32,4 @@ petya@192.168.11.101's password:
 Connection closed by 192.168.11.101 port 22
 
 ```
-Наше правило сработало. Теперь все пользователи, кроме пользователя vagrnat не могут зайти по ssh на хост.
+Наше правило сработало. Теперь все пользователи, кроме пользователей группы admin не могут зайти по ssh на хост.
