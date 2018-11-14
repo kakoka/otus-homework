@@ -11,7 +11,7 @@ $ useradd -g myusers petya
 $ useradd -g myusers kolya
 ```
 
-Добавим правило в /etc/security/time.conf:
+Добавим правило в /etc/security/time.conf, запрещающее вход в выходные дни всем пользователям, кроме тех, кто принадлежит группе admin:
 
 ```bash
 sshd;*;!admin;!Wk0000-2400
