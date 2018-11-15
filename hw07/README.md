@@ -31,11 +31,12 @@ $ ssh petya@192.168.11.101
 
 petya@192.168.11.101's password:
 Connection closed by 192.168.11.101 port 22
-
 ```
 Наше правило сработало. Теперь все пользователи, кроме пользователей группы admin не могут зайти по ssh на хост.
 
 #### 2. Дать конкретному пользователю права рута.
+
+##### 2.1 Добавим пользователя в `/etc/sudoers` строчку:
 
 Добавим в `/etc/sudoers` строчку:
 
@@ -62,3 +63,32 @@ vasya is not in the sudoers file.  This incident will be reported.
 </pre>
 
 Пользователь kolya может получить права суперпользователя, а vasya - нет.
+
+##### 2.1 pam_groups.so
+
+Добавим в `/etc/pam.d/sshd` в самое начало строчку:
+
+```bash
+auth required pam_group.so
+```
+
+а в файл `/etc/security/group.conf`
+
+```bash
+sshd;*;kolya;Al0000-2400;wheel
+```
+Таким образом, при входе в систему, пользователь kolya (который входит в группу admin, кстати, вместо 'kolya' можно добавить всю группу admin - написать '%admin' ) получит членство в группе wheel, а члены этой группы могут получать права суперпользователя.
+
+<pre>
+ssh kolya@localhost
+kolya@localhost's password:
+Last login: Thu Nov 15 13:47:17 2018 from ::1
+[kolya@otuslinux ~]$ sudo -i
+[sudo] password for kolya:
+[root@otuslinux ~]# cat /etc/sudoers | grep kolya
+#kolya   ALL=(ALL)       ALL
+[root@otuslinux ~]# cat /etc/sudoers | grep wheel
+## Allows people in group wheel to run all commands
+%wheel	ALL=(ALL)	ALL
+# %wheel	ALL=(ALL)	NOPASSWD: ALL
+</pre>
