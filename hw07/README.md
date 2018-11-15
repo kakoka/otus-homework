@@ -27,9 +27,9 @@ account required pam_time.so
 Пробуем зайти по ssh:
 
 ```bash
-$ ssh petya@192.168.11.101
+$ ssh petya@localhost
 
-petya@192.168.11.101's password:
+petya@localhost's password:
 Authentication failed.
 ```
 Наше правило сработало. Теперь все пользователи, кроме пользователей группы admin не могут зайти по ssh на хост.
