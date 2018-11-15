@@ -30,7 +30,7 @@ account required pam_time.so
 $ ssh petya@192.168.11.101
 
 petya@192.168.11.101's password:
-Connection closed by 192.168.11.101 port 22
+Authentication failed.
 ```
 Наше правило сработало. Теперь все пользователи, кроме пользователей группы admin не могут зайти по ssh на хост.
 
