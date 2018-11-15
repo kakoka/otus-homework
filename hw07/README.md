@@ -21,7 +21,7 @@ sshd;*;!admin;!Wk0000-2400
 Добавим правило в /etc/pam.d/sshd
 
 ```bash
-auth required pam_time.so
+account required pam_time.so
 ```
 
 Пробуем зайти по ssh:
