@@ -103,6 +103,23 @@ kolya@localhost's password:
 [15-11-15] vasya - you may pass
 </pre>
 
+И еще, если:
+```bash
+$ ls -la /etc/pam_script*
+```
+То:
+<pre>
+-rwxr-xr-x. 1 root root  688 Nov 15 15:58 /etc/pam_script
+-rwxr-xr-x. 1 root root 3837 Aug 23  2016 /etc/pam_script.old
+lrwxrwxrwx. 1 root root   10 Nov 15 06:57 /etc/pam_script_acct -> pam_script
+lrwxrwxrwx. 1 root root   10 Nov 15 06:57 /etc/pam_script_auth -> pam_script
+lrwxrwxrwx. 1 root root   10 Nov 15 06:57 /etc/pam_script_passwd -> pam_script
+lrwxrwxrwx. 1 root root   10 Nov 15 06:57 /etc/pam_script_ses_close -> pam_script
+lrwxrwxrwx. 1 root root   10 Nov 15 06:57 /etc/pam_script_ses_open -> pam_script
+</pre>
+
+Все /etc/pam_script* указывают на один файл. Это для заметки.
+
 #### 2. Дать конкретному пользователю права рута.
 
 ##### 2.1 Добавим пользователя в `/etc/sudoers` строчку:
