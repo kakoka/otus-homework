@@ -54,33 +54,26 @@ $ grep "admin.*kolya" /etc/group
 ```bash
 #!/usr/bin/env bash
 
-dmh="[`date +%d-%m-%H`]"
-prazdniki=(0101 0201 0301 0401 0501 0601 0701 0801 2302 \ 
+prazdniki=(1511 0101 0201 0301 0401 0501 0601 0701 0801 2302 \ 
 2402 2502 0803 0903 1003 1103 2904 3004 0105 0205 0905 \ 
 1006 1106 1206 0311 0411 0511 3012 3112)                        # согласно календарю )
 
 if [[ `grep "admin.*$(echo $PAM_USER)" /etc/group` ]]           # принадлежит ли пользователь группе admin
  then
-   echo "$dmh $PAM_USER - you are welcome!" >> /tmp/login.log
    exit 0                                                       # если админ - то пускаем
 elif [[ `grep "myusers.*$(echo $PAM_USER)" /etc/group` ]]       # если кто-то другой, но из группы myusers
  then
    if [[ " `date +%u` " > " 5 " ]]                              # смотрим день недели, должен быть меньше 5 что б попасть внурть
     then
-     echo "$dmh $PAM_USER - weekend now!" >> /tmp/login.log
      exit 1
    elif [[ " ${prazdniki[@]} " =~ " `date +%d%m` " ]]          # смотрим не попадаем ли в праздники 
     then
-     echo "$dmh $PAM_USER - is party day!" >> /tmp/login.log
      exit 1
    else
-     echo "$dmh $PAM_USER - you may pass" >> /tmp/login.log
      exit 0                                                    # если все хорошо - пускаем внутрь
     fi
 else
-   echo "$dmh anohter user $1 shall pass" >> /tmp/login.log    # это если пользователь вне групп admin, myusers
-   exit 0                                                      # ну и все пишем в лог /tmp/login.log
-fi
+   exit 0                                                      # это если пользователь вне групп admin, myusers
 ```
 
 Проверяем (проверим все варианты работы - текущая дата в списке праздников, текущий день недели - что б срабатывало):
