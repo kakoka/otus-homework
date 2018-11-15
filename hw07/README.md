@@ -83,6 +83,26 @@ else
 fi
 ```
 
+Проверяем (проверим все варианты работы - текущая дата в списке праздников, текущий день недели - что б срабатывало):
+
+<pre>
+[Thu Nov 15:root@otuslinux~]# ssh vagrant@localhost
+vagrant@localhost's password:
+Hi!
+[Thu Nov 15:vagrant@otuslinux~]$ logout
+[Thu Nov 15:root@otuslinuxetc]# ssh vasya@localhost
+vasya@localhost's password:
+Authentication failed.
+[Thu Nov 15:root@otuslinuxetc]# ssh kolya@localhost
+kolya@localhost's password:
+[kolya@otuslinux ~]$ more /tmp/login.log
+[15-11-15] anohter user vagrant shall pass
+[15-11-15] vasya - weekend now!
+[15-11-15] kolya - you are welcome!
+[15-11-15] vasya - is party day!
+[15-11-15] vasya - you may pass
+</pre>
+
 #### 2. Дать конкретному пользователю права рута.
 
 ##### 2.1 Добавим пользователя в `/etc/sudoers` строчку:
