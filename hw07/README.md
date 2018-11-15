@@ -6,9 +6,10 @@
  
 ```bash
 $ groupadd myusers
+$ groupadd admin
 $ useradd -g myusers vasya
 $ useradd -g myusers petya
-$ useradd -g myusers kolya
+$ useradd -g admin kolya
 ```
 
 Добавим правило в /etc/security/time.conf, запрещающее вход в выходные дни всем пользователям, кроме тех, кто принадлежит группе admin:
