@@ -18,7 +18,7 @@ $ useradd -g admin kolya
 sshd;*;!admin;!Wk0000-2400
 ```
 
-Добавим правило в /etc/pam.d/system-auth
+Добавим правило в /etc/pam.d/sshd
 
 ```bash
 account required pam_time.so
