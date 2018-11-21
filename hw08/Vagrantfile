@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+home = ENV['HOME']
+
+MACHINES = {
+  :packages => {
+        :box_name => "centos/7",
+        :ip_addr => '192.168.11.101',
+    :disks => {
+        :sata1 => {
+            :dfile => home + '/VirtualBox VMs/sata1.vdi',
+            :size => 250,
+            :port => 1
+        }
+    }
+  },
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+      config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+          box.vm.host_name = boxname.to_s
+
+          box.vm.network "forwarded_port", guest: 80, host: 8000
+
+          box.vm.network "private_network", ip: boxconfig[:ip_addr]
+
+          box.vm.provider :virtualbox do |vb|
+                  vb.customize ["modifyvm", :id, "--memory", "200"]
+          #vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
+          vb.name = boxname.to_s
+
+          boxconfig[:disks].each do |dname, dconf|
+              unless File.exist?(dconf[:dfile])
+                vb.customize ['createhd', '--filename', dconf[:dfile], '--variant', 'Fixed', '--size', dconf[:size]]
+              end
+              vb.customize ['storageattach', :id,  '--storagectl', 'SATA', '--port', dconf[:port], '--device', 0, '--type', 'hdd', '--medium', dconf[:dfile]]
+
+          end
+          end
+      box.vm.provision "shell", inline: <<-SHELL
+#          mkdir -p ~root/.ssh
+#          cp ~vagrant/.ssh/auth* ~root/.ssh
+           yum install epel-release -y -q
+           yum install nano fish wget -y -q
+# Install tools for building rpm
+           yum install rpmdevtools rpm-build -y -q
+           yum install tree yum-utils mc wget gcc vim git -y -q
+# Install tools for building woth mock and make prepares    
+           yum install mock -y -q
+           usermod -a -G mock root
+# Install tools for creating your own REPO
+           yum install nginx -y -q
+           yum install createrepo -y -q
+# Install docker-ce
+           sudo yum install -y -q yum-utils links \
+           device-mapper-persistent-data \
+           lvm2
+           sudo yum-config-manager \
+           --add-repo \
+           https://download.docker.com/linux/centos/docker-ce.repo
+           yum install docker-ce docker-compose -y -q
+           systemctl start docker
+           docker run hello-world
+      SHELL
+
+      end
+   end
+end
