@@ -110,15 +110,15 @@ total 6736
 
 Создадим директорию для размещения репозитария и поместим туда наш пакет.
 
-```
-$ mkdir -p /opt/repo && mkdir -p /opt/repo/{RPMS,SRPMS} && mkdir -p /opt/repo/RPMS/x86_64  
-cp nginx-1.15.6-1.el7_4.ngx.* /opt/repo/RPMS/x86_64
+```bash
+$ mkdir -p /opt/localrepo && mkdir -p /opt/repo/{RPMS,SRPMS} && mkdir -p /opt/localrepo/RPMS/x86_64  
+cp nginx-1.15.6-1.el7_4.ngx.* /opt/localrepo/RPMS/x86_64
 ```
 
 Создадим репозиторий:
 
-```
-createrepo -v /opt/repo/
+```bash
+$ createrepo -v /opt/localrepo/
 ```
 
 Добавим `/etc/yum.repos.d/vts.repo`.
@@ -126,7 +126,7 @@ createrepo -v /opt/repo/
 <pre>
 [vts]
 name=local vts repo 
-baseurl=file:///opt/repo
+baseurl=file:///opt/localrepo
 gpgcheck=0
 enabled=1
 priority=1
@@ -134,7 +134,7 @@ priority=1
 
 Проверим:
 
-```
+```bash
 $ yum repo-pkgs vts list
 ```
 
@@ -149,32 +149,44 @@ nginx.x86_64             1:1.15.6-1.el7_4.ngx     vts
 nginx-debuginfo.x86_64   1:1.15.6-1.el7_4.ngx     vts
 </pre>
 
+Поставим наш пакетик, проверим его работоспособность.
 
+```bash
+$ yum install nginx
+```
 
-Добавим в `/etc/nginx/conf.d/default.conf`
+<pre>
+--> Running transaction check
+---> Package nginx.x86_64 1:1.15.6-1.el7_4.ngx will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=================================================================================
+ Package          Arch          Version                 Repository    Size
+=================================================================================
+Installing:
+ nginx            x86_64       1:1.15.6-1.el7_4.ngx     vts           3.8 M
+
+Transaction Summary
+================================================================================
+</pre>
+
+Добавим в `/etc/nginx/nginx.conf` – `vhost_traffic_status_zone;`, а в `/etc/nginx/conf.d/default.conf`: 
 
 ```
-location /repo {
+location /status {
+  vhost_traffic_status_display;
+  vhost_traffic_status_display_format html;
+}
+location /localrepo {
   autoindex on;
   root /opt;
   }
 ```
 
-и в `/etc/yum.repos.d/vts.repo `
-
-![Наш репозиторий](pic02.png)
-
-Поставим наш пакетик, проверим его работоспособность.
-
-rpm -i nginx-1.15.6-1.el7_4.ngx.x86_64.rpm
-
-Добавим в `/etc/nginx/nginx.conf` – `http { vhost_traffic_status_zone; }`, а в `/etc/nginx/conf.d/default.conf`:
-
-<pre>
-location /status {
-  vhost_traffic_status_display;
-  vhost_traffic_status_display_format html;
-}
-</pre>
+Внесем изменения в `/etc/yum.repos.d/vts.repo ` - `baseurl=http://localhost/localrepo`.
+Теперь репозиторий доступен по http.
 
 ![Немного статистики](pic01.png)
+![Наш репозиторий](pic02.png)
