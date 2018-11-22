@@ -70,8 +70,8 @@ $ rpm -Uvh nginx-1.15.6-1.el7_4.ngx.src.rpm
 
 ```bash
 $ cd ~rpmbuild/SOURCES
-wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_1a.tar.gz
-wget https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
+$ wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_1a.tar.gz
+$ wget https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
 ```
 
 Далее нам необходимо внести изменения в файл nginx.spec, а именно:
@@ -105,6 +105,7 @@ total 6736
 * %setup - распаковывает исходники библиотеки и модуля внуть папки первого Source [то есть сначала распаковывается архив с исходниками nginx, внутрь него распаковывается следующий, указанный], опция `-a #` указывает к какому Source мы применили это правило установки.
 * [Вот тут подробнее обо всех опциях](http://wiki.rosalab.ru/ru/index.php/%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0_RPM_-_%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9_%D1%81%D1%82%D0%B0%D1%80%D1%82)
 * [RPM команды, шпаргалка](http://linux-notes.org/komanda-rpm-v-primerah)
+* [YUM шпаргалка](https://habr.com/post/301292/)
 
 #### 2. Создать репозиторий и разместить RPM пакет
 
