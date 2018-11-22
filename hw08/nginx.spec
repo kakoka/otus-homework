@@ -112,7 +112,7 @@ sed -e 's|%%DEFAULTSTART%%||g' -e 's|%%DEFAULTSTOP%%|0 1 2 3 4 5 6|g' \
     --with-cc-opt="%{WITH_CC_OPT}" \
     --with-ld-opt="%{WITH_LD_OPT}" \
     --with-debug \
-    --add-dynamic-module=%{_builddir}/%{name}-%{version}/nginx-module-vts-0.1.18 \
+    --add-module=%{_builddir}/%{name}-%{version}/nginx-module-vts-0.1.18 \
     --with-openssl=%{_builddir}/%{name}-%{version}/openssl-OpenSSL_1_1_1a
 make %{?_smp_mflags}
 %{__mv} %{bdir}/objs/nginx \
@@ -120,7 +120,7 @@ make %{?_smp_mflags}
 ./configure %{BASE_CONFIGURE_ARGS} \
     --with-cc-opt="%{WITH_CC_OPT}" \
     --with-ld-opt="%{WITH_LD_OPT}" \
-    --add-dynamic-module=%{_builddir}/%{name}-%{version}/nginx-module-vts-0.1.18 \
+    --add-module=%{_builddir}/%{name}-%{version}/nginx-module-vts-0.1.18 \
     --with-openssl=%{_builddir}/%{name}-%{version}/openssl-OpenSSL_1_1_1a
 make %{?_smp_mflags}
 %install
