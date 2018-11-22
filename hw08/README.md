@@ -19,6 +19,7 @@ $ su -u builder
 ```
 $ rpmdev-setuptree
 $ tree
+```
 <pre>
 `-- rpmbuild
     |-- BUILD
@@ -27,20 +28,14 @@ $ tree
     |-- SPECS
     `-- SRPMS
 </pre>
-```
 
 Добавим удаленный репозиторий nginx, в котором есть исходники текущей версии [см. документацию](http://nginx.org/en/linux_packages.html#mainline): 
 
 ```
 $ sudo vi /etc/yum.repos.d/nginx.repo
 ```
-<pre>
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/mainline/centos/7/$basearch/
-gpgcheck=0
-enabled=1
 
+<pre>
 [nginx-source]
 name=nginx source repo
 baseurl=http://nginx.org/packages/mainline/centos/7/SRPMS/
@@ -61,12 +56,12 @@ $ sudo yum-builddep nginx
 $ rpm -Uvh nginx-1.15.6-1.el7_4.ngx.src.rpm
 ```
 
-Нам нужны исходники:
+Дополнительно нужны исходники:
 
 * nginx-module-vts-0.1.18
 * openssl-OpenSSL_1_1_1a
 
-Скачаем их и положим в папку `SOURCES`:
+Скачаем их и положим в папку `~rpmbuild/SOURCES`:
 
 ```bash
 $ cd ~rpmbuild/SOURCES
@@ -75,7 +70,7 @@ $ wget https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
 ```
 
 Далее нам необходимо внести изменения в файл nginx.spec, а именно:
-Укажем источники исходников для библиотеки и модуля, куда положить распакованные исходники, и с какими опциями собрать nginx.
+Укажем источники исходников для библиотеки и модуля, куда положить распакованные исходники, и с какими опциями собрать nginx (секции - sources, setup, build).
 <pre>
 Source14: OpenSSL_1_1_1a.tar.gz
 Source15: v0.1.18.tar.gz
@@ -91,7 +86,7 @@ Source15: v0.1.18.tar.gz
 $ rpmbuild -ba ~/rpmbuild/SPECS/nginx.spec
 ```
 
-Собрался пакет:
+Минут за 10 собрался пакет:
 
 <pre>
 $ ll ~/rpmbuild/RPMS/x86_64/
@@ -100,7 +95,7 @@ total 6736
 -rw-rw-r--. 1 builder builder 2960524 Nov 21 17:49 nginx-debuginfo-1.15.6-1.el7_4.ngx.x86_64.rpm
 </pre>
 
-Опции:
+Заметки:
 
 * %setup - распаковывает исходники библиотеки и модуля внуть папки первого Source [то есть сначала распаковывается архив с исходниками nginx, внутрь него распаковывается следующий, указанный], опция `-a #` указывает к какому Source мы применили это правило установки.
 * [Вот тут подробнее обо всех опциях](http://wiki.rosalab.ru/ru/index.php/%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0_RPM_-_%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9_%D1%81%D1%82%D0%B0%D1%80%D1%82)
