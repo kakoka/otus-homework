@@ -186,3 +186,73 @@ location /localrepo {
 
 ![Немного статистики](pic01.png)
 ![Наш репозиторий](pic02.png)
+
+#### 3. Docker
+
+mkdir -p stat
+cd stat/
+vi Dockerfile
+<pre>Dockerfile</pre>
+
+cat /etc/nginx/nginx.conf > nginx.conf
+cat /etc/nginx/conf.d/default.conf > default.conf
+
+port change to 8080
+
+cat /etc/yum.repos.d/vts.repo
+
+localhost -> 10.10.10.136
+
+sudo docker build -t kakoka/nginx /home/kakoka/stat --no-cache
+
+<pre>
+Sending build context to Docker daemon  6.656kB
+Step 1/8 : FROM centos:latest
+latest: Pulling from library/centos
+aeb7866da422: Pull complete
+Digest: sha256:67dad89757a55bfdfabec8abd0e22f8c7c12a1856514726470228063ed86593b
+Status: Downloaded newer image for centos:latest
+ ---> 75835a67d134
+Step 2/8 : MAINTAINER Pavel Konotopov <kakoka@gmail.com>
+ ---> Running in 738a3a93a82d
+Removing intermediate container 738a3a93a82d
+ ---> 94991e1434aa
+Step 3/8 : COPY vts.repo /etc/yum.repos.d
+ ---> 1211bd0a5cdb
+Step 4/8 : RUN yum install -y nginx && yum clean all
+ ---> Running in 434619a95026
+Loaded plugins: fastestmirror, ovl
+Determining fastest mirrors
+ * base: dedic.sh
+ * extras: dedic.sh
+ * updates: dedic.sh
+Resolving Dependencies
+--> Running transaction check
+---> Package nginx.x86_64 1:1.15.6-1.el7_4.ngx will be installed
+--> Processing Dependency: openssl >= 1.0.2 for package: 1:nginx-1.15.6-1.el7_4.ngx.x86_64
+--> Running transaction check
+---> Package openssl.x86_64 1:1.0.2k-12.el7 will be installed
+--> Processing Dependency: make for package: 1:openssl-1.0.2k-12.el7.x86_64
+--> Running transaction check
+---> Package make.x86_64 1:3.82-23.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package         Arch           Version                      Repository    Size
+================================================================================
+Installing:
+ nginx           x86_64         1:1.15.6-1.el7_4.ngx         vts          3.8 M
+Installing for dependencies:
+ make            x86_64         1:3.82-23.el7                base         420 k
+ openssl         x86_64         1:1.0.2k-12.el7              base         492 k
+
+Transaction Summary
+================================================================================
+
+Successfully built 6fec78d82b09
+Successfully tagged kakoka/nginx:latest
+</pre>
+
+sudo docker run -d -p 8080:8080 kakoka/nginx:latest
