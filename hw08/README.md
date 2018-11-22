@@ -189,21 +189,50 @@ location /localrepo {
 
 #### 3. Docker
 
-mkdir -p stat
-cd stat/
-vi Dockerfile
-<pre>Dockerfile</pre>
+Сделаем стек из Prometheus, Grafana и nginx-vts-exporter для съема метрик с работающего в докере nginx. Nginx в докер-контейнер установим тот, который мы собрали.
 
-cat /etc/nginx/nginx.conf > nginx.conf
-cat /etc/nginx/conf.d/default.conf > default.conf
+Создадим рабочий каталог, и в нем Dockerfile.
 
-port change to 8080
+```bash
+$ mkdir -p ~/stat
+$ cd stat/
+$ vi Dockerfile
+```
+<pre>
+FROM centos:latest
+MAINTAINER Pavel Konotopov <kakoka@gmail.com>
 
-cat /etc/yum.repos.d/vts.repo
+COPY vts.repo /etc/yum.repos.d
 
-localhost -> 10.10.10.136
+RUN yum install -y nginx && yum clean all
 
-sudo docker build -t kakoka/nginx /home/kakoka/stat --no-cache
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /usr/share/nginx/html
+RUN echo "NGINX with vts on CentOS 7 inside Docker" > /usr/share/nginx/html/index.html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+</pre>
+
+Создадим также конфиги для работы nginx в контейнере:
+
+```bash
+$ cat /etc/nginx/nginx.conf > nginx.conf
+$ cat /etc/nginx/conf.d/default.conf > default.conf
+```
+
+Изменим в конфигурацинном файле `default.conf` порт сервер на 8080, уберем ненужные  директивы. Добавим локальный репозиторий, где лежит собранный пакет, изменив в `basedir`  localhost на ip.
+
+```bash
+$ cat /etc/yum.repos.d/vts.repo > vts.repo
+```
+
+Собираем docker image:
+
+```bash
+$ sudo docker build -t kakoka/nginx /home/kakoka/stat --no-cache
+```
 
 <pre>
 Sending build context to Docker daemon  6.656kB
@@ -215,17 +244,7 @@ Status: Downloaded newer image for centos:latest
  ---> 75835a67d134
 Step 2/8 : MAINTAINER Pavel Konotopov <kakoka@gmail.com>
  ---> Running in 738a3a93a82d
-Removing intermediate container 738a3a93a82d
- ---> 94991e1434aa
-Step 3/8 : COPY vts.repo /etc/yum.repos.d
- ---> 1211bd0a5cdb
-Step 4/8 : RUN yum install -y nginx && yum clean all
- ---> Running in 434619a95026
-Loaded plugins: fastestmirror, ovl
-Determining fastest mirrors
- * base: dedic.sh
- * extras: dedic.sh
- * updates: dedic.sh
+...
 Resolving Dependencies
 --> Running transaction check
 ---> Package nginx.x86_64 1:1.15.6-1.el7_4.ngx will be installed
@@ -243,7 +262,7 @@ Dependencies Resolved
  Package         Arch           Version                      Repository    Size
 ================================================================================
 Installing:
- nginx           x86_64         1:1.15.6-1.el7_4.ngx         vts          3.8 M
+> nginx.         x86_64         1:1.15.6-1.el7_4.ngx         vts      3.8 M
 Installing for dependencies:
  make            x86_64         1:3.82-23.el7                base         420 k
  openssl         x86_64         1:1.0.2k-12.el7              base         492 k
@@ -255,12 +274,52 @@ Successfully built 6fec78d82b09
 Successfully tagged kakoka/nginx:latest
 </pre>
 
-sudo docker run -d -p 8080:8080 kakoka/nginx:latest
-sudo docker pull grafana/grafana
-sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana
-sudo docker pull sophos/nginx-vts-exporter:latest
-sudo docker run  -d --name=nginx-vts-exporter -p 9913:9913 --rm --env NGINX_STATUS="http://10.10.10.136:8080/status/format/json" sophos/nginx-vts-exporter
-sudo docker pull prom/prometheus
-sudo docker run -d -p 9090:9090 -v /home/kakoka/stat/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+Docker image собрался, видим, что nginx был взят из локального репозитория.
 
-docker-compose.yml
+Запускаем локально простейший репозиторий docker контейнеров:
+
+```bash
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+```
+
+Правим пару файлов: в `/etc/default/docker` добавим `DOCKER_OPTS="$DOCKER_OPTS --insecure-registry 10.10.10.136:5000"`, а в `/etc/docker/daemon.json`:
+
+```js
+{
+  "insecure-registries" : ["10.10.10.136:5000"]
+}
+```
+
+Пушим наш docker image в локальный репо:
+
+```
+$ docker tag kakoka/nginx 10.10.10.136:5000/kakoka/nginx:latest
+$ docker push 10.10.10.136:5000/kakoka/nginx:latest
+```
+
+Проверяем, там ли он:
+
+```
+$ curl http://10.10.10.136:5000/v2/_catalog
+{"repositories":["kakoka/nginx"]}
+```
+
+Далее, пишем файл `docker-compose.yml`, указываем в нем разнообразные параметры, нужные нам для поднятия стека.
+
+```bash
+$ docker-compose up
+```
+И наконец получаем:
+
+<pre>
+Starting stat_nginx_1_d8e62e1d1ad9      ... done
+Starting stat_exporter_1_761ef77c21e1 ... done
+Starting stat_prometheus_1_f084d25ab5d2 ... done
+Starting stat_grafana_1_e26890480f6d    ... done
+</pre>
+
+Смотрим картинки :)
+
+![](pic03.png)
+![](pic04.png)
+
