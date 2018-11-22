@@ -256,3 +256,11 @@ Successfully tagged kakoka/nginx:latest
 </pre>
 
 sudo docker run -d -p 8080:8080 kakoka/nginx:latest
+sudo docker pull grafana/grafana
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana
+sudo docker pull sophos/nginx-vts-exporter:latest
+sudo docker run  -d --name=nginx-vts-exporter -p 9913:9913 --rm --env NGINX_STATUS="http://10.10.10.136:8080/status/format/json" sophos/nginx-vts-exporter
+sudo docker pull prom/prometheus
+sudo docker run -d -p 9090:9090 -v /home/kakoka/stat/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+
+docker-compose.yml
