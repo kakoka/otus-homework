@@ -77,13 +77,13 @@ wget https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
 Далее нам необходимо внести изменения в файл nginx.spec, а именно:
 Укажем источники исходников для библиотеки и модуля, куда положить распакованные исходники, и с какими опциями собрать nginx.
 <pre>
-Source14: https://github.com/openssl/openssl/archive/OpenSSL_1_1_1a.tar.gz
-Source15: https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
+Source14: OpenSSL_1_1_1a.tar.gz
+Source15: v0.1.18.tar.gz
 ...
 %setup -T -D -a 14
 %setup -T -D -a 15
 ...
---with-openssl=%{_builddir}/%{name}-%{version}/openssl-OpenSSL_1_1_1a
+--with-openssl=%{_builddir}/%{name}-%{version}/openssl-OpenSSL_1_1_1a \
 --add-module=%{_builddir}/%{name}-%{version}/nginx-module-vts-0.1.18
 </pre>
 
@@ -106,6 +106,64 @@ total 6736
 * [Вот тут подробнее обо всех опциях] (http://wiki.rosalab.ru/ru/index.php/%D0%A1%D0%B1%D0%BE%D1%80%D0%BA%D0%B0_RPM_-_%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9_%D1%81%D1%82%D0%B0%D1%80%D1%82)
 * [RPM команды, шпаргалка] (http://linux-notes.org/komanda-rpm-v-primerah)
 
+#### 2. Создать репозиторий и разместить RPM пакет
+
+Создадим директорию для размещения репозитария и поместим туда наш пакет.
+
+```
+$ mkdir -p /opt/repo && mkdir -p /opt/repo/{RPMS,SRPMS} && mkdir -p /opt/repo/RPMS/x86_64  
+cp nginx-1.15.6-1.el7_4.ngx.* /opt/repo/RPMS/x86_64
+```
+
+Создадим репозиторий:
+
+```
+createrepo -v /opt/repo/
+```
+
+Добавим `/etc/yum.repos.d/vts.repo`.
+
+<pre>
+[vts]
+name=local vts repo 
+baseurl=file:///opt/repo
+gpgcheck=0
+enabled=1
+priority=1
+</pre>
+
+Проверим:
+
+```
+$ yum repo-pkgs vts list
+```
+
+<pre>
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: dedic.sh
+ * extras: mirror.tversu.ru
+ * updates: dedic.sh
+Available Packages
+nginx.x86_64             1:1.15.6-1.el7_4.ngx     vts
+nginx-debuginfo.x86_64   1:1.15.6-1.el7_4.ngx     vts
+</pre>
+
+
+
+Добавим в `/etc/nginx/conf.d/default.conf`
+
+```
+location /repo {
+  autoindex on;
+  root /opt;
+  }
+```
+
+и в `/etc/yum.repos.d/vts.repo `
+
+![Наш репозиторий](pic02.png)
+
 Поставим наш пакетик, проверим его работоспособность.
 
 rpm -i nginx-1.15.6-1.el7_4.ngx.x86_64.rpm
@@ -120,64 +178,3 @@ location /status {
 </pre>
 
 ![Немного статистики](pic01.png)
-
-#### 2. Создать репозиторий и разместить RPM пакет
-
-Создадим директорию для размещения репозитария и поместим туда наш пакет.
-
-```
-$ mkdir -p /opt/repo && cp nginx-1.15.6-1.el7_4.ngx.src.rpm /opt/repo
-```
-
-Инициализируем наш репозиторий.
-
-```
-createrepo -v /opt/repo/
-```
-
-Добавим в /etc/nginx/conf.d/default.conf`
-
-```
-location /repo {
-  autoindex on;
-  root /opt;
-  }
-```
-
-и в `/etc/yum.repos.d/vts.repo `
-
-<pre>
-[vts]
-name=local vts repo 
-baseurl=http://localhost/repo
-gpgcheck=0
-enabled=1
-</pre>
-
-![Наш репозиторий](pic02.png)
-
-<pre>
-[root@packages repo]# yum repoinfo vts
-Failed to set locale, defaulting to C
-Loaded plugins: fastestmirror
-Loading mirror speeds from cached hostfile
- * base: centos-mirror.rbc.ru
- * epel: ftp.icm.edu.pl
- * extras: centos-mirror.rbc.ru
- * updates: centos-mirror.rbc.ru
-Repo-id      : vts
-Repo-name    : local vts repo
-Repo-status  : enabled
-Repo-revision: 1542830858
-Repo-updated : Wed Nov 21 20:07:38 2018
-Repo-pkgs    : 1
-Repo-size    : 3.8 M
-Repo-baseurl : http://localhost/repo/
-Repo-expire  : 21600 second(s) (last: Wed Nov 21 20:41:19 2018)
-  Filter     : read-only:present
-Repo-filename: /etc/yum.repos.d/vts.repo
-</pre>
-
-<pre>
-
-</pre>
