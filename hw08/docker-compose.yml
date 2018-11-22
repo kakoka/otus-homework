@@ -1,0 +1,27 @@
+version: '3'
+services:
+  nginx:
+     image: kakoka/nginx:latest
+     ports: 
+      - 8080:8080
+  exporter:
+     image: sophos/nginx-vts-exporter:latest
+     ports:
+       - 9913:9913
+     environment:
+      - "NGINX_STATUS=http://10.10.10.136:8080/status/format/json"
+  prometheus:
+     image: prom/prometheus
+     volumes:
+       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+     command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+     ports:
+       - 9090:9090
+     depends_on:
+      - exporter
+  grafana:
+     image: grafana/grafana
+     ports:
+       - 3000:3000
+     depends_on:
+       - prometheus
