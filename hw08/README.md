@@ -310,17 +310,26 @@ $ curl http://10.10.10.136:5000/v2/_catalog
 Далее, пишем файл `docker-compose.yml`, указываем в нем разнообразные параметры, нужные нам для поднятия стека. Добавим так же файл для работы Prometheus - `prometheus.yml`.
 
 ```bash
-$ docker-compose up
+$ docker-compose up -d
 ```
 И, наконец, получаем:
 
 <pre>
-Starting stat_nginx_1_d8e62e1d1ad9      ... done
+Starting stat_nginx_1_d8e62e1d1ad9    ... done
 Starting stat_exporter_1_761ef77c21e1 ... done
 Starting stat_prometheus_1_f084d25ab5d2 ... done
 Starting stat_grafana_1_e26890480f6d    ... done
 </pre>
 
+<pre>
+$ sudo docker ps -a
+CONTAINER ID        IMAGE                              COMMAND                  CREATED             STATUS                   PORTS                    NAMES
+4840315fef0c        registry:2                         "/entrypoint.sh /etc…"   About an hour ago   Up About an hour         0.0.0.0:5000->5000/tcp   registry
+0cc96b085ce8        grafana/grafana                    "/run.sh"                2 hours ago         Up 9 seconds             0.0.0.0:3000->3000/tcp   stat_grafana_1_e26890480f6d
+263bc95ab45f        prom/prometheus                    "/bin/prometheus --c…"   2 hours ago         Up 10 seconds            0.0.0.0:9090->9090/tcp   stat_prometheus_1_f084d25ab5d2
+fbd43e2ffaf8        kakoka/nginx:latest                "nginx -g 'daemon of…"   2 hours ago         Up 11 seconds            0.0.0.0:8080->8080/tcp   stat_nginx_1_d8e62e1d1ad9
+ce14c8872296        sophos/nginx-vts-exporter:latest   "docker-entrypoint.sh"   2 hours ago         Up 11 seconds            0.0.0.0:9913->9913/tcp   stat_exporter_1_761ef77c21e1
+</pre>
 Смотрим картинки :), метрики снимаются, переливаются и отображаются.
 
 ![](pic03.png)
