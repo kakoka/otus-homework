@@ -1,0 +1,6 @@
+[vts]
+name=local vts repo 
+baseurl=http://10.10.10.136/localrepo
+gpgcheck=0
+enabled=1
+priority=1
