@@ -2,11 +2,11 @@
 
 #### 1. Создать свой RPM пакет
 
-Будем собирать nginx-1.15.6 из mainline ветки, с библиотекой openssl-1.1.1a и модулем статистики nginx-module-vts-0.1.18.
+Будем собирать nginx-1.15.6 из mainline ветки, с библиотекой openssl-1.1.1a и модулем для получения статистики nginx-module-vts-0.1.18.
 
 Все необходимые инструменты для сборки пакетов поставились при создании VM - см. [Vagrantfile](https://github.com/kakoka/otus-homework/blob/master/hw08/Vagrantfile).
 
-В рекомендациях по сборке пакетов говорится, что сборка пакетов из-под `root` крайне опасная операция. Поэтому заведем пользователся `builder` из-под которого и будем собирать наш пакет.
+В рекомендациях по сборке пакетов говорится, что сборка пакетов из-под `root` крайне опасная операция. Поэтому заведем пользователся `builder` из-под которого и будем собирать наш пакет и сразу переключимся в него.
 
 ```
 $ sudo useradd builder && passwd builder
@@ -43,7 +43,7 @@ gpgcheck=0
 enabled=1
 </pre>
 
-И скачаем последнюю версию исходников, после соберем все зависимости, необходимые для сборки nginx:
+Скачаем последнюю версию исходников, после соберем все зависимости, необходимые для сборки nginx:
 
 ```
 $ yumdownloader --source nginx
@@ -56,7 +56,7 @@ $ sudo yum-builddep nginx
 $ rpm -Uvh nginx-1.15.6-1.el7_4.ngx.src.rpm
 ```
 
-Дополнительно нужны исходники:
+Дополнительно потребуются исходники следующих модулей:
 
 * nginx-module-vts-0.1.18
 * openssl-OpenSSL_1_1_1a
@@ -69,8 +69,11 @@ $ wget https://github.com/openssl/openssl/archive/OpenSSL_1_1_1a.tar.gz
 $ wget https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
 ```
 
-Далее нам необходимо внести изменения в файл nginx.spec, а именно:
-Укажем источники исходников для библиотеки и модуля, куда положить распакованные исходники, и с какими опциями собрать nginx (секции - sources, setup, build).
+Далее, нам необходимо внести изменения в файл nginx.spec, а именно:
+
+* укажем источники исходников для библиотеки и модуля, куда положить распакованные исходники
+* укажем с какими опциями собрать модули для nginx (секции - sources, setup, build).
+
 <pre>
 Source14: OpenSSL_1_1_1a.tar.gz
 Source15: v0.1.18.tar.gz
@@ -108,7 +111,7 @@ total 6736
 
 ```bash
 $ mkdir -p /opt/localrepo && mkdir -p /opt/repo/{RPMS,SRPMS} && mkdir -p /opt/localrepo/RPMS/x86_64  
-cp nginx-1.15.6-1.el7_4.ngx.* /opt/localrepo/RPMS/x86_64
+$ cp nginx-1.15.6-1.el7_4.ngx.* /opt/localrepo/RPMS/x86_64
 ```
 
 Создадим репозиторий:
@@ -304,12 +307,12 @@ $ curl http://10.10.10.136:5000/v2/_catalog
 {"repositories":["kakoka/nginx"]}
 ```
 
-Далее, пишем файл `docker-compose.yml`, указываем в нем разнообразные параметры, нужные нам для поднятия стека.
+Далее, пишем файл `docker-compose.yml`, указываем в нем разнообразные параметры, нужные нам для поднятия стека. Добавим так же файл для работы Prometheus - `prometheus.yml`.
 
 ```bash
 $ docker-compose up
 ```
-И наконец получаем:
+И, наконец, получаем:
 
 <pre>
 Starting stat_nginx_1_d8e62e1d1ad9      ... done
@@ -318,8 +321,9 @@ Starting stat_prometheus_1_f084d25ab5d2 ... done
 Starting stat_grafana_1_e26890480f6d    ... done
 </pre>
 
-Смотрим картинки :)
+Смотрим картинки :), метрики снимаются, переливаются и отображаются.
 
 ![](pic03.png)
 ![](pic04.png)
 
+PS. Ссылку репозиторий с docker image "kakoka/nginx" пока не могу дать.
