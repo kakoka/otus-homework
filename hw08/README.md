@@ -337,3 +337,4 @@ ce14c8872296        sophos/nginx-vts-exporter:latest   "docker-entrypoint.sh"   
 
 PS. Ссылку репозиторий с docker image "kakoka/nginx" пока не могу дать.
 * [Шпаргалка по Docker](https://habr.com/company/flant/blog/336654/)
+* [Docker tutorial](https://rominirani.com/docker-tutorial-series-a7e6ff90a023)
