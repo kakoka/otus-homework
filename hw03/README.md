@@ -117,6 +117,9 @@ lvm lvreduce --config 'global {locking_type=1}' -y -r -L -12G /dev/vg0/lvm_root
 ```sh
 dracut --omit resizeroot --force
 ```
+##### UPD.
+
+* [Старшие товарищи написали более совершенный код](https://github.com/thedolphin/dracut-root-lv-resize)
 
 #### 2. Уменьшить xfs / до 8 Gb
 
