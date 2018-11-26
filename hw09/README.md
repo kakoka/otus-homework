@@ -180,7 +180,7 @@ Cmdline=`awk '{ print $1 }' $procpid/cmdline | sed 's/\x0/ /g'`
    4864 ?       Ssl          00:00 /usr/sbin/gssproxy -D =BOOT_IMAGE=/boot/vmlinuz-3.10.0-862.14.4.el7.x86_64 
   14047 ?       Ss           00:00 nginx:    
   17773 ?       Ss           00:00 /usr/sbin/lvmetad -f 
-  17944 ?       Ssl          01:39 /usr/bin/containerd 
+  17944 ?       Ssl          01:40 /usr/bin/containerd 
   18191 ?       S            00:03 nginx:    
   19903 ?       S            00:00 pickup -l -t unix -u 
   19930 ?       Ss           00:00 sshd:     
@@ -188,30 +188,24 @@ Cmdline=`awk '{ print $1 }' $procpid/cmdline | sed 's/\x0/ /g'`
   19934 pts/1   Ss+          00:00 -bash     
   19960 pts/1   S+           00:00 sudo -i   
   19961 pts/1   S+           00:00 -bash     
-  21950 pts/1   S+           00:00 man ls    
-awk: cmd. line:1: { if ($7 == 0) {printf "?"} else { printf "pts/1
-awk: cmd. line:1:                                           ^ unterminated string
-awk: cmd. line:1: { if ($7 == 0) {printf "?"} else { printf "pts/1
-awk: cmd. line:1:                                           ^ syntax error
-  21961         S+           00:00 less -s   
-  21997 ?       S            00:00 [kworker/0:0]
-  21998 ?       Ss           00:00 sshd:     
-  22001 ?       S            00:00 sshd:     
-  22002 pts/3   Ss+          00:00 -bash     
-  22047 ?       S            00:00 [kworker/0:2]
   22048 ?       S            00:00 [kworker/0:1]
-  22050 pts/3   S+           00:00 sudo -i   
-  22051 pts/3   S+           00:00 -bash     
-  22072 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
-  22073 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
-  22074 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
-  22075 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
-  22076 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
-  22077 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  24146 ?       S            00:00 [kworker/0:0]
+  24147 ?       S            00:00 [kworker/0:2]
+  24148 ?       Ss           00:00 sshd:     
+  24151 ?       S            00:00 sshd:     
+  24152 pts/3   Ss+          00:00 -bash     
+  24177 pts/3   S+           00:00 sudo -i   
+  24178 pts/3   S+           00:00 -bash     
   26657 ?       Ssl          02:38 /usr/bin/dockerd -H unix:// 
   26806 ?       Sl           00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5000 -container-ip 172.17.0.2 -container-port 5000 
-  26811 ?       Sl           00:10 containerd-shim -namespace moby -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/moby/4840315fef0c065c58c16a733c930310961ce8edafa399c76474f6877b088583 -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd -runtime-root /var/run/docker/runtime-runc 
+  26811 ?       Sl           00:11 containerd-shim -namespace moby -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/moby/4840315fef0c065c58c16a733c930310961ce8edafa399c76474f6877b088583 -address /run/containerd/containerd.sock -containerd-binary /usr/bin/containerd -runtime-root /var/run/docker/runtime-runc 
   26827 ?       Ssl          00:30 registry serve /etc/docker/registry/config.yml 
+  30452 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  30453 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  30454 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  30455 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  30456 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
+  30457 pts/3   S+           00:00 /bin/bash /root/./prcss.sh 
   31457 pts/0   S+           00:00 sudo -i   
   31458 pts/0   S+           00:00 -bash     
   31554 ?       Ss           00:00 /usr/sbin/sshd -D -u0 
@@ -229,7 +223,7 @@ awk: cmd. line:1:                                           ^ syntax error
     6 ?        S      0:05 [kworker/u128:0]
     7 ?        S      0:00 [migration/0]
     8 ?        S      0:00 [rcu_bh]
-    9 ?        S      0:26 [rcu_sched]
+    9 ?        R      0:26 [rcu_sched]
    10 ?        S<     0:00 [lru-add-drain]
    11 ?        S      0:17 [watchdog/0]
    13 ?        S      0:00 [kdevtmpfs]
@@ -286,7 +280,7 @@ awk: cmd. line:1:                                           ^ syntax error
   398 tty1     Ss+    0:00 /sbin/agetty --noclear tty1 linux
   399 ttyS0    Ss+    0:00 /sbin/agetty --keep-baud 115200 38400 9600 ttyS0 vt220
   403 ?        Ss     0:03 /usr/sbin/crond -n
-  424 ?        S      0:01 /sbin/dhclient -d -q -sf /usr/libexec/nm-dhcp-helper -pf /var/run/dhclient-eth0.pid -lf /var/lib/NetworkManager/dhclient-5fb06bd0-
+  424 ?        S      0:01 /sbin/dhclient -d -q -sf /usr/libexec/nm-dhcp-helper -pf /var/run/dhclient-eth0.pid -lf /var/lib/NetworkManager/dhclient-5fb06bd0-0bb0-7
   628 ?        Ssl    3:52 /usr/bin/python -Es /usr/sbin/tuned -l -P
   632 ?        Ss     0:00 /usr/sbin/hypervkvpd -n
   633 ?        Ssl    2:07 /usr/sbin/rsyslogd -n
@@ -298,7 +292,7 @@ awk: cmd. line:1:                                           ^ syntax error
  4864 ?        Ssl    0:00 /usr/sbin/gssproxy -D =BOOT_IMAGE=/boot/vmlinuz-3.10.0-862.14.4.el7.x86_64
 14047 ?        Ss     0:00 nginx: master process nginx
 17773 ?        Ss     0:00 /usr/sbin/lvmetad -f
-17944 ?        Ssl    1:39 /usr/bin/containerd
+17944 ?        Ssl    1:40 /usr/bin/containerd
 18191 ?        S      0:03 nginx: worker process
 19903 ?        S      0:00 pickup -l -t unix -u
 19930 ?        Ss     0:00 sshd: kakoka [priv]
@@ -306,24 +300,23 @@ awk: cmd. line:1:                                           ^ syntax error
 19934 pts/1    Ss     0:00 -bash
 19960 pts/1    S      0:00 sudo -i
 19961 pts/1    S      0:00 -bash
-21950 pts/1    S+     0:00 man ls
-21961 pts/1    S+     0:00 less -s
-21997 ?        S      0:00 [kworker/0:0]
-21998 ?        Ss     0:00 sshd: kakoka [priv]
-22001 ?        S      0:00 sshd: kakoka@pts/3
-22002 pts/3    Ss     0:00 -bash
-22047 ?        S      0:00 [kworker/0:2]
-22048 ?        R      0:00 [kworker/0:1]
-22049 pts/3    R+     0:00 ps -ax
+22048 ?        S      0:00 [kworker/0:1]
+24146 ?        S      0:00 [kworker/0:0]
+24147 ?        R      0:00 [kworker/0:2]
+24148 ?        Ss     0:00 sshd: kakoka [priv]
+24151 ?        S      0:00 sshd: kakoka@pts/3
+24152 pts/3    Ss     0:00 -bash
+24177 pts/3    S      0:00 sudo -i
+24178 pts/3    S+     0:00 -bash
 26657 ?        Ssl    2:38 /usr/bin/dockerd -H unix://
 26806 ?        Sl     0:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 5000 -container-ip 172.17.0.2 -container-port 5000
-26811 ?        Sl     0:10 containerd-shim -namespace moby -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/moby/4840315fef0c065c58c16a733c9303109
+26811 ?        Sl     0:11 containerd-shim -namespace moby -workdir /var/lib/containerd/io.containerd.runtime.v1.linux/moby/4840315fef0c065c58c16a733c930310961ce8e
 26827 ?        Ssl    0:30 registry serve /etc/docker/registry/config.yml
 31457 pts/0    S      0:00 sudo -i
 31458 pts/0    S+     0:00 -bash
 31554 ?        Ss     0:00 /usr/sbin/sshd -D -u0
-50962 ?        S      0:00 [kworker/u128:2]
-</pre></details>
+32492 pts/1    R+     0:00 ps -ax
+50962 ?        S      0:00 [kworker/u128:2]</pre></details>
 
 
 
