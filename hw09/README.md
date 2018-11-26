@@ -216,7 +216,7 @@ awk: cmd. line:1:                                           ^ syntax error
   31458 pts/0   S+           00:00 -bash     
   31554 ?       Ss           00:00 /usr/sbin/sshd -D -u0 
   50962 ?       S            00:00 [kworker/u128:2]
-</pre>
+</pre></details>
 
 <details>
   <summary>Вывод `ps -ax`:<summary>
@@ -323,7 +323,7 @@ awk: cmd. line:1:                                           ^ syntax error
 31458 pts/0    S+     0:00 -bash
 31554 ?        Ss     0:00 /usr/sbin/sshd -D -u0
 50962 ?        S      0:00 [kworker/u128:2]
-</pre>
+</pre></details>
 
 
 
