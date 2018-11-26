@@ -10,7 +10,7 @@ function io1 {
   ionice -c 2 dd if=/dev/urandom of=/tmp/file_1.dump bs=1M count=1024 >/dev/null 2>&1
 }
 
-# real time option
+# idle option
 function io2 {
   ionice -c 3 dd if=/dev/urandom of=/tmp/file_2.dump bs=1M count=1024 >/dev/null 2>&1 
 }
