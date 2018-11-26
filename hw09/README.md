@@ -240,6 +240,67 @@ Cmdline=`awk '{ print $1 }' $procpid/cmdline | sed 's/\x0/ /g'`
 32492 pts/1    R+     0:00 ps -ax
 50962 ?        S      0:00 [kworker/u128:2]</pre></details>
 
+#### 2. Написать свою реализацию lsof
+
+Те же танцы, только с другим бубном :-]
+
+#### 3. Дописать обработчики сигналов в прилагаемом скрипте
+
+TODO: дело не шибко сложное, нужно добавить в скрипт функцию и установить обработчик сигнала, конструкции, подобные этой:
+
+```python
+def handle(signum, frame):
+    sys.exit(1)
+...
+signal.signal(signal.SIGTERM, handle)
+```
 
 
+#### 4. Реализовать 2 конкурирующих процесса по IO 
+#### 5. Реализовать 2 конкурирующих процесса по CPU
 
+Напишем скрипт, в котором будут четыре функции:
+
+- io1 и io2
+- ni1 и ni2
+
+Первые две запускают утилиту `dd`, которая генерирует 1Gb файлы используя `/dev/random` с разным ionice, вторые две сжимают получившиеся файлы посредством `gzip` в архив с макисмальной степенью компрессии. Далее, запустим параллельно первые две функции, потом вторые.
+
+```
+$ ./iotest.sh
+```
+
+<details>
+  <summary>Вывод скрипта:</summary>
+<pre>
+
+ionice 1 started
+ionice 2 started
+io functions started
+
+real	0m23.762s
+user	0m0.003s
+sys	0m8.573s
+
+real	0m24.030s
+user	0m0.002s
+sys	0m8.586s
+ok
+nice 1 started
+nice 2 started
+nice functions started
+
+real	1m5.212s
+user	0m56.812s
+sys	0m3.077s
+
+real	2m6.088s
+user	0m58.343s
+sys	0m2.942s
+ok</pre></details>
+
+Наглядные скриншоты: на первом, два первых процесса конкурируют по IO, на втором, по CPU.
+
+![](pic1.png)
+![](pic2.png)
+Скрипт запускается так: `sudo chmod +x iotest.sh && ./iotest.sh`.
