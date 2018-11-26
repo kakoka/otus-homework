@@ -101,7 +101,7 @@ Cmdline=`awk '{ print $1 }' $procpid/cmdline | sed 's/\x0/ /g'`
 После всех преобразований составляем вывод, близкий к выводу `ps`. См. файл [prcss.sh](). Файл нужно запустить от рута - `sudo chmod +x prcss.sh && sudo ./prcss.sh`. 
 
 <details>
-  <summary>Вывод `prcss.sh`:<summary>
+  <summary>Вывод `prcss.sh`:</summary>
 <pre>
     PID TTY     STAT         TIME COMMAND   
       1 ?       Ss           00:34 /usr/lib/systemd/systemd --switched-root --system --deserialize 21 
@@ -219,7 +219,7 @@ awk: cmd. line:1:                                           ^ syntax error
 </pre></details>
 
 <details>
-  <summary>Вывод `ps -ax`:<summary>
+  <summary>Вывод `ps -ax`:</summary>
 <pre>
   PID TTY      STAT   TIME COMMAND
     1 ?        Ss     0:34 /usr/lib/systemd/systemd --switched-root --system --deserialize 21
