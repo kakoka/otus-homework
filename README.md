@@ -10,3 +10,5 @@
 * [Homework #07. PAM.](https://github.com/kakoka/otus-homework/tree/master/hw07)
 * [Homework #08. Управление пакетами. Дистрибьюция софта.](https://github.com/kakoka/otus-homework/tree/master/hw08)
 * [Homework #09. Управление процессами.](https://github.com/kakoka/otus-homework/tree/master/hw09)
+* [Homework #10. LDAP.](https://github.com/kakoka/otus-homework/tree/master/hw10)
+* [Homework #11. Ansible.](https://github.com/kakoka/otus-homework/tree/master/hw11)
