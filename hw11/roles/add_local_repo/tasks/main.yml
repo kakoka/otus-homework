@@ -1,0 +1,14 @@
+---
+# tasks file for add_local_repo
+
+- name: Check local repo is already added
+  stat: 
+    path: '{{ dest_folder }}{{ local_repo }}'
+  register: repofile_result
+
+- name: Add local repofile
+  copy:
+    src: '{{ local_repo }}'
+    dest: '{{ dest_folder }}'
+  when: not repofile_result.stat.exists
+...

@@ -4,7 +4,7 @@
 
 #### 1. Requirements
 
-Centos/7
+Centos/7.
 
 #### 2. Role Variables
 

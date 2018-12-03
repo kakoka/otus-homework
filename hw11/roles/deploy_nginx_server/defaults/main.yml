@@ -1,0 +1,7 @@
+---
+# defaults file for deploy_nginx_server
+nginx_port: 8080
+nginx_web_root: /var/www/html/
+nginx_conf_folder: /etc/nginx
+nginx_conf_def_folder: /etc/nginx/conf.d
+...

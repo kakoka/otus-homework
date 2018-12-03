@@ -1,0 +1,12 @@
+---
+#
+# Deploy nginx server on 8080 port
+#
+- name: Add local repo
+  hosts: ipa_clients
+  become: yes
+
+  roles:
+  - { role: add_local_repo }
+  - { role: deploy_nginx_server }
+...

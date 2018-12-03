@@ -1,0 +1,70 @@
+---
+# tasks file for deploy_nginx_server
+
+- name: Make default www root folder
+  file:
+    path: '{{ nginx_web_root }}'
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: 0755
+
+- name: Deploy nginx from local repo
+  yum:
+    name: nginx
+    state: latest
+    enablerepo: "vts"
+
+# install and configure nginx service
+
+- name: сopy systemd script
+  copy:
+    src: nginx.service
+    dest: /lib/systemd/system/nginx.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart nginx
+
+- name: сreate systemd symlink for nginx
+  file: 
+    dest: "/etc/systemd/system/nginx.service"
+    src: "/lib/systemd/system/nginx.service"
+    state: link 
+    force: yes
+  notify: 
+    - Restart nginx
+
+- name: reload scripts systemd
+  shell: "systemctl daemon-reload"
+
+- name: enable service nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+
+- name: Start nginx  
+  service: 
+    name: nginx
+    state: started
+
+- name: Generate nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: '{{ nginx_conf_folder }}/nginx.conf'
+  notify: Restart nginx
+
+- name: Generate default.conf
+  template:
+    src: default.conf.j2
+    dest: '{{ nginx_conf_def_folder }}/default.conf'
+  notify: Restart nginx
+
+- name: Generate index.html
+  template:
+    src: index.html.j2
+    dest: '{{ nginx_web_root }}/index.html'
+  notify: Restart nginx
+...

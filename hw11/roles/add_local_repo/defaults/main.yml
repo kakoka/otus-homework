@@ -1,0 +1,5 @@
+---
+# defaults file for add_local_repo
+local_repo: vts.repo
+dest_folder: /etc/yum.repos.d/
+...
