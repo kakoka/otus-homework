@@ -2,7 +2,7 @@
 #
 # Deploy nginx server on 8080 port
 #
-- name: Add local repo
+- name: Deploy nginx server on 8080 port
   hosts: ipa_clients
   become: yes
 
