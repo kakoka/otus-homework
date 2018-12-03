@@ -1,0 +1,12 @@
+---
+#
+# IPA clients install
+#
+- name: Install IPA clients
+  hosts: ipa_clients
+  become: yes
+
+  roles:
+  - { role: add_epel_repo }
+  - { role: deploy_ipa_client }
+...

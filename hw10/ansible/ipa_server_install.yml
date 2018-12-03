@@ -1,0 +1,39 @@
+---
+#
+# IPA SERVER
+#
+- name: IPA server install
+  hosts: master.homework.local
+  become: yes
+
+  tasks:
+  - name: Setting hostname
+    hostname: 
+      name: '{{ ansible_fqdn }}'
+     
+  - name: Add fqdn entires to /etc/hosts file
+    lineinfile:
+      path: /etc/hosts
+      regexp: '^127\.0\.0\.1   master'
+      line: '{{ ansible_eth1.ipv4.address }} {{ ansible_fqdn }} {{ ansible_fqdn }}'
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: IPA server nedded packages install
+    yum: name={{ ipa_pkg }} state=latest
+
+  - name: ipa server install
+    action: command
+      {{ ipa_install_command }}
+      --realm {{ ipa_realm }}
+      --domain {{ ipa_domain }} 
+      -p 12345678 
+      -a 12345678 
+      --hostname={{ ansible_fqdn }}
+      --ip-address={{ ansible_eth1.ipv4.address }}
+      --setup-dns 
+      --no-forwarders 
+      --no-reverse
+      creates=/etc/ipa/default.conf
+...

@@ -1,0 +1,11 @@
+---
+ansible_user: kakoka
+ansible_ssh_private_key_file: /Users/kakoka/.ssh/id_rsa
+ipa_domain: homework.local
+ipa_realm: HOMEWORK.LOCAL
+ipa_pkg:
+  - ipa-server
+  - ipa-server-dns
+  - bind-dyndb-ldap
+ipa_install_command: ipa-server-install -U
+...

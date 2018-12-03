@@ -1,0 +1,32 @@
+---
+#
+# Peploys localuser keys to the vagrant
+#
+
+- name: Provision my keys
+  hosts: all
+  become: yes
+  vars:
+    localuser: "{{ lookup('ENV','USER') }}"
+  tasks:
+    - name: Create local user
+      user: 
+        name="{{localuser}}"
+        home="/home/{{localuser}}"
+        shell="/bin/bash"
+        append="true"
+        group="wheel"
+        comment="{{localuser}}"
+    - name: Putting local authorized_key
+      authorized_key: 
+        key="{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+        user="{{localuser}}"
+        manage_dir=yes
+    - name: Add local user to sudoers file
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{localuser}}\s'
+        line: '{{localuser}} ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+...

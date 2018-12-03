@@ -1,0 +1,36 @@
+---
+# tasks file for deploy_ipa_client
+
+- name: Add node fqdn entires to /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1[\t]node[0-9].homework.local[\t]node[0-9]$'
+    line: '{{ ansible_eth1.ipv4.address }} {{ ansible_fqdn }} {{ ansible_fqdn }}'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add server fqdn entires to /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    line: '{{ ipa_server_address }} {{ ipa_fqdn }}'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: IPA clients packages install
+  yum: name={{ ipa_pkg }} state=latest
+
+- name: IPA client install
+  action: command
+    {{ ipa_install_command }}
+    -p admin 
+    -w 12345678 
+    --server={{ ipa_fqdn }} 
+    --ip-address={{ ipa_server_address }} 
+    --domain=homework.local 
+    --realm=HOMEWORK.LOCAL 
+    --hostname={{ ansible_fqdn }} 
+    --mkhomedir
+    creates=/etc/ipa/default.conf
+...

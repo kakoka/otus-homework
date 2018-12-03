@@ -1,0 +1,67 @@
+---
+# tasks file for deploy_ipa_server
+    
+- name: Add fqdn entires to /etc/hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.0\.1[\t]master.homework.local[\t]master$'
+    line: '{{ ansible_eth1.ipv4.address }} {{ ansible_fqdn }} {{ ansible_fqdn }}'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add forwarder entires to /etc/resolv.conf file
+  lineinfile:
+    path: /etc/resolv.conf
+    line: 'nameserver 10.0.2.3'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: IPA server nedded packages install
+  yum: name={{ ipa_pkg }} state=latest
+
+- name: ipa server install
+  action: command
+    {{ ipa_install_command }}
+    --realm {{ ipa_realm }}
+    --domain {{ ipa_domain }} 
+    -p 12345678 
+    -a 12345678 
+    --hostname={{ ansible_fqdn }}
+    --ip-address={{ ansible_eth1.ipv4.address }}
+    --setup-dns 
+    --auto-forwarders
+    --no-reverse
+    creates=/etc/ipa/default.conf
+
+- name: kinit command
+  shell: echo "12345678" | kinit admin
+
+- name: ipa add sudo rule 
+  action: command
+    {{ ipa_add_rule_command }}
+    --cmdcat=all All
+
+- name: ipa grant admin become sudoers
+  action: command
+    {{ ipa_grant_admin_command }}
+    --groups=admins All
+
+- name: ipa user add
+  action: command
+    {{ ipa_user_add }}
+    ololo 
+    --first=Ololo 
+    --last=PyshPysh
+    --email=ololo@homework.local
+    --shell=/bin/bash
+    --sshpubkey="ssh-rsa AAAA...6o9"
+    --password="87654321"
+    
+- name: ipa add user to group
+  action: command
+    {{ ipa_add_to_group }}
+    admins 
+    --users=ololo
+...
