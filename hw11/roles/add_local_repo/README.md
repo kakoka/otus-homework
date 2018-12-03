@@ -9,7 +9,7 @@
 #### 2. Role Variables
 
 - local_repo - имя файла локального репозитория, `vts.repo`
-- dest_folder - папка, куда добавляем локальный реозиторий, `/etc/yum.repos.d/`
+- dest_folder - папка, куда добавляем локальный репозиторий, `/etc/yum.repos.d/`
 
 #### 3. Example Playbook
 
