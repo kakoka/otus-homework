@@ -1,15 +1,12 @@
 ### Role Name
-### =========
 
-Роль для уствновки IPA-сервера.
+Роль для установки IPA-сервера.
 
-### Requirements
-### ------------
+#### 1. Requirements
 
 Centos/7
 
-### Role Variables
-### --------------
+#### 2. Role Variables
 
 - ipa_domain - имя домена `homework.local`
 - ipa_realm - имя домена, но заглавными буквами `HOMEWORK.LOCAL`
@@ -23,8 +20,7 @@ Centos/7
 - ipa_user_add - команда для добавления пользователя  `ipa user-add`
 - ipa_add_to_group - - команда для добавления пользователя в группу `ipa group-add-member`
 
-### Example Playbook
-### ----------------
+#### 3. Example Playbook
 
     - hosts: servers
       roles:
