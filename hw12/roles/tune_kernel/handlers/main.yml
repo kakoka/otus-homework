@@ -1,0 +1,8 @@
+---
+# handlers file for tune_kernel
+
+- name: Restart systemd-sysctl service
+  service:
+    name: systemd-sysctl 
+    state: restarted
+...    

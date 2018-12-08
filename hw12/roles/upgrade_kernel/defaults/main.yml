@@ -1,0 +1,5 @@
+---
+# defaults file for upgrade_kernel
+
+grub_build_command: grub2-mkconfig -o
+...

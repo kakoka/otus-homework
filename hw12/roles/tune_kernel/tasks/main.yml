@@ -1,0 +1,18 @@
+---
+# tasks file for tune_kernel
+
+- name: systemd-sysctl service enable
+  systemd: 
+    name: systemd-sysctl
+    enabled: yes
+    masked: no
+
+- name: Sysctl config file
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+    delay: 10
+  notify: Restart systemd-sysctl service
+  ignore_errors: yes
+  
+...

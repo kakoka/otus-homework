@@ -1,0 +1,8 @@
+---
+# handlers file for setup_atop_service
+
+- name: Restart atop
+  service: 
+    name: atop
+    state: restarted
+...    

@@ -1,0 +1,55 @@
+---
+# defaults file for tune_kernel
+
+net_ipv6_conf_all_disable_ipv6: 1
+net_ipv6_conf_default_disable_ipv6: 1
+net_ipv4_conf_all_accept_redirects: 0
+net_ipv4_conf_all_secure_redirects: 0
+net_ipv4_conf_all_send_redirects: 0
+net_ipv4_tcp_max_orphans: 65536
+net_ipv4_tcp_fin_timeout: 10
+net_ipv4_tcp_keepalive_time: 1800
+net_ipv4_tcp_keepalive_intvl: 15
+net_ipv4_tcp_keepalive_probes: 5
+net_ipv4_tcp_max_syn_backlog: 4096
+net_ipv4_tcp_synack_retries: 1
+net_ipv4_tcp_mem: '50576 64768 98152'
+net_ipv4_tcp_rmem: '4096 87380 16777216'
+net_ipv4_tcp_wmem: '4096 65536 16777216'
+net_ipv4_tcp_orphan_retries: 0
+net_ipv4_tcp_syncookies: 0
+net_ipv4_netfilter_ip_conntrack_max: 16777216
+net_netfilter_nf_conntrack_max: 16777216
+net_ipv4_tcp_timestamps: 1
+net_ipv4_tcp_sack: 1
+net_ipv4_tcp_congestion_control: 'htcp'
+net_ipv4_tcp_no_metrics_save: 1
+net_ipv4_route_flush: 1
+net_ipv4_conf_all_rp_filter: 1
+net_ipv4_conf_lo_rp_filter: 1
+net_ipv4_conf_eth0_rp_filter: 1
+net_ipv4_conf_default_rp_filter: 1
+net_ipv4_conf_all_accept_source_route: 0
+net_ipv4_conf_lo_accept_source_route: 0
+net_ipv4_conf_eth0_accept_source_route: 0
+net_ipv4_conf_default_accept_source_route: 0
+net_ipv4_ip_local_port_range: '1024 65535'
+net_ipv4_tcp_tw_reuse: 1
+net_ipv4_tcp_window_scaling: 1
+net_ipv4_tcp_rfc1337: 1
+net_ipv4_ip_forward: 0
+net_ipv4_icmp_echo_ignore_broadcasts: 1
+net_ipv4_icmp_echo_ignore_all: 1
+net_ipv4_icmp_ignore_bogus_error_responses: 1
+net_core_somaxconn: 65535
+net_core_netdev_max_backlog: 1000
+net_core_rmem_default: 65536
+net_core_wmem_default: 65536
+net_core_rmem_max: 16777216
+net_core_wmem_max: 16777216
+fs_inotify_max_user_watches: 16777216
+vm_swappiness: 0
+vm_min_free_kbytes: 2
+vm_overcommit_memory: 512 
+kernel_core_pattern: '/var/core/%E.%t.%p'
+...

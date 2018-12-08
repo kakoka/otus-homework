@@ -1,0 +1,21 @@
+---
+# tasks file for setup_atop_service
+
+- name: Enable service atop
+  systemd:
+    name: atop
+    enabled: yes
+    masked: no
+
+- name: Start service atop  
+  service: 
+    name: atop
+    state: started
+
+- name: Generate atop config file
+  template:
+    src: atop.j2
+    dest: /etc/sysconfig/atop
+  notify: Restart atop
+    
+...

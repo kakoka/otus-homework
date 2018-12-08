@@ -1,0 +1,44 @@
+---
+# tasks file for add_repos
+
+- name: yum-clean-metadata
+  command: yum clean all
+  args:
+    warn: no
+
+- name: Check GPG repo key if exists
+  rpm_key:
+    state: absent
+    key: "{{ item.key }}"
+  loop: "{{ repo }}"
+  register: repo_key_status
+
+- name: Install GPG repo key if not exists
+  rpm_key: 
+    state: present
+    key: "{{ item.1.key }}"
+  with_together: 
+    - "{{ repo_key_status.results }}"
+    - "{{ repo }}"  
+  when: item.0.changed == False
+
+- name: Check repos if exists
+  stat:
+    path: "{{ item.file }}"
+  loop: "{{ repo }}"
+  register: repo_status
+
+- name: Add repository if not exists
+  yum_repository:
+    name: "{{ item.1.name }}"
+    description: "{{ item.1.name }} repository"
+    baseurl: "{{ item.1.url }}"
+    gpgcheck: yes 
+    enabled: yes
+    gpgkey: "{{ item.1.key }}"
+  with_together: 
+    - "{{ repo_status.results }}"
+    - "{{ repo }}"
+  when: item.0.stat.exists == False
+
+...

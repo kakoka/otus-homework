@@ -1,0 +1,16 @@
+---
+# tasks file for deploy_monitoring_tools
+ 
+- name: Update all packages
+  yum:
+   name: '*'
+   state: latest
+   update_cache: yes
+   exclude: kernel
+
+- name: Add packages for monitoring
+  yum: 
+    name: "{{ monitoring_packages_list }}"
+    state: latest
+    update_cache: yes
+...

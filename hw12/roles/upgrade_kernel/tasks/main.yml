@@ -1,0 +1,37 @@
+---
+# tasks file for upgrade_kernel
+
+- name: Get new kernel from ELRepo
+  yum:
+    disablerepo: '*'
+    enablerepo: 'elrepo-kernel'
+    name: kernel-ml
+  register: result
+
+- name: Grub reconfigure with new kernel
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_DEFAULT'
+    line: 'GRUB_DEFAULT=0'
+  when: result.changed == True
+- name: Grub make
+  action: command
+    {{ grub_build_command }}
+    /boot/grub2/grub.cfg
+  when: result.changed == True
+
+- name: Reboot VM after kernel upgrade
+  shell: sleep 3 && reboot now
+  async: 1
+  poll: 0
+  when: result.changed == True
+
+- name: Control VM after kernel upgrade
+  wait_for:
+    host: node1.homework.local
+    state: started
+    delay: 5
+    timeout: 40
+  delegate_to: localhost
+  when: result.changed == True
+...

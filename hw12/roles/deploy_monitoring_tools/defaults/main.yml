@@ -1,0 +1,13 @@
+---
+# defaults file for deploy_build_and_monitoring_tools
+
+monitoring_packages_list:
+  - procps-ng
+  - sysstat
+  - iotop
+  - strace
+  - ltrace
+  - gdb
+  - atop
+  - iftop
+...

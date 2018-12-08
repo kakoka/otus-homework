@@ -1,0 +1,8 @@
+---
+# defaults file for setup_atop_service
+
+atop_log_path: /var/log/atop
+atop_bin_path: /usr/bin
+atop_pid_file: /var/run/atop.pid
+atop_polling_interval: 15
+...
