@@ -12,3 +12,4 @@
 * [Homework #09. Управление процессами.](https://github.com/kakoka/otus-homework/tree/master/hw09)
 * [Homework #10. LDAP.](https://github.com/kakoka/otus-homework/tree/master/hw10)
 * [Homework #11. Ansible.](https://github.com/kakoka/otus-homework/tree/master/hw11)
+* [Homework #12. Linux Troubleshooting.](https://github.com/kakoka/otus-homework/tree/master/hw12)
