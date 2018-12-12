@@ -35,7 +35,7 @@
 
  Выходит достаточно много. Со временем можно одолеть :).
 
-#### 4. Ссылки.
+#### 5. Ссылки.
 
 - [Хороший текст про то, что же такое LA](https://habr.com/company/mailru/blog/335326/)
 - [Служба tuned](http://itmithran.com/tuned-automatic-performance-tuning-of-linux-servers/)
