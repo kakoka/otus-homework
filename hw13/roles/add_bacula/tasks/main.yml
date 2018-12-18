@@ -62,7 +62,7 @@
 
 - name: Create backup and restore dirs
   file:
-    path: "{{ item.item }}"
+    path: "{{ item }}"
     state: directory
     owner: bacula
     group: bacula
@@ -113,12 +113,7 @@
     group: bacula
     mode: 0600
 
-- name: Start Bacula director
-  systemd:
-    name: bacula-dir
-    state: started
-
-- name: Start Bacula storage
+- name: Start Bacula services
   systemd:
     name: "{{ item }}"
     state: started
