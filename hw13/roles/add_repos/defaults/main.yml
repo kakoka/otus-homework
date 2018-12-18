@@ -1,0 +1,4 @@
+---
+# defaults file for add_repos
+rpm_command: rpm -ihv
+...

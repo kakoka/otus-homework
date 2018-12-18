@@ -1,0 +1,18 @@
+---
+# tasks file for add_repos
+
+- name: Yum clean metadata
+  command: yum clean all
+  args:
+    warn: no
+
+- name: Add bacula repository
+  action: command
+     {{ rpm_command }}
+     http://repo.backup-solutions.ru/pub/bacula-bs-7-1.el7.backupsolutions.noarch.rpm
+
+- name: Add postgresql repository
+  action: command
+     {{ rpm_command }}
+     https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
+...

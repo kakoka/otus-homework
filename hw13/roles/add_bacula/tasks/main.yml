@@ -1,0 +1,64 @@
+---
+# tasks file for add_bacula
+
+- name: add bacula packages
+  yum:
+    name:
+      - bacula-director
+      - bacula-storage
+      - bacula-console
+    state: latest
+
+- name: Check if bacula db exists
+  become_user: postgres
+  command:
+    psql -qAt -c "SELECT datname FROM pg_database"
+  register: db_bacula_present
+
+- name: Create bacula DB
+  become_user: postgres
+  action: command
+    /usr/libexec/bacula/create_postgresql_database
+  when: db_bacula_present.stdout.find('bacula') == -1
+
+- name: Check tables in bacula DB
+  become_user: postgres
+  command:
+    psql -d bacula -qAt -c "select table_name from information_schema.tables where table_schema = 'public'"
+  register: db_bacula_tables_present
+
+- name: Create bacula DB tables
+  become_user: postgres
+  action: command
+    /usr/libexec/bacula/make_postgresql_tables
+  when: db_bacula_tables_present.stdout.find('pathvisibility') == -1
+
+- name: Check privileges in bacula DB
+  become_user: postgres
+  action: command
+    psql -d bacula -qAt -c "SELECT grantee FROM information_schema.role_table_grants where table_name='pathvisibility'"
+  register: db_bacula_priv_present
+
+- name: Grant bacula priveleges
+  become_user: postgres
+  action: command
+    /usr/libexec/bacula/grant_postgresql_privileges
+  when: db_bacula_priv_present.stdout.find('bacula') == -1
+# Bacula db password
+
+- name: Add bacula pg_user password
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    db: bacula
+    name: bacula
+    password: "{{ PG_BACULA_PASSWORD }}"
+
+- name: Add .pgpass
+  template:
+     src: pgpass.j2
+     dest: /var/spool/bacula/.pgpass
+     owner: bacula
+     group: bacula
+     mode: 0600
+...

@@ -1,0 +1,8 @@
+---
+# handlers file for add_pgsql11
+
+- name: Restart postgres
+  service:
+     name: postgresql-11
+     state: restarted
+...

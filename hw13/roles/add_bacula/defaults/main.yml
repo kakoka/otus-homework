@@ -1,0 +1,4 @@
+---
+# defaults file for add_bacula
+
+PG_BACULA_PASSWORD: bacula123
