@@ -54,6 +54,22 @@
     name: bacula
     password: "{{ PG_BACULA_PASSWORD }}"
 
+- name: Check bacula folders
+  stat:
+    path: "{{ item }}"
+  register: folder_stats
+  with_items: "{{ bacula_folders }}"
+
+- name: Create backup and restore dirs
+  file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: bacula
+    group: bacula
+    mode: 0755
+  when: item.stat.exists == false
+  with_items: "{{ folder_stats.results }}"
+
 - name: Add .pgpass
   template:
     src: pgpass.j2
@@ -62,29 +78,24 @@
     group: bacula
     mode: 0600
 
-- name: Create backup and restory dirs
-  file:
-    path: "{{ item.item }}"
-    state: directory
-    owner: bacula
-    group: bacula
-    mode: 0755
-  when: item.stat.exsists == false
-  with_items: {{ bacula_folders }}
+- name: SElinux fix for bacula backup dir
+  sefcontext: 
+    target: '/opt/backups(/.*)?'
+    setype: bacula_store_t
+    state: present
+    
+- name: SElinux fix for bacula restore dir
+  sefcontext:
+    target: '/opt/restore(/.*)?'
+    setype: bacula_store_t
+    state: present
 
-- name: Check SELinux permissions
+- name: Apply new SELinux file context to fs
   action: command
-    ls -Z {{ item.item }}
-  with_items: {{ bacula_folders }}
-  register: selinux
-
-- name: SElinux fix for bacula dir
-  action: command
-    chcon system_u:object_r:bacula_store_t:s0 {{ item.item }}
-    semanage fcontext -a -t bacula_store_t "{{ item.item }}(/.*)?"
-    restorecon -R -v {{ item.item }}
-  with_items: {{ bacula_folders }}
-  when: selinux.stdout.find('bacula_store_t') == -1
+    restorecon -irv {{ item }}
+  with_items:
+    - /opt/backups
+    - /opt/restore
 
 - name: Add bacula-dir.conf
   template:
@@ -109,7 +120,7 @@
 
 - name: Start Bacula storage
   systemd:
-    name: {{ item.item }}
+    name: "{{ item }}"
     state: started
-  with_items: {{ bacula_services }}
+  with_items: "{{ bacula_services }}"
 ...

@@ -6,6 +6,7 @@ PG_BACULA_PASSWORD: bacula123
 bacula_folders:
   - /opt/backups
   - /opt/restore
+  - /var/spool/bacula
 
 bacula_services:
   - bacula-sd
