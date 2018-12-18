@@ -1,0 +1,31 @@
+Storage {
+  Name = master-storage
+  SDPort = 9103
+  WorkingDirectory = "/var/spool/bacula"
+  Pid Directory = "/var/run"
+  Maximum Concurrent Jobs = 20
+}
+Director {
+  Name = master-director
+  Password = "bacula123"
+}
+Director {
+  Name = master-director-mon
+  Password = "bacula123"
+  Monitor = yes
+}
+
+Device {
+  Name = FileStorage
+  Media Type = File
+  Archive Device = /opt/backups
+  Random Access = Yes
+  RemovableMedia = no
+  LabelMedia = yes
+  AutomaticMount = yes
+  AlwaysOpen = no
+}
+Messages {
+  Name = Standard
+  director = master-director = all, !skipped
+}

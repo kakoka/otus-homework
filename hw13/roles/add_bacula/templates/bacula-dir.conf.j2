@@ -1,0 +1,137 @@
+Director {
+    Name = master-director
+    DIRport = 9101
+    QueryFile = "/etc/bacula/query.sql"
+    WorkingDirectory = "/var/spool/bacula"
+    PidDirectory = "/var/run"
+    Maximum Concurrent Jobs = 1
+    Password = "bacula123"
+    Messages = Daemon
+}
+Catalog {
+    Name = master-catalog
+    dbname = "bacula"
+    user = "bacula"
+    dbpassword = "bacula123"
+    DB Address = localhost
+}
+Storage {
+  Name = dir-master-storage
+  Address = master.homework.local
+  SDPort = 9103
+  Password = "bacula123"
+  Device = FileStorage
+  Media Type = File
+}
+Pool {
+    Name = master-pool
+    Pool Type = Backup
+    AutoPrune = yes
+    Recycle = yes
+    Volume Retention = 1 months
+    Maximum Volume Jobs = 1
+    Maximum Volumes = 4
+    Maximum Volume Bytes = 10G
+    Label Format = "vol-"
+}
+FileSet {
+    Name = "master-set"
+    Include {
+        Options {
+           signature = MD5
+           compression= GZIP
+           recurse = yes
+        }
+    File = /etc
+    # File = /var
+    }
+    Exclude {
+        File = /var/tmp
+        File = /var/spool/bacula
+    }
+}
+FileSet {
+  Name = "Full Set"
+  Include {
+    Options {
+      signature = MD5
+    }
+    File = /
+  }
+  Exclude {
+    File = /var/spool/bacula
+    File = /tmp
+    File = /proc
+    File = /tmp
+    File = /.journal
+    File = /.fsck
+  }
+}
+Client {
+    Name = node1-client
+    Address = node1.homework.local
+    FDPort = 9102
+    Catalog = master-catalog
+    Password = "bacula123"
+    File Retention = 30 days
+    Job Retention = 6 months
+    AutoPrune = yes
+}
+#Client {
+#    Name = node2-client
+#    Address = node2.homework.local
+#    FDPort = 9102
+#    Catalog = master-catalog
+#    Password = "bacula123"
+#}
+Schedule {
+  Name = "WeeklyCycle"
+  Run = Full sun at 20:05
+  Run = Incremental mon-sat at 23:05
+}
+
+JobDefs {
+  Name = "DefaultJob"
+  Type = Backup
+  Level = Incremental
+  FileSet = "Full Set"
+  Schedule = "WeeklyCycle"
+  Storage = dir-master-storage
+  Messages = Standard
+  Pool = master-pool
+  Priority = 10
+}
+
+Job {
+    Name = "example-node1-backup"
+    Type = Backup
+    Storage = dir-master-storage
+    Client = node1-client
+    FileSet="master-set"
+    Schedule = "WeeklyCycle"
+    Messages = Standard
+    Pool = master-pool
+    Write Bootstrap = "/var/spool/bacula/%n.bsr"
+    Priority = 1
+}
+Messages {
+  Name = Standard
+  syslog = all, !skipped, !saved
+  console = all, !skipped, !saved
+
+# WARNING! the following will create a file that you must cycle from
+#          time to time as it will grow indefinitely. However, it will
+#          also keep all your messages if they scroll off the console.
+#
+  append = "/var/log/bacula/bacula.log" = all, !skipped
+  catalog = all
+}
+#
+# Message delivery for daemon messages (no job).
+Messages {
+  Name = Daemon
+  syslog = all, !skipped, !saved
+  console = all, !skipped, !saved
+  append = "/var/log/bacula/bacula.log" = all, !skipped
+}
+
