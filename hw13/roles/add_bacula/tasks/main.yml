@@ -56,9 +56,60 @@
 
 - name: Add .pgpass
   template:
-     src: pgpass.j2
-     dest: /var/spool/bacula/.pgpass
-     owner: bacula
-     group: bacula
-     mode: 0600
+    src: pgpass.j2
+    dest: /var/spool/bacula/.pgpass
+    owner: bacula
+    group: bacula
+    mode: 0600
+
+- name: Create backup and restory dirs
+  file:
+    path: "{{ item.item }}"
+    state: directory
+    owner: bacula
+    group: bacula
+    mode: 0755
+  when: item.stat.exsists == false
+  with_items: {{ bacula_folders }}
+
+- name: Check SELinux permissions
+  action: command
+    ls -Z {{ item.item }}
+  with_items: {{ bacula_folders }}
+  register: selinux
+
+- name: SElinux fix for bacula dir
+  action: command
+    chcon system_u:object_r:bacula_store_t:s0 {{ item.item }}
+    semanage fcontext -a -t bacula_store_t "{{ item.item }}(/.*)?"
+    restorecon -R -v {{ item.item }}
+  with_items: {{ bacula_folders }}
+  when: selinux.stdout.find('bacula_store_t') == -1
+
+- name: Add bacula-dir.conf
+  template:
+    src: bacula-dir.conf.j2
+    dest: /etc/bacula/bacula-dir.conf
+    owner: bacula
+    group: bacula
+    mode: 0600
+
+- name: Add bacula-sd.conf
+  template:
+    src: bacula-sd.conf.j2
+    dest: /etc/bacula/bacula-sd.conf
+    owner: bacula
+    group: bacula
+    mode: 0600
+
+- name: Start Bacula director
+  systemd:
+    name: bacula-dir
+    state: started
+
+- name: Start Bacula storage
+  systemd:
+    name: {{ item.item }}
+    state: started
+  with_items: {{ bacula_services }}
 ...
