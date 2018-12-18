@@ -62,9 +62,16 @@
     group: bacula
     mode: 0600
 
-- name: Create backup and restory dirs
+- name: Checking backup folders
+      stat:
+        path: "{{item}}"
+      register: folder_stats
+      with_items: 
+
+
+- name: Create backup and restore dirs
   file:
-    path: "{{ item.item }}"
+    path: "{{ item }}"
     state: directory
     owner: bacula
     group: bacula
@@ -74,15 +81,15 @@
 
 - name: Check SELinux permissions
   action: command
-    ls -Z {{ item.item }}
+    ls -Z {{ item }}
   with_items: {{ bacula_folders }}
   register: selinux
 
 - name: SElinux fix for bacula dir
   action: command
-    chcon system_u:object_r:bacula_store_t:s0 {{ item.item }}
-    semanage fcontext -a -t bacula_store_t "{{ item.item }}(/.*)?"
-    restorecon -R -v {{ item.item }}
+    chcon system_u:object_r:bacula_store_t:s0 {{ item }}
+    semanage fcontext -a -t bacula_store_t "{{ item }}(/.*)?"
+    restorecon -R -v {{ item }}
   with_items: {{ bacula_folders }}
   when: selinux.stdout.find('bacula_store_t') == -1
 
@@ -102,14 +109,9 @@
     group: bacula
     mode: 0600
 
-- name: Start Bacula director
+- name: Start Bacula services
   systemd:
-    name: bacula-dir
-    state: started
-
-- name: Start Bacula storage
-  systemd:
-    name: {{ item.item }}
+    name: "{{ item }}"
     state: started
   with_items: {{ bacula_services }}
 ...
