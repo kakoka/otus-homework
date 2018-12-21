@@ -4,9 +4,9 @@
 
 Написаны роли для развертывания [postgres11](roles/_add_pgsql11), [bacula-director, bacula-storage, bacula-console](roles/add_bacula), для развертывания на клиенте [bacula-file-daemon](roles/add_bacula_client).
 
-Некторые нюансы установки и запуска bacula заключаются в подсистеме SELinux, нужно поправить политики, иначе director и storage не запустятся, или будут работать некорректно.
+Некторые нюансы установки и запуска bacula заключаются в дополнительно настройке подсистемы SELinux. Необходимо добавить политики, иначе director и storage не запустятся, или будут работать некорректно.
 
-Подробнее тут - [Bacula and SELinux](http://sysadm.mielnet.pl/bacula-and-selinux-denying-access/).
+Подробнее об этом тут - [Bacula and SELinux](http://sysadm.mielnet.pl/bacula-and-selinux-denying-access/).
 
 Проверим логи аудита, посмотрим куда не пускают 'bacula-director'. 
 
@@ -98,10 +98,12 @@ Job {
 	}
 ```
 
-##### 1.4 list jobs, list files jobid=`<id>` и сами конфиги bacula-*
+##### 1.4 list jobs, list files jobid=`<id>`, конфиги bacula-*
 
 ![](pic/pic01.png)
 ![](pic/pic02.png)
+
+[Файлы конфигурации](roles/add_bacula/templates/bacula-dir.conf.j2) bacula.
 
 ##### TODO. 
 
