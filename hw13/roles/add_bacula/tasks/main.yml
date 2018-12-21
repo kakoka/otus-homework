@@ -1,27 +1,29 @@
 ---
 # tasks file for add_bacula
 
-- name: add bacula packages
-  yum:
-    name:
-      - bacula-director
-      - bacula-storage
-      - bacula-console
-    state: latest
+# Add bacula packages
 
-- name: Check if bacula db exists
+- name: Install bacula server packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ bacula_packages }}"
+
+# Create bacula database
+
+- name: Check if bacula databbase exists
   become_user: postgres
-  command:
+  action: command
     psql -qAt -c "SELECT datname FROM pg_database"
   register: db_bacula_present
 
-- name: Create bacula DB
+- name: Create bacula database if not exists
   become_user: postgres
   action: command
     /usr/libexec/bacula/create_postgresql_database
   when: db_bacula_present.stdout.find('bacula') == -1
 
-- name: Check tables in bacula DB
+- name: Check tables in bacula database
   become_user: postgres
   command:
     psql -d bacula -qAt -c "select table_name from information_schema.tables where table_schema = 'public'"
@@ -44,7 +46,8 @@
   action: command
     /usr/libexec/bacula/grant_postgresql_privileges
   when: db_bacula_priv_present.stdout.find('bacula') == -1
-# Bacula db password
+
+# Set Bacula db password
 
 - name: Add bacula pg_user password
   become: yes
@@ -54,13 +57,15 @@
     name: bacula
     password: "{{ PG_BACULA_PASSWORD }}"
 
+# Create Bacula folders, check SELinux permissions
+
 - name: Check bacula folders
   stat:
     path: "{{ item }}"
   register: folder_stats
   with_items: "{{ bacula_folders }}"
 
-- name: Create backup and restore dirs
+- name: Create bacula folders
   file:
     path: "{{ item }}"
     state: directory
@@ -70,7 +75,21 @@
   when: item.stat.exists == false
   with_items: "{{ folder_stats.results }}"
 
-- name: Add .pgpass
+- name: SElinux fix permissions for bacula folders
+  sefcontext:
+    target: "{{ item }}(/.*)?"
+    setype: bacula_store_t
+    state: present
+  with_items: "{{ bacula_folders }}"
+
+- name: Apply new SELinux file context to filesystem
+  action: command
+    restorecon -irv {{ item }}
+  with_items: "{{ bacula_folders }}"
+
+# Add configuration files
+
+- name: Add .pgpass file
   template:
     src: pgpass.j2
     dest: /var/spool/bacula/.pgpass
@@ -78,40 +97,24 @@
     group: bacula
     mode: 0600
 
-- name: SElinux fix for bacula backup dir
-  sefcontext: 
-    target: '/opt/backups(/.*)?'
-    setype: bacula_store_t
-    state: present
-    
-- name: SElinux fix for bacula restore dir
-  sefcontext:
-    target: '/opt/restore(/.*)?'
-    setype: bacula_store_t
-    state: present
-
-- name: Apply new SELinux file context to fs
-  action: command
-    restorecon -irv {{ item }}
-  with_items:
-    - /opt/backups
-    - /opt/restore
-
-- name: Add bacula-dir.conf
+- name: Add .conf files
   template:
-    src: bacula-dir.conf.j2
-    dest: /etc/bacula/bacula-dir.conf
+    src: "{{ item }}.j2"
+    dest: /etc/bacula/{{ item }}
     owner: bacula
     group: bacula
     mode: 0600
+  with_items: "{{ conf_files }}"
+  notify: Restart bacula
 
-- name: Add bacula-sd.conf
-  template:
-    src: bacula-sd.conf.j2
-    dest: /etc/bacula/bacula-sd.conf
-    owner: bacula
-    group: bacula
-    mode: 0600
+# Enable and start Bacula services
+
+- name: Enable Bacula services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    masked: no
+  with_items: "{{ bacula_services }}"
 
 - name: Start Bacula services
   systemd:

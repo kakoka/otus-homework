@@ -1,0 +1,27 @@
+Director {
+  Name = master-director
+  Password = "bacula123"
+#  Monitor = yes
+}
+
+FileDaemon {
+    Name = bacula-fd
+    FDport = 9102
+    WorkingDirectory = /var/spool/bacula
+    
+    Pid Directory = /var/run
+    Maximum Concurrent Jobs = 20
+    Plugin Directory = /usr/lib64/bacula
+
+    PKI Signatures = Yes
+    PKI Encryption = Yes
+    PKI Keypair = "/etc/bacula/node.pem"
+    PKI Master Key = "/etc/bacula/master.crt"
+}
+
+# Send all messages except skipped files back to Director
+
+Messages {
+  Name = Standard
+  director = master-director = all, !skipped, !restored
+}

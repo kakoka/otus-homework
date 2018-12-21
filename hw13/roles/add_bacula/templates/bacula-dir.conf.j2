@@ -29,10 +29,23 @@ Pool {
     AutoPrune = yes
     Recycle = yes
     Volume Retention = 1 months
-    Maximum Volume Jobs = 1
+    # Maximum Volume Jobs = 1
     Maximum Volumes = 4
     Maximum Volume Bytes = 10G
-    Label Format = "vol-"
+    LabelFormat = "vol-"
+}
+Pool {
+  Name = dedup-master-pool
+  Purge Oldest Volume = yes
+  Pool Type = Backup
+  Recycle = yes
+  AutoPrune = yes
+  Volume Retention = 150 year
+  File Retention = 150 year
+  Job Retention = 150 year
+  Maximum Volumes = 1 
+  Label Format = "dedup-"
+  Maximum Volume Jobs = 1
 }
 FileSet {
     Name = "master-set"
@@ -77,19 +90,39 @@ Client {
     Job Retention = 6 months
     AutoPrune = yes
 }
-#Client {
-#    Name = node2-client
-#    Address = node2.homework.local
-#    FDPort = 9102
-#    Catalog = master-catalog
-#    Password = "bacula123"
-#}
+Client {
+    Name = node2-client
+    Address = node2.homework.local
+    FDPort = 9102
+    Catalog = master-catalog
+    Password = "bacula123"
+    File Retention = 30 days
+    Job Retention = 6 months
+    AutoPrune = yes
+}
 Schedule {
   Name = "WeeklyCycle"
   Run = Full sun at 20:05
   Run = Incremental mon-sat at 23:05
 }
-
+Schedule {
+  Name = "EveryDay"
+  Run = Level=Full daily at 17:00
+}
+Schedule {
+  Name = "EveryTenMinutes"
+  Run = Level=Incremental hourly at 0:01
+  Run = Level=Incremental hourly at 0:11
+  Run = Level=Incremental hourly at 0:21
+  Run = Level=Incremental hourly at 0:31
+  Run = Level=Incremental hourly at 0:41
+  Run = Level=Incremental hourly at 0:51
+  }
+Schedule {
+  Name = "DiffEvery30Minutes"
+  Run = Level=Differential hourly at 0:01
+  Run = Level=Differential hourly at 0:31
+  }
 JobDefs {
   Name = "DefaultJob"
   Type = Backup
@@ -101,19 +134,89 @@ JobDefs {
   Pool = master-pool
   Priority = 10
 }
-
 Job {
-    Name = "example-node1-backup"
+   Name = "DifferentialBackupEvery30Min"
+   Type = Backup
+   Level = Differential
+   Storage = dir-master-storage
+   Client = node1-client
+   FileSet="master-set"
+   Schedule = "DiffEvery30Minutes"
+   Messages = Standard
+   Pool = master-pool
+   Write Bootstrap = "/var/spool/bacula/%n.bsr"
+   Priority = 1
+  }
+   
+Job {
+    Name = "IncrementalBackupEveryTenMinutes"
     Type = Backup
+    Level = Incremental
     Storage = dir-master-storage
     Client = node1-client
     FileSet="master-set"
-    Schedule = "WeeklyCycle"
+    Schedule = "EveryTenMinutes"
     Messages = Standard
     Pool = master-pool
     Write Bootstrap = "/var/spool/bacula/%n.bsr"
     Priority = 1
 }
+Job {
+   Name = "FullBackupEveryDay"
+   Type = Backup
+   Level = Full
+   Client = node1-client
+   FileSet = master-set
+   Messages = Standard
+   Storage = dir-master-storage
+   Pool = dedup-master-pool
+   Schedule = EveryDay
+   Accurate = yes
+   Spool Attributes = yes
+}
+Job {
+   Name = "FullBackupEveryDay1"
+   Type = Backup
+   Level = Full
+   Client = node2-client
+   FileSet= "master-set"
+   Messages = Standard
+   Storage = dir-master-storage
+   Pool = master-pool
+   Schedule = EveryDay
+   Accurate = yes
+   Spool Attributes = yes
+}
+
+
+Job {
+  Name = "Base-backup-node1"
+  Type = Backup
+  Storage = dir-master-storage
+  Client = node1-client
+  FileSet = master-set
+  Pool = dedup-master-pool
+  Level = Base
+  Accurate = yes
+  Spool Attributes = yes
+  Messages = Standard
+}
+
+Job {
+  Storage = dir-master-storage
+  Type= Backup
+  Name = "Dedup-base-backup-node1"
+  Base = "Base-backup-node1"
+  Client = node1-client
+  FileSet = master-set
+  Pool = dedup-master-pool
+  Schedule = "EveryTenMinutes"
+  Accurate = yes
+  Spool Attributes = yes
+  Messages = Standard
+}
+
+
 Messages {
   Name = Standard
   syslog = all, !skipped, !saved

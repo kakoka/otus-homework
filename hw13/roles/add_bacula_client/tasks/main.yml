@@ -1,0 +1,105 @@
+---
+# tasks file for add_bacula
+
+# Add bacula client packages
+
+- name: Install bacula server packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ bacula_packages }}"
+
+# - name: pip
+#   pip:
+#     name: pyopenssl
+
+
+# - name: Generate master private key
+#   openssl_privatekey:
+#     path: /etc/bacula/master.key
+#     size: 2048
+
+# - name: Generate csr
+#   openssl_csr:
+#     path: /etc/bacula/master.csr
+#     privatekey_path: /etc/bacula/master.key
+#     common_name: "{{ ansible_fqdn }}"
+
+# - name: Generate master cert
+#   openssl_certificate:
+#     path: /etc/bacula/master.crt
+#     privatekey_path: /etc/bacula/master.key
+#     csr_path: /etc/bacula/master.csr
+#     provider: selfsigned
+
+# - name: Generate client private key
+#   openssl_privatekey:
+#     path: /etc/bacula/{{ ansible_fqdn }}.key
+#     size: 2048
+
+# - name: Generate csr
+#   openssl_csr:
+#     path: /etc/bacula/{{ ansible_fqdn }}.csr
+#     privatekey_path: /etc/bacula/{{ ansible_fqdn }}.key
+#     common_name: "{{ ansible_fqdn }}"
+
+# - name: Generate client cert
+#   openssl_certificate:
+#     path: /etc/bacula/{{ ansible_fqdn }}.crt
+#     privatekey_path: /etc/bacula/{{ ansible_fqdn }}.key
+#     csr_path: /etc/bacula/{{ ansible_fqdn }}.csr
+#     provider: selfsigned
+#
+- name: Generate master key
+  shell: |
+    openssl genrsa -out master.key 2048 
+    openssl req -new -key master.key -x509 -subj "/C=RU/ST=Moscow/L=Moscow/O=HOMEWORK/CN={{ ansible_fqdn }}" -out master.crt
+  args:
+    chdir: /etc/bacula
+
+- name: Generate FileDaemon key pair
+  shell: |
+    openssl genrsa -out node.key 2048 
+    openssl req -new -key node.key -x509 -subj "/C=RU/ST=None/L=None/O=None/CN={{ ansible_fqdn }}" -out node.crt 
+    cat node.key node.crt > node.pem 
+  args:
+    chdir: /etc/bacula
+
+- name: Change keys owner
+  file:
+    path: "{{ item }}"
+    owner: bacula
+    group: bacula
+    mode: 0600
+  loop:
+    - /etc/bacula/master.crt
+    - /etc/bacula/node.pem
+  notify: Restart bacula
+
+- name: Enable Bacula services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    masked: no
+  with_items: "{{ bacula_services }}"
+  
+- name: Add .conf files
+  template:
+    src: "{{ item }}.conf.j2"
+    dest: "/etc/bacula/{{ item }}.conf"
+    owner: bacula
+    group: bacula
+    mode: 0600
+  with_items: "{{ bacula_services }}"
+  notify: Restart bacula
+
+# Enable and start Bacula services
+
+- name: Start Bacula services
+  systemd:
+    name: "{{ item }}"
+    state: started
+  with_items: "{{ bacula_services }}"
+
+
+...

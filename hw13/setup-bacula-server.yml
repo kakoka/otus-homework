@@ -8,7 +8,7 @@
   become: yes
 
   roles:
-  #- { role: add_repos }
+  - { role: add_repos }
   - { role: add_pgsql11 }
   - { role: add_bacula }
 ...

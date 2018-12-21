@@ -1,0 +1,11 @@
+---
+# defaults file for add_bacula
+
+bacula_packages:
+  - epel-release
+  - bacula-client
+  - python-pip
+
+bacula_services:
+  - bacula-fd
+...

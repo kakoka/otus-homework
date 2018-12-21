@@ -1,0 +1,13 @@
+---
+#
+# Setup a vagrant host
+#
+
+- name: Setup new host
+  hosts: node2.homework.local
+  become: yes
+
+  roles:
+  - { role: add_repos }
+  - { role: add_bacula_client }
+...

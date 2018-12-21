@@ -3,11 +3,23 @@
 
 PG_BACULA_PASSWORD: bacula123
 
+bacula_packages:
+  - bacula-director
+  - bacula-storage
+  - bacula-console
+
 bacula_folders:
   - /opt/backups
   - /opt/restore
   - /var/spool/bacula
+  - /var/log/bacula
+
+conf_files:
+  - bacula-sd.conf
+  - bacula-dir.conf
+  - bconsole.conf
 
 bacula_services:
   - bacula-sd
   - bacula-dir
+...
