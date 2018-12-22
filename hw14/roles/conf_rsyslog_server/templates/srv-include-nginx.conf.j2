@@ -1,0 +1,28 @@
+#
+# Gotten messages write down $ip/$facility.$severity
+#
+# $template FILENAME,"/var/log/remote-hosts/%hostname%/%pri-text%.log"
+#
+# Gets messages from nginx access.log and error.log
+#
+
+$template FILENAME_nginx_err,"/var/log/remote-hosts/%hostname%/nginx_err.log"
+$template FILENAME_nginx_acc,"/var/log/remote-hosts/%hostname%/nginx_acc.log"
+
+#
+# Body of $msg
+#
+template(name="remoteSimple" type="string" string="%msg:2:$%\n")
+#
+# --- Gets messages from nginx(local6.*(client_side)) ---
+#
+
+local1.* ?FILENAME_nginx_err;remoteSimple
+local2.* ?FILENAME_nginx_acc;remoteSimple
+
+#
+# --- Gets all messages exclude local6.*
+#
+
+# *.*;local6.none ?FILENAME
+

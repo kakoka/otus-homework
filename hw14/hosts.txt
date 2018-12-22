@@ -1,0 +1,6 @@
+[masters]
+master.homework.local
+
+[clients]
+node1.homework.local
+node2.homework.local

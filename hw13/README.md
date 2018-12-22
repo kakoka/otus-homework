@@ -1,10 +1,12 @@
-## Bacula 
+## Резервное копирование. Bacula.
 
 #### 0. Ansible роль
 
+Запускаем три вирутальные машины: master, node1 и node2. Развернем на master postgresql11, bacula director, bacula storage и bacula console и bacula file daemon на клиентах node1 и node2.
+
 Написаны роли для развертывания [postgres11](roles/_add_pgsql11), [bacula-director, bacula-storage, bacula-console](roles/add_bacula), для развертывания на клиенте [bacula-file-daemon](roles/add_bacula_client).
 
-Некторые нюансы установки и запуска bacula заключаются в дополнительно настройке подсистемы SELinux. Необходимо добавить политики, иначе director и storage не запустятся, или будут работать некорректно.
+Нюансы установки и запуска bacula заключаются в дополнительно настройке подсистемы SELinux. Необходимо добавить политики, иначе director и storage не запустятся, или будут работать некорректно.
 
 Подробнее об этом тут - [Bacula and SELinux](http://sysadm.mielnet.pl/bacula-and-selinux-denying-access/).
 

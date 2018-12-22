@@ -1,0 +1,7 @@
+---
+# defaults file for conf_audit_client
+
+audit_remote_server: master
+audit_remote_server_port: 60
+audit_rules: ['a exit,always -F arch=b32 -S execve','a exit,always -F arch=b64 -S execve','-a exit,always -S unlink -S rmdir','-a exit,always -S open -F loginuid=1001','-w /etc/group -p wa','-w /etc/passwd -p wa','-w /etc/shadow -p wa','-w /etc/sudoers -p wa','-w /etc -p r','-w /etc/nginx/nginx.conf -p wa']
+...

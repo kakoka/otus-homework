@@ -1,0 +1,13 @@
+---
+# handlers file for conf_audit_client_syslog
+
+- name: Restart auditd
+  systemd:
+    name: auditd
+    state: restarted
+    
+- name: Restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+...

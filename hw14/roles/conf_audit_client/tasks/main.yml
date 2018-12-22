@@ -1,0 +1,39 @@
+---
+# tasks file for conf_auditd_client
+
+- name: Client audit daemon config file
+  template:
+    src: auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+  notify: Restart auditd
+
+- name: Client audit rules config
+  template:
+    src: audit.rules.j2
+    dest: /etc/audit/rules.d/audit.rules
+  notify: Restart auditd
+
+- name: Client audisp daemon config file
+  template:
+    src: audispd.conf.j2
+    dest: /etc/audisp/audispd.conf
+  notify: Restart auditd
+
+- name: Client au-remote plugin config
+  template:
+    src: au-remote.conf.j2
+    dest: /etc/audisp/plugins.d/au-remote.conf
+  notify: Restart auditd
+
+- name: Client audisp-remote config - send logs to remote server
+  template:
+    src: audisp-remote.conf.j2
+    dest: /etc/audisp/audisp-remote.conf
+  notify: Restart auditd
+
+- name: Restart auditd server
+  systemd:
+    service: auditd
+    state: restarted
+  notify: Restart auditd
+...

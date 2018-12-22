@@ -1,0 +1,35 @@
+---
+# tasks file for conf_rsyslog_client_syslog
+
+- name: Install auditd plugins
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - audit-libs 
+    - audispd-plugins
+
+- name: Client audit config file
+  template:
+    src: auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+  notify: Restart auditd
+
+- name: Client audit rules config
+  template:
+    src: audit.rules.j2
+    dest: /etc/audit/rules.d/audit.rules
+  notify: Restart auditd
+
+- name: Client audisp syslog-plugin config file
+  template:
+    src: syslog.plugin.conf.j2
+    dest: /etc/audisp/plugins.d/syslog.conf
+  notify: Restart auditd
+
+- name: Client rsyslog config file
+  template:
+    src: syslog.conf.j2
+    dest: /etc/rsyslog.conf
+  notify: Restart rsyslog
+...

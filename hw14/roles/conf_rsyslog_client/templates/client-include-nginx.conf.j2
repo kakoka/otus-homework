@@ -1,0 +1,26 @@
+# Nginx error and access logs transfer to remote
+
+$ModLoad imfile
+
+$InputFileName /var/log/nginx/error.log
+$InputFileTag nginx:
+$InputFileStateFile stat-nginx-error
+$InputFileSeverity error
+$InputFileFacility local1
+$InputFilePollInterval 1
+$InputRunFileMonitor
+
+# access log
+$InputFileName /var/log/nginx/access.log
+$InputFileTag nginx:
+$InputFileStateFile stat-nginx-access
+$InputFileSeverity notice
+$InputFileFacility local2
+$InputFilePollInterval 1
+$InputRunFileMonitor
+
+$template error, "<163> %msg%"
+$template access, "<166> %msg%"
+
+local1.* @@master;error
+local2.* @@master;access

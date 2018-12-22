@@ -1,0 +1,28 @@
+## First rule - delete all
+-D
+
+## Increase the buffers to survive stress events.
+## Make this bigger for busy systems
+-b 8192
+
+## Set failure mode to syslog
+-f 1
+
+# Let's generate rules from list
+
+{% for rule in audit_rules %}
+{{ rule }}
+{% endfor %}
+
+# Different rules for different things :)
+
+#-a exit,always -F arch=b64 -S execve
+#-a exit,always -F arch=b32 -S execve
+#-a exit,always -S unlink -S rmdir
+#-a exit,always -S open -F loginuid=1001
+#-w /etc/nginx/nginx.conf -p wa
+#-w /etc/group -p wa
+#-w /etc/passwd -p wa
+#-w /etc/shadow -p wa
+#-w /etc/sudoers -p wa
+#-w /etc -p r
