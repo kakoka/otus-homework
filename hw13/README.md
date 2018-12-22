@@ -180,7 +180,7 @@ The defined Job resources are:
 
 ![Кусочек лога](pic/pic03.png)
 
-На скриншоте указано стрелками что у нас создался зашифрованная резервная копия с дедупликацией  ¯\_(ツ)_/¯.
+На скриншоте указано красными стрелками, что у нас создалась зашифрованная резервная копия, да еще и с дедупликацией  ¯\_(ツ)_/¯.
 
 Умные люди призыват использовать для бэкапа файловые системы с поддержкой дедупликации -
 [Block-level File-system Deduplication with Aligned Volumes](http://bacula.us/block-level-deduplication-with-aligned-volumes-tutorial-bacula-7-9-9-0-and-above/)
