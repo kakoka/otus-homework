@@ -152,8 +152,12 @@ INFO [2018-12-24 19:04:11,163] defaultEventExecutorGroup-2-1 - riemann.config - 
 
 #### 3. Ссылки
 
-[Using external URLs and proxies with Prometheus](https://www.robustperception.io/using-external-urls-and-proxies-with-prometheus)
-
-[Pretty AlertManager Alerts in Slack](https://harthoover.com/pretty-alertmanager-alerts-in-slack/)
-
-[Grafana Documentation](http://docs.grafana.org/)
+- [Using external URLs and proxies with Prometheus](https://www.robustperception.io/using-external-urls-and-proxies-with-prometheus)
+- [Pretty AlertManager Alerts in Slack](https://harthoover.com/pretty-alertmanager-alerts-in-slack/)
+- [Grafana Documentation](http://docs.grafana.org/)
+- [Riemann](http://www.admin-magazine.com/Archive/2016/35/Proactive-Monitoring)
+- [Arvandi Gottipati](https://robinhood.engineering/@aravindg)
+- [Application specific host grouping in Riemann-dash](https://gist.github.com/aaronfeng/4583640)
+- [Basic site monitoring with Riemann](https://adambard.com/blog/basic-website-monitoring-with-riemann/)
+- [How To Install Ruby on CentOS 7](https://linuxize.com/post/how-to-install-ruby-on-centos-7/)
+- [Advanced Server Monitoring with Riemann and Graphite](https://stewartadam.io/blog/2014/01/02/advanced-server-monitoring-riemann-and-graphite)
