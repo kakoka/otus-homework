@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Index of {{ ansible_fqdn }} server</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <h3>This is main page of server {{ ansible_fqdn }}</h3>
+    <p>Server name: {{ ansible_fqdn }}.</p>
+    <p>Server ip: {{ ansible_eth1.ipv4.address }}.</p>
+  </body>
+</html>

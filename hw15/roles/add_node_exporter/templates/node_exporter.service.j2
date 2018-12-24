@@ -1,0 +1,16 @@
+[Unit]
+Description=Node-exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/sbin/node_exporter \
+--collector.textfile.directory {{ node_collector_dir }} \
+--web.listen-address={{ node_listen_address }} \
+--web.telemetry-path=/metrics
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+#
+# Setup a prometheus-grafana host
+#
+
+- name: Setup prometheus-grafana host
+  hosts: masters
+  become: yes
+
+  roles:
+  - { role: add_repos }
+  - { role: add_prometheus }
+  - { role: add_grafana }
+  - { role: add_nginx_server }
+...

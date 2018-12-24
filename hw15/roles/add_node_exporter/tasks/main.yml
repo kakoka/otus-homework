@@ -1,0 +1,18 @@
+---
+# tasks file for add_node_exporter
+
+- include: install.yml
+  become: true
+  tags:
+    - install
+
+- name: ensure node_exporter service is started and enabled
+  become: true
+  systemd:
+    daemon_reload: true
+    name: node_exporter
+    state: started
+    enabled: true
+  tags:
+    - run
+...

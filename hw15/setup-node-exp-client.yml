@@ -1,0 +1,12 @@
+---
+#
+# Setup node_exporter
+#
+
+- name: Setup node_exporter
+  hosts: clients
+  become: yes
+
+  roles:
+  - { role: add_node_exporter }
+...

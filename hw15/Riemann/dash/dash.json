@@ -1,0 +1,99 @@
+{
+  "server": "master.homework.local:4556",
+  "server_type": "ws",
+  "workspaces": [
+    {
+      "name": "Health",
+      "view": {
+        "type": "Balloon",
+        "weight": 1,
+        "id": "e75428c8873ba25e8d61ca2e9e67ead6b8739dd3",
+        "version": 21,
+        "child": {
+          "type": "VStack",
+          "weight": 1,
+          "id": "fb909ab87f3a3be73956c792d7bebdca0d0c4669",
+          "version": 21,
+          "children": [
+            {
+              "type": "HStack",
+              "weight": 1,
+              "id": "1e2dd3940959d463326a0cb8390fa04e53d0ec30",
+              "version": 16,
+              "children": [
+                {
+                  "type": "VStack",
+                  "weight": 1,
+                  "id": "780c14c4f3c34ddf6b12c1e905431796bf8f6fb0",
+                  "version": 9,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "weight": 1,
+                      "id": "34c6bd3832803793e5e1ec90238d4891160af337",
+                      "version": 6,
+                      "title": "CPU",
+                      "query": "service ~= \"cpu\"",
+                      "max": "",
+                      "rows": "service",
+                      "cols": "host",
+                      "row_sort": "lexical",
+                      "col_sort": "lexical"
+                    },
+                    {
+                      "type": "Grid",
+                      "weight": 1,
+                      "id": "614f52d0b6de89b2307ff882c8ca0a61652d8161",
+                      "version": 3,
+                      "title": "Processes",
+                      "query": "service =~ \"load\"",
+                      "max": "",
+                      "rows": "service",
+                      "cols": "host",
+                      "row_sort": "lexical",
+                      "col_sort": "lexical"
+                    }
+                  ]
+                },
+                {
+                  "type": "VStack",
+                  "weight": 1,
+                  "id": "c06e13702b2bec0015153a4f10978c2d4b2353c1",
+                  "version": 2,
+                  "children": [
+                    {
+                      "type": "Grid",
+                      "weight": 1,
+                      "id": "a3875c0e331a8598c424763f1f4e2eee533b0481",
+                      "version": 2,
+                      "title": "Load",
+                      "query": "service =~ \"disk\"",
+                      "max": "",
+                      "rows": "service",
+                      "cols": "host",
+                      "row_sort": "lexical",
+                      "col_sort": "lexical"
+                    },
+                    {
+                      "type": "Grid",
+                      "weight": 1,
+                      "id": "8a7a7412d9c05437f69543723ca14c89357dbf91",
+                      "version": 1,
+                      "title": "Swap",
+                      "query": "service =~ \"eth0\" or service =~ \"eth1\"",
+                      "max": "",
+                      "rows": "service",
+                      "cols": "host",
+                      "row_sort": "lexical",
+                      "col_sort": "lexical"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

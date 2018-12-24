@@ -1,0 +1,7 @@
+---
+# defaults file for add_node_exporter
+
+node_exp_ver: 0.17.0
+node_listen_address: "{{ ansible_eth0.ipv4.address }}:9100"
+node_collector_dir: /var/lib/node-exporter/textfile_collector
+...

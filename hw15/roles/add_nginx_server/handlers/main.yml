@@ -1,0 +1,8 @@
+---
+# handlers file for deploy_nginx_server
+
+- name: Restart nginx
+  service:
+     name: nginx
+     state: restarted
+...

@@ -1,0 +1,25 @@
+---
+# tasks file for add_grafana
+
+- name: Install grafana
+  yum:
+    name: grafana
+    state: latest
+
+- name: Enable grafana service
+  systemd:
+    name: grafana-server
+    enabled: yes
+    masked: no
+
+- name: Start grafana service
+  systemd:
+    name: grafana-server
+    state: started
+
+- name: Configuration file
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  notify: Restart grafana
+...

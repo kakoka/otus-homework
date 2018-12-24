@@ -1,0 +1,74 @@
+---
+
+- name: Create prometheus group
+  group:
+    name: prometheus
+    system: true
+    state: present
+
+- name: Create prometheus user
+  user:
+    name: prometheus
+    system: true
+    shell: "/sbin/nologin"
+    group: prometheus
+    createhome: false
+    home: /tmp
+
+- name: Create node_exporter data directory
+  file:
+    path: "{{ node_collector_dir }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: Download node_exporter binary to local folder
+  become: false
+  get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exp_ver }}/node_exporter-{{ node_exp_ver }}.linux-amd64.tar.gz"
+    dest: "/tmp/ansible/node_exporter.tar.gz"
+    checksum: 'sha256:https://github.com/prometheus/node_exporter/releases/download/v{{ node_exp_ver }}/sha256sums.txt'
+  run_once: true
+  delegate_to: localhost
+
+- name: Unpack node_exporter binaries
+  become: false
+  unarchive:
+    src: "/tmp/ansible/node_exporter.tar.gz"
+    dest: "/tmp/ansible"
+    creates: "/tmp/ansible/node_exporter-{{ node_exp_ver }}.linux-amd64/node_exporter"
+  delegate_to: localhost
+  check_mode: false
+
+- name: propagate node_exporter binaries
+  copy:
+    src: "/tmp/ansible/node_exporter-{{ node_exp_ver }}.linux-amd64/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    mode: 0755
+    owner: root
+    group: root
+  with_items:
+    - node_exporter
+
+- name: Create systemd service unit
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart node_exporter
+
+- name: Enable node_exporter service
+  systemd:
+    name: node_exporter
+    enabled: yes
+    masked: no
+
+- name: Start node_exporter service
+  systemd:
+    name: node_exporter
+    state: started
+
+...
