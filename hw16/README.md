@@ -48,18 +48,19 @@ Broadcast адреса указаны в таблицах выше. Ошибки
 Немного дополним исходную схему:
 
 ```sequence
-  Office1 ─ Office1Router ⤵
-(4 subnets)                  CentralRouter ⇨ InternetRouter ⇨ internet
-                                  ↑
-  Office2 ─ Office2Router ⤴ CentralOffice       
-(3 subnets)                  (3 subnets)
+  Office1 → office2-net ⤵
+(4 subnets)  (switch)     CentralRouter ⇨ InternetRouter ⇨ internet
+                                 ↑
+  Office2 → office2-net ⤴  central-net    
+(3 subnets)  (switch)        (switch)
+                                 ↑
+                           CentralOffice
+                            (3 subnets)
 ```
 
 
-- Соединить офисы в сеть согласно схеме и настроить роутинг
+##### Соединить офисы в сеть согласно схеме и настроить роутинг
 - Все сервера и роутеры должны ходить в инет черз inetRouter
 - Все сервера должны видеть друг друга
 - у всех новых серверов отключить дефолт на нат (eth0), который вагрант поднимает для связи
 - при нехватке сетевых интервейсов добавить по несколько адресов на интерфейс
-
-
