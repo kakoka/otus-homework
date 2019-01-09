@@ -86,17 +86,17 @@ Vagrant.configure("2") do |config|
             echo "net.ipv4.conf.all.forwarding=1"  >> /etc/sysctl.conf
             sysctl -p /etc/sysctl.conf
             echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
-            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth2
+            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
             # Central office
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.33\nNETMASK=255.255.255.240\nDEVICE=eth3:0" > /etc/sysconfig/network-scripts/ifcfg-eth3:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.65\nNETMASK=255.255.255.192\nDEVICE=eth3:1" > /etc/sysconfig/network-scripts/ifcfg-eth3:1
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.33\nNETMASK=255.255.255.240\nDEVICE=eth2:0" > /etc/sysconfig/network-scripts/ifcfg-eth2:0
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.65\nNETMASK=255.255.255.192\nDEVICE=eth2:1" > /etc/sysconfig/network-scripts/ifcfg-eth2:1
             # Office 2      
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.129\nNETMASK=255.255.255.192\nDEVICE=eth4:0" > /etc/sysconfig/network-scripts/ifcfg-eth4:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.193\nNETMASK=255.255.255.192\nDEVICE=eth4:1" > /etc/sysconfig/network-scripts/ifcfg-eth4:1
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.129\nNETMASK=255.255.255.192\nDEVICE=eth3:0" > /etc/sysconfig/network-scripts/ifcfg-eth3:0
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.193\nNETMASK=255.255.255.192\nDEVICE=eth3:1" > /etc/sysconfig/network-scripts/ifcfg-eth3:1
             # Office 1
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.65\nNETMASK=255.255.255.192\nDEVICE=eth5:0" > /etc/sysconfig/network-scripts/ifcfg-eth5:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.129\nNETMASK=255.255.255.192\nDEVICE=eth5:1" > /etc/sysconfig/network-scripts/ifcfg-eth5:1
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.193\nNETMASK=255.255.255.192\nDEVICE=eth5:2" > /etc/sysconfig/network-scripts/ifcfg-eth5:2
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.65\nNETMASK=255.255.255.192\nDEVICE=eth4:0" > /etc/sysconfig/network-scripts/ifcfg-eth4:0
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.129\nNETMASK=255.255.255.192\nDEVICE=eth4:1" > /etc/sysconfig/network-scripts/ifcfg-eth4:1
+            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.193\nNETMASK=255.255.255.192\nDEVICE=eth4:2" > /etc/sysconfig/network-scripts/ifcfg-eth4:2
             systemctl restart network
             SHELL
         when "centralServer"
