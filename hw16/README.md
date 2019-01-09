@@ -186,4 +186,4 @@ echo "GATEWAY=192.168.2.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
 Все описанные выше настройки внесены в [Vagrantfile](Vagrantfile).
 ##### PS.
 
-По какой-то неясной причине `systemctl restart network` не отрабатывает через provision в Vagrant. Это относится как к shell, так и ansible. Приходится заходить на каждую виртуалку и руками перезапускать network.
+По какой-то неясной причине `systemctl restart network` не отрабатывает через provision в Vagrant. Это относится как к shell, так и ansible. Приходится заходить на каждую виртуалку и руками перезапускать network, после чего устанавливаются корректные гейты и маршруты.
