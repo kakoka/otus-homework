@@ -2,7 +2,7 @@
 
 ### 1. Теоретическая часть
 
-#### 1.1 Найти свободные подсети
+#### 1.1 Найти свободные подсети.
 
 |Подсеть|Min IP|Max IP|Broadcast|Hosts|Mask|
 |---|---|---|---|:---:|---|
@@ -10,7 +10,7 @@
 |192.168.0.48/28|192.168.0.49|192.168.0.62|192.168.0.63|14|255.255.255.240|
 |192.168.0.128/25|192.168.0.129|192.168.0.254|192.168.0.254|126|255.255.255.128|
 
-#### 1.2 Посчитать сколько узлов в каждой подсети, включая свободные
+#### 1.2 Посчитать сколько узлов в каждой подсети, включая свободные.
 
 ##### Office1
 
@@ -39,36 +39,29 @@
 |wifi|192.168.0.64/26|192.168.0.127|62|255.255.255.192|
 
 
-##### 1.3 Указать broadcast адрес для каждой подсети
+#### 1.3 Указать broadcast адрес для каждой подсети.
 
 Broadcast адреса указаны в таблицах выше. Ошибки при разбиении не обнаружил.
 
-#### 2. Практическая часть
+### 2. Практическая часть
 
-Немного дополним исходную схему:
+Немного расширим исходную схему:
 
 ```sequence
   Office1 → office2-net ⤵
-(4 subnets)  (switch)     CentralRouter ⇨ InternetRouter ⇨ internet
-                                 ↑
-  Office2 → office2-net ⤴  central-net    
-(3 subnets)  (switch)        (switch)
+(4 subnets)  (switch)     CentralRouter → router-net → InternetRouter ⇨ internet
+                                 ↑         (switch)
+  Office2 → office2-net ⤴  central-net  
+(3 subnets)  (switch)        (switch)    
                                  ↑
                            CentralOffice
                             (3 subnets)
 ```
 
 
-##### 2.1 Соединить офисы в сеть согласно схеме и настроить роутинг
+#### 2.1 Соединить офисы в сеть согласно схеме и настроить роутинг.
 
-Создадим виртуальные свитчи:
-
-- router-net - к нему подключены внутренний интерфейс inetRouter (eth2) и внешний интерфейс centralRouter (eth2)
-- central-net - к нему подключена сеть центрального офиса
-- office1-net - к нему подключена сеть офиса 1
-- office2-net - к нему подключена сеть офиса 2
-
-Все сети подключены к соответсвующим интерфейсам centralRouter.
+##### 2.1.1 Internet Router
 
 InetRouter - внешний интерфейс (eth1) получает ip-адрес по DHCP, на внутренний интерфейс (eth2) назначаем ip-адрес 192.168.255.1/255.255.255.252. Включаем NAT на eth1 и создаем статический маршрут: 
 
@@ -84,6 +77,24 @@ echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 ```
 
+##### 2.1.2 Виртуальные сети (switches)
+
+Создадим виртуальные свитчи:
+
+- router-net - к нему подключены внутренний интерфейс inetRouter (eth2) и внешний интерфейс centralRouter (eth2)
+- central-net - к нему подключена сеть центрального офиса
+- office1-net - к нему подключена сеть офиса 1
+- office2-net - к нему подключена сеть офиса 2
+
+Все виртуальные свитчи подключены к соответствующим интерфейсам centralRouter:
+
+- eth2 - router-net
+- eth3 - central-net
+- eth4 - office1-net
+- eth5 - office2-net
+
+##### 2.1.3 Сentral Router
+
 На centralRouter создаем 4 сетевых интерфейса и назначим им ip-адреса:
 
 - eth2 - 192.168.255.2/255.255.255.252, подключен к свитчу router-net
@@ -91,7 +102,7 @@ sysctl -p /etc/sysctl.conf
 - eth4 - 192.168.1.1/255.255.255.128 подключен к свитчу office1-net
 - eth5 - 192.168.2.1/255.255.255.192 подключен к свитчу office2-net
 
-Так же на centralRouter на интерфейсах eth3,4,5 создадим сабинтерфейсы:
+Так же на centralRouter на интерфейсы eth3,4,5 добавим дополнительные ip-адреса:
 
 Подсети центрального офиса:
 - eth3:0 192.168.0.33/255.255.255.240
@@ -108,20 +119,43 @@ sysctl -p /etc/sysctl.conf
 
 и добавляем в sysctl.conf опции для форвардинга пакетов.
 
-##### 2.2 Все сервера и роутеры должны ходить в интернет через inetRouter.
+#### 2.2 Все сервера и роутеры должны ходить в интернет через inetRouter.
 
-centralRouter -> internet
-centralServer -> internet
-office1Server -> internet
-office2Server -> internet
+Проверяем, ходят ли все сервера и роутеры в интернет - `tracepath otus.ru -b`:
 
-##### 2.3 Все сервера должны видеть друг друга.
+- internetRouter ⇨ internet
+![internetRouter ⇨ internet](pic/pic01.png)
 
-centralServer <-> office1Server
-office1Server <-> office2Server
-office2Server <-> centralServer
+- centralRouter ⇨ internetRouter ⇨ internet
+![centralRouter ⇨ internetRouter ⇨ internet](pic/pic02.png)
 
-##### 2.4 У всех серверов отключить дефолтный маршрут через eth0, который Vagrant поднимает для связи.
+- centralServer ⇨ centralRouter ⇨ internetRouter ⇨ internet
+![centralServer ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic03.png)
+
+- office1Server ⇨ centralRouter ⇨ internetRouter ⇨ internet
+![office1Server ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic04.png)
+
+- office2Server ⇨ centralRouter ⇨ internetRouter ⇨ internet
+![office2Server ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic05.png)
+
+#### 2.3 Все сервера должны видеть друг друга.
+
+Проверяем видимость - `tracepath $servername -b` и `ping $servername -c 2`:
+
+- centralServer ⇨ centralRouter ⇨ office1Server
+![centralServer ⇨ centralRouter ⇨ office1Server](pic/pic07.png)
+- centralServer ⇨ centralRouter ⇨ office1Server
+![centralServer ⇨ centralRouter ⇨ office1Server](pic/pic06.png)
+- office1Server ⇨ centralRouter ⇨ centralServer
+![office1Server ⇨ centralRouter ⇨ centralServer](pic/pic08.png)
+- office1Server ⇨ centralRouter ⇨ office2Server
+![office1Server ⇨ centralRouter ⇨ office2Server](pic/pic09.png)
+- office2Server ⇨ centralRouter ⇨ centralServer
+![office2Server ⇨ centralRouter ⇨ centralServer](pic/pic11.png)
+- office2Server ⇨ centralRouter ⇨ office1Server
+![office2Server ⇨ centralRouter ⇨ office1Server](pic/pic10.png)
+
+#### 2.4 У всех серверов отключить дефолтный маршрут через eth0, который Vagrant поднимает для связи.
 
 Отключаем дефолтный маршрут командной:
 
@@ -129,13 +163,13 @@ office2Server <-> centralServer
 echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
 ```
 
-и добавляем необходимый нам маршрут исходя из конфигурации наших сетей (office1Server):
+Добавляем необходимый нам gateway исходя из конфигурации наших сетей (например, office1Server):
 
 ```
 echo "GATEWAY=192.168.2.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
 ```
 
-попутно, для удобства, внесем изменения в /etc/resolv.conf - добавим локальный DNS-сервер и /etc/hosts
+Попутно, для удобства, внесем изменения в /etc/resolv.conf - добавим локальный DNS-сервер и в /etc/hosts внесем записи, в зависимости от сервера:
 
 ```
 192.168.255.1 internetRouter
@@ -144,8 +178,11 @@ echo "GATEWAY=192.168.2.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
 192.168.2.2 office1Server
 192.168.1.130 office2Server
 ```
+Таблица маршрутов на centralRouter:
+![](pic/pic12.png)
 
-##### 2.5 При нехватке сетевых интерфейсов, добавить по несколько адресов на интерфейс.
+#### 2.5 При нехватке сетевых интерфейсов, добавить по несколько адресов на интерфейс.
 
-Сетевых интерфейсов можно добавить еще, однако это не самое рациональное решение. Ради практики добавлены несколько сетевых адресов на интерфейс, см. в п. 2.1. Оптимальный способ организации такого рода сети - разбить сеть на VLANы.
+Сетевых интерфейсов можно добавить еще, однако это не самое рациональное решение. Ради практики добавлены несколько сетевых адресов на интерфейс, см. в п. 2.1. Оптимальный способ организации такого рода сети - разбить сеть на VLANы. 
+Все настройки внесены в [Vagrantfile](Vagrantfile).
 
