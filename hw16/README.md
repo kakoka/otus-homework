@@ -117,18 +117,23 @@ sysctl -p /etc/sysctl.conf
 Проверяем, ходят ли все сервера и роутеры в интернет - `tracepath otus.ru -b`:
 
 - internetRouter ⇨ internet
+
 ![internetRouter ⇨ internet](pic/pic01.png)
 
 - centralRouter ⇨ internetRouter ⇨ internet
+
 ![centralRouter ⇨ internetRouter ⇨ internet](pic/pic02.png)
 
 - centralServer ⇨ centralRouter ⇨ internetRouter ⇨ internet
+
 ![centralServer ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic03.png)
 
 - office1Server ⇨ centralRouter ⇨ internetRouter ⇨ internet
+
 ![office1Server ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic04.png)
 
 - office2Server ⇨ centralRouter ⇨ internetRouter ⇨ internet
+
 ![office2Server ⇨ centralRouter ⇨ internetRouter ⇨ internet](pic/pic05.png)
 
 #### 2.3 Все сервера должны видеть друг друга.
