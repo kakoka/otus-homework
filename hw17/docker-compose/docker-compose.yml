@@ -1,0 +1,16 @@
+web:
+  image: kakoka/nginx
+  ports:
+      - "8080:8080"
+  links:
+      - php
+  volumes:
+      - ./code:/usr/share/nginx/html
+      - ./default-php.conf:/etc/nginx/conf.d/default.conf
+php:
+  image: kakoka/fpm
+  ports:
+      - "9000:9000"
+  volumes:
+      - ./code:/usr/share/nginx/html
+
