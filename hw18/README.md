@@ -67,11 +67,14 @@ MASTER=bond0
 SLAVE=yes 
 ```
 
+
 Тестируем интерфейс, сделаем две ssh-сессии, в одном терминале пишем:
 `watch -n1 cat /proc/net/bond0`
 ![](pic/pic01.gif)
 
+
 в другом - `ifdown eth1 && ifup eth1`
 ![](pic/pic02.gif)
+
 
 Наблюдаем за работой bond-интерфейся в режиме active-active. `Currently active slave` меняется при отключении `eth1` на `eth2`, а при включении - обратно.
