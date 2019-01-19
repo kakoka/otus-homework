@@ -101,8 +101,8 @@ Vagrant.configure("2") do |config|
             sysctl -p /etc/sysctl.conf
             # start bonding
             echo -e 'NM_CONTROLED=no\nDEVICE=bond0\nONBOOT=yes\nTYPE=Bond\nBONDING_MASTER=yes\nIPADDR=192.168.255.1\nPREFIX=30\nBOOTPROTO=static\nBONDING_OPTS="mode=1 miimon=100 fail_over_mac=1"' > /etc/sysconfig/network-scripts/ifcfg-bond0
-            echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nONBOOT=yes\nDEVICE=eth1\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth1
-            echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nONBOOT=yes\nDEVICE=eth2\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth2
+            echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nONBOOT=yes\nDEVICE=eth1\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth1
+            echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nONBOOT=yes\nDEVICE=eth2\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth2
             systemctl restart network
             # end bonding
             iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
@@ -114,21 +114,21 @@ Vagrant.configure("2") do |config|
             echo "net.ipv4.conf.all.forwarding=1"  >> /etc/sysctl.conf
             sysctl -p /etc/sysctl.conf
             echo -e 'NM_CONTROLED=no\nDEVICE=bond0\nONBOOT=yes\nTYPE=Bond\nBONDING_MASTER=yes\nIPADDR=192.168.255.2\nPREFIX=30\nGATEWAY=192.168.255.1\nBOOTPROTO=static\nBONDING_OPTS="mode=1 miimon=100 fail_over_mac=1"' > /etc/sysconfig/network-scripts/ifcfg-bond0
-            echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nONBOOT=yes\nDEVICE=eth1\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth1
-            echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nONBOOT=yes\nDEVICE=eth2\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth5
+            echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nONBOOT=yes\nDEVICE=eth1\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth1
+            echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nONBOOT=yes\nDEVICE=eth5\nMASTER=bond0\nSLAVE=yes" > /etc/sysconfig/network-scripts/ifcfg-eth5
             echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
             # echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
             # ip ro add default via 192.168.255.1 dev eth1 metric 1
             # Central office
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.33\nNETMASK=255.255.255.240\nDEVICE=eth2:0" > /etc/sysconfig/network-scripts/ifcfg-eth2:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.0.65\nNETMASK=255.255.255.192\nDEVICE=eth2:1" > /etc/sysconfig/network-scripts/ifcfg-eth2:1
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.0.33\nNETMASK=255.255.255.240\nDEVICE=eth2:0" > /etc/sysconfig/network-scripts/ifcfg-eth2:0
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.0.65\nNETMASK=255.255.255.192\nDEVICE=eth2:1" > /etc/sysconfig/network-scripts/ifcfg-eth2:1
             # Office 2      
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.129\nNETMASK=255.255.255.192\nDEVICE=eth3:0" > /etc/sysconfig/network-scripts/ifcfg-eth3:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.1.193\nNETMASK=255.255.255.192\nDEVICE=eth3:1" > /etc/sysconfig/network-scripts/ifcfg-eth3:1
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.1.129\nNETMASK=255.255.255.192\nDEVICE=eth3:0" > /etc/sysconfig/network-scripts/ifcfg-eth3:0
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.1.193\nNETMASK=255.255.255.192\nDEVICE=eth3:1" > /etc/sysconfig/network-scripts/ifcfg-eth3:1
             # Office 1
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.65\nNETMASK=255.255.255.192\nDEVICE=eth4:0" > /etc/sysconfig/network-scripts/ifcfg-eth4:0
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.129\nNETMASK=255.255.255.192\nDEVICE=eth4:1" > /etc/sysconfig/network-scripts/ifcfg-eth4:1
-            echo -e "BOOTPROTO=none\nONBOOT=yes\nIPADDR=192.168.2.193\nNETMASK=255.255.255.192\nDEVICE=eth4:2" > /etc/sysconfig/network-scripts/ifcfg-eth4:2
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.2.65\nNETMASK=255.255.255.192\nDEVICE=eth4:0" > /etc/sysconfig/network-scripts/ifcfg-eth4:0
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.2.129\nNETMASK=255.255.255.192\nDEVICE=eth4:1" > /etc/sysconfig/network-scripts/ifcfg-eth4:1
+            echo -e "BOOTPROTO=static\nONBOOT=yes\nIPADDR=192.168.2.193\nNETMASK=255.255.255.192\nDEVICE=eth4:2" > /etc/sysconfig/network-scripts/ifcfg-eth4:2
             systemctl restart network
             SHELL
         when "centralServer"
@@ -171,24 +171,26 @@ Vagrant.configure("2") do |config|
           # end
         when "testServer1"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-          echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.1\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
+          echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.1\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
             # sudo systemctl restart network
             SHELL
         when "testServer2"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-          echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.1\nNETMASK=255.255.255.0\nDEVICE=eth1.2" > /etc/sysconfig/network-scripts/ifcfg-eth1.2
+          echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.1\nNETMASK=255.255.255.0\nDEVICE=eth1.2" > /etc/sysconfig/network-scripts/ifcfg-eth1.2
             # sudo systemctl restart network
             SHELL
         when "testClient1"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-          echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
+          echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
+          cp -a /vagrant/id_rsa /home/vagrant/.ssh/
             # sudo systemctl restart network
             SHELL
         when "testClient2"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
-          echo -e "NM_CONTROLED=no\nBOOTPROTO=none\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.2" > /etc/sysconfig/network-scripts/ifcfg-eth1.2
-            # sudo systemctl restart network
-            SHELL              
+          echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.2" > /etc/sysconfig/network-scripts/ifcfg-eth1.2
+          cp -a /vagrant/id_rsa /home/vagrant/.ssh/
+          # sudo systemctl restart network
+            SHELL
           end
       end
 
