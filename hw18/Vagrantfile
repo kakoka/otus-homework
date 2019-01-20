@@ -172,6 +172,7 @@ Vagrant.configure("2") do |config|
         when "testServer1"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
           echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.1\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
+            # cat /some_path/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
             # sudo systemctl restart network
             SHELL
         when "testServer2"
@@ -182,13 +183,12 @@ Vagrant.configure("2") do |config|
         when "testClient1"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
           echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.1" > /etc/sysconfig/network-scripts/ifcfg-eth1.1
-          cp -a /vagrant/id_rsa /home/vagrant/.ssh/
+            # cp -a ./some_path/id_rsa /home/vagrant/.ssh/
             # sudo systemctl restart network
             SHELL
         when "testClient2"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
           echo -e "NM_CONTROLED=no\nBOOTPROTO=static\nVLAN=yes\nONBOOT=yes\nIPADDR=10.10.10.254\nNETMASK=255.255.255.0\nDEVICE=eth1.2" > /etc/sysconfig/network-scripts/ifcfg-eth1.2
-          cp -a /vagrant/id_rsa /home/vagrant/.ssh/
           # sudo systemctl restart network
             SHELL
           end

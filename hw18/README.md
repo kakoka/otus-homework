@@ -33,7 +33,7 @@ PING 10.10.10.254 (10.10.10.254) 56(84) bytes of data.
 Что бы применились настройки сети через провижн, придется зайти через `vagrant ssh` после создания ВМ и сделать `sudo systemctl restart network`.
 
 **PPS.**
-Для того что бы попасть с `testClient1` на `testServer1` без пароля пользователю `vagrant`, нужно скопировать приватный ключ этого пользователя на `testClient1` командной `cp -a /vagrant/id_rsa /home/vagrant/.ssh/.` Делаем это через shell provision.
+Для того что бы попасть с `testClient1` на `testServer1` без пароля пользователю `vagrant`, нужно скопировать приватный ключ этого пользователя на `testClient1` командной `cp -a ./some_path/id_rsa /home/vagrant/.ssh/.` Делаем это через shell provision. На сервер необходимо добавить публичный ключ пользователя vagrant: `cat ./some_path/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys`. В Vagrantfile эти строчки закомментированы, т.к. не стал добавлять ssh ключи на гитхаб.
 
 ### 2. Bonding
 
