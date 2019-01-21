@@ -19,3 +19,4 @@
 * [#16. Архитектура сетей.](https://github.com/kakoka/otus-homework/tree/master/hw16)
 * [#17. Docker.](https://github.com/kakoka/otus-homework/tree/master/hw17)
 * [#18. VLAN. Bonding.](https://github.com/kakoka/otus-homework/tree/master/hw18)
+* [#19. OSPF.](https://github.com/kakoka/otus-homework/tree/master/hw19)
