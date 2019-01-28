@@ -3,12 +3,13 @@ proto udp
 dev tun
 topology subnet
 
-remote 172.16.16.10
+remote 172.16.10.101
 port 1194
 cd /etc/openvpn
 pull
 
 tls-client
+tls-auth ta.key 1
 keepalive 10 120
 comp-lzo
 persist-key

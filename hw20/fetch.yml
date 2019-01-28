@@ -3,8 +3,8 @@
   hosts: all
   become: yes
   vars:
-    temporary_local_path: /private/tmp
-    project_local_path: /Users/kakoka/git/otus-homework/hw20/ca
+    temporary_local_path: /tmp
+    project_local_path: /home/kakoka/git/otus-homework/hw20/ca
   tasks:
     - name: make temp dir
       file:
