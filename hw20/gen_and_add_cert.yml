@@ -1,0 +1,46 @@
+---
+- name: Generate ssl cert
+  hosts: all
+  become: yes
+  tasks:
+    - name: pip
+      pip:
+        name: pyopenssl
+
+
+    - name: Generate master private key
+      openssl_privatekey:
+        path: /etc/openvpn/server.key
+        size: 2048
+
+    - name: Generate csr
+      openssl_csr:
+        path: /etc/openvpn/server.csr
+        privatekey_path: /etc/openvpn/master.key
+        # common_name: "{{ ansible_fqdn }}"
+
+    - name: Generate master cert
+      openssl_certificate:
+        path: /etc/openvpn/master.crt
+        privatekey_path: /etc/bacula/master.key
+        csr_path: /etc/bacula/master.csr
+        provider: selfsigned
+
+    - name: Generate client private key
+      openssl_privatekey:
+        path: /etc/bacula/{{ ansible_fqdn }}.key
+        size: 2048
+
+    - name: Generate csr
+      openssl_csr:
+        path: /etc/bacula/{{ ansible_fqdn }}.csr
+        privatekey_path: /etc/bacula/{{ ansible_fqdn }}.key
+        common_name: "{{ ansible_fqdn }}"
+
+    - name: Generate client cert
+      openssl_certificate:
+        path: /etc/bacula/{{ ansible_fqdn }}.crt
+        privatekey_path: /etc/bacula/{{ ansible_fqdn }}.key
+        csr_path: /etc/bacula/{{ ansible_fqdn }}.csr
+        provider: selfsigned
+...

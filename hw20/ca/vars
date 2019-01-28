@@ -1,0 +1,9 @@
+set_var EASYRSA_REQ_COUNTRY "RU"
+set_var EASYRSA_REQ_PROVINCE "Msk"
+set_var EASYRSA_REQ_CITY "Msk"
+set_var EASYRSA_REQ_ORG "HomeworkLocal"
+set_var EASYRSA_REQ_EMAIL "adm@homework.local"
+set_var EASYRSA_REQ_OU "Servers"
+set_var EASYRSA_REQ_CN "HWL"
+set_var EASYRSA_KEY_SIZE 2048
+set_var EASYRSA_BATCH "Yes"

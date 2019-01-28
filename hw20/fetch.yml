@@ -1,0 +1,28 @@
+---
+- name: Transfer OpenVPN cert from server to client 
+  hosts: all
+  become: yes
+  vars:
+    temporary_local_path: /private/tmp
+    project_local_path: /Users/kakoka/git/otus-homework/hw20/ca
+  tasks:
+    - name: make temp dir
+      file:
+        path: "{{ temporary_local_path }}"
+        state: directory
+      delegate_to: 127.0.0.1
+        # local_action: command mkdir -p "{{ temporary_local_path }}"
+    - fetch:
+        become: yes
+        src: /etc/openvpn/server/client.conf
+        dest: "{{ temporary_local_path }}/client.conf"
+        flat: yes
+    - name: client.conf file copy to project dir
+      local_action: command cp "{{ temporary_local_path }}/client.conf" "{{ project_local_path }}"
+    # - name: remove temp dir
+    #   file:
+    #     path: "{{ temporary_local_path }}"
+    #     state: absent
+    #   delegate_to: 127.0.0.1
+        # local_action: command rm -rf "{{ temporary_local_path }}"
+...

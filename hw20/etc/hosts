@@ -1,0 +1,17 @@
+192.168.10.1 router1 router1.area0 router1-eth11
+192.168.10.10 router1-eth13
+10.10.1.1 router1-eth2
+192.168.10.2 router2 router2.area0 router2-eth11
+192.168.10.5 router2-eth12
+10.10.2.1 router2-eth2
+192.168.10.6 router3 router3.area0 router3-eth12
+192.168.10.9 router3-eth13
+10.10.3.1 router3-eth2
+10.10.1.2 client1.area1
+10.10.3.2 client1.area3
+172.16.10.100 router1
+172.16.10.101 router2
+172.16.10.102 router3
+172.16.16.10 vault
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6

@@ -1,0 +1,36 @@
+c_conf=$(cat client.tmpl)
+c_cert=$(cat pki/issued/client.crt)
+c_key=$(cat pki/private/client.key)
+ca=$(cat pki/ca.crt)
+ta=$(cat static.key)
+
+
+cat <<EOF > client.conf
+$c_conf
+
+EOF
+
+cat <<EOF >> client.conf
+<ca>
+$ca
+</ca>
+EOF
+
+cat <<EOF >> client.conf
+<tls-auth>
+$ta
+</tls-auth>
+EOF
+
+cat <<EOF >> client.conf
+<cert>
+$c_cert
+</cert>
+EOF
+
+cat <<EOF >> client.conf
+<key>
+$c_key
+</key>
+
+EOF

@@ -1,0 +1,40 @@
+---
+#
+# Add interface eth1 to VM
+#
+
+- name: Add network interface
+  hosts: all
+  become: yes
+  tasks:
+    - name: install needed network manager libs
+      yum:
+        name: '{{ item }}'
+        state: installed
+      with_items:
+        - NetworkManager-glib
+        # - libnm-qt-devel.x86_64
+        # - nm-connection-editor.x86_64
+        # - libsemanage-python
+        # - policycoreutils-python
+    - name: Add interface eth1
+      nmcli:
+        conn_name: 'System eth1'
+        ifname: eth1
+        type: ethernet
+        ip4: 192.168.1.130/26
+        gw4: 192.168.1.129
+        state: present
+    # - name: Modify interface eth0
+    #   nmcli:
+    #     conn_name: "System eth0"
+    #     type: ethernet
+    #     ifname: eth0
+    #     gw4: 0.0.0.0
+    #     state: present
+    # - nmcli:
+    #     ctype: ethernet
+    #     name: my-eth1
+    #     ifname: '*'
+    #     state: present
+...
