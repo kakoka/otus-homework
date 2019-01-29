@@ -59,7 +59,7 @@
   - name: SElinux fix permissions for named
     sefcontext:
       target: "{{ item }}(/.*)?"
-      setype: named_conf_t
+      setype: named_zone_t
       state: present
     with_items: 
       - /etc/named
@@ -94,7 +94,7 @@
   - name: SElinux fix permissions for named
     sefcontext:
       target: "{{ item }}(/.*)?"
-      setype: named_conf_t
+      setype: named_zone_t
       state: present
     with_items: 
       - /etc/named
