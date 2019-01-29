@@ -1,0 +1,17 @@
+### Welcome to the DNS lab! ###
+
+- Use this client to test the enviroment, with dig or nslookup.
+    dig @192.168.50.10 ns01.dns.lab
+    dig @192.168.50.11 -x 192.168.50.10
+
+- nsupdate is available in the ddns.lab zone. Ex:
+    nsupdate -k /etc/named.zonetransfer.key
+    server 192.168.50.10
+    zone ddns.lab 
+    update add www.ddns.lab. 60 A 192.168.50.15
+    send
+
+- rndc is also available to manage the servers
+    rndc -c ~/rndc.conf reload
+
+Enjoy!

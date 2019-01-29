@@ -1,0 +1,18 @@
+$TTL 3600
+$ORIGIN 50.168.192.in-addr.arpa.
+50.168.192.in-addr.arpa.  IN      SOA     ns01.dns.lab. root.dns.lab. (
+                            2901201901 ; serial
+                            3600       ; refresh (1 hour)
+                            600        ; retry (10 minutes)
+                            86400      ; expire (1 day)
+                            600        ; minimum (10 minutes)
+                        )
+
+                IN      NS      ns01.dns.lab.
+                IN      NS      ns02.dns.lab.
+
+; DNS Servers
+10              IN      PTR     ns01.dns.lab.
+11              IN      PTR     ns02.dns.lab.
+15              IN      PTR     web1.dns.lab.
+16              IN      PTR     web2.dns.lab.
