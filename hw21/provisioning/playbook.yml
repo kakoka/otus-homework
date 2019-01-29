@@ -56,13 +56,13 @@
       name: named
       state: restarted
       enabled: yes
-  - name: SElinux fix permissions for named
+  - name: SElinux fix for /etc/named
     sefcontext:
-      target: "{{ item }}(/.*)?"
+      target: "/etc/named(/.*)?"
       setype: named_zone_t
       state: present
-    with_items: 
-      - /etc/named
+  - name: Apply new SELinux file context to filesystem
+    command: restorecon -R -v /etc/named
 - hosts: ns02
   become: yes
   tasks:
