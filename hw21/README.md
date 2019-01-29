@@ -85,4 +85,10 @@ ddns тоже должен работать без выключения selinux
 >
 </pre>
 
+<pre>
+[vagrant@client ~]$ ping www.ddns.lab
+PING www.ddns.lab (192.168.50.15) 56(84) bytes of data.
+64 bytes from web1.dns.lab (192.168.50.15): icmp_seq=1 ttl=64 time=0.021 ms
+</pre>
+
 http://mx54.ru/nastrojka-dns-bind-razdelenie-cherez-view/
