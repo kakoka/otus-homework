@@ -58,6 +58,8 @@ PING web2.dns.lab (192.168.50.16) 56(84) bytes of data.
 
 ddns тоже должен работать без выключения selinux
 
+`semanage fcontext -l | grep '/etc/named'`
+
 <pre>
   - name: SElinux fix for /etc/named
     sefcontext:
