@@ -74,4 +74,15 @@ ddns тоже должен работать без выключения selinux
     command: restorecon -R -v /etc/named
 </pre>
 
+`setenforce 1`
+
+<pre>
+[vagrant@client ~]$ nsupdate -k /etc/named.zonetransfer.key
+> server 192.168.50.10
+> zone ddns.lab
+>  update add www.ddns.lab. 60 A 192.168.50.15
+> send
+>
+</pre>
+
 http://mx54.ru/nastrojka-dns-bind-razdelenie-cherez-view/
