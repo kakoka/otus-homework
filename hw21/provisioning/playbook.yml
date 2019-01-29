@@ -63,6 +63,10 @@
       state: present
   - name: Apply new SELinux file context to filesystem
     command: restorecon -R -v /etc/named
+  - name: Enable SELinux
+    selinux:
+      policy: targeted
+      state: enforcing
 - hosts: ns02
   become: yes
   tasks:
@@ -98,6 +102,10 @@
       state: present
   - name: Apply new SELinux file context to filesystem
     command: restorecon -R -v /etc/named
+  - name: Enable SELinux
+    selinux:
+      policy: targeted
+      state: enforcing
 - hosts: client
   become: yes
   tasks:
