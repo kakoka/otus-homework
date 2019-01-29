@@ -58,7 +58,11 @@ PING web2.dns.lab (192.168.50.16) 56(84) bytes of data.
 
 ddns тоже должен работать без выключения selinux
 
-`semanage fcontext -l | grep '/etc/named'`
+`semanage fcontext -l | grep '/var/named'`
+
+<pre>
+/var/named/chroot/var/named(/.*)?                  all files          system_u:object_r:named_zone_t:s0
+</pre>
 
 <pre>
   - name: SElinux fix for /etc/named
