@@ -74,9 +74,13 @@ Vagrant.configure("2") do |config|
         when "centralRouter"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
             echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-            echo "net.ipv4.conf.all.forwarding=1"  >> /etc/sysctl.conf
+            echo "net.ipv4.conf.all.forwarding=1" >> /etc/sysctl.conf
             sysctl -p /etc/sysctl.conf
             ip route add default nexthop via 192.168.255.1 weight 1
+            #
+            # set multipath routing
+            # ip route add default nexthop via 192.168.255.1 weight 1 nexthop via 192.168.254.1 weight 2
+            #
             systemctl enable firewalld && systemctl start firewalld
             firewall-cmd --add-masquerade --permanent
             firewall-cmd --permanent --new-ipset=stage1 --type=hash:ip --option=family=inet --option=maxelem=10 --option=timeout=60
@@ -91,8 +95,6 @@ Vagrant.configure("2") do |config|
             firewall-cmd --reload
             sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
             systemctl restart sshd
-            # firewall-cmd --zone=public --add-icmp-block-inversion --permanent
-            # ip route add default nexthop via 192.168.255.1 weight 1 nexthop via 192.168.254.1 weight 2
             SHELL
         when "centralServer"
           box.vm.provision "shell", run: "always", inline: <<-SHELL
