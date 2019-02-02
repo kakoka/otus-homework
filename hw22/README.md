@@ -135,7 +135,7 @@ firewall-cmd --permanent --direct \
 -j SET --add-set stage1 src
 ```
 
-Разрешаем прохождение `echo-reply`:
+Разрешаем прохождение `echo-request`:
 
 ```
 firewall-cmd --permanent --direct \
@@ -170,3 +170,9 @@ ssh 192.168.0.1
 ![](pic/pic03.png)
 
 Обратим внимание на истечение timeouts на скриншоте. По их истечении, "стук" придется повторить.
+
+### 3. Ссылки
+
+- https://www.lisenet.com/2016/firewalld-rich-and-direct-rules-setup-rhel-7-server-as-a-router/
+- https://habr.com/ru/post/198108/
+- https://www.tecmint.com/firewalld-rules-for-centos-7
