@@ -23,3 +23,4 @@
 * [#20. Мосты, туннели и VPN. OpenVPN.](https://github.com/kakoka/otus-homework/tree/master/hw20)
 * [#21. DNS.](https://github.com/kakoka/otus-homework/tree/master/hw21)
 * [#22. Iptables, NAT, Firewalld.](https://github.com/kakoka/otus-homework/tree/master/hw22)
+* [#23. Nginx.](https://github.com/kakoka/otus-homework/tree/master/hw23)
