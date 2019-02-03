@@ -19,7 +19,7 @@ server {
     }
     location /get_cookie {
       <span style="color:red"><b>add_header Set-Cookie "id=123";</b></span>
-      return 302 $scheme://$server_addr;
+      return 302 $scheme://$server_addr$request_uri;
     }
 }
 </pre>
