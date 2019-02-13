@@ -1,0 +1,75 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: install mysql8 reposiroty from url
+    yum:
+      name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+- hosts: router
+  become: yes
+  tasks:
+  - name: install mysql8 router packages
+    yum:
+      name: "{{ item }}"
+    with_items:
+      - mysql-router
+      - mysql-shell
+  - name: copy hosts file to all hosts
+    copy:
+      src: etc/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0640
+  - name: copy mysqlrouter.conf to router host
+    copy:
+      src: mysql-router/mysqlrouter.conf
+      dest: /etc/mysqlrouter/mysqlrouter.conf
+      owner: root
+      group: root
+      mode: 0640
+  - name: ensure mysqlrouter service is running and enabled
+    service:
+      name: mysqlrouter
+      state: restarted
+      enabled: yes
+- hosts: nodes
+  become: yes
+  tasks:
+  - name: Include vars of stuff.yaml into the 'stuff' variable (2.2).
+    include_vars:
+      file: vars.yml
+      name: stuff
+  - name: install mysql8 server
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - mysql-community-devel*
+      - mysql-community-server*
+      - MySQL-python
+  - name: copy my.cnf
+    copy:
+      src: mysql-server/my.cnf
+      dest: /etc/my.cnf
+      mode: 0644
+  - name: enable mysql
+    systemd:
+      name: mysqld
+      state: restarted
+      enabled: yes
+  - name: get root password
+    shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+    register: root_password
+  - name: update expired root user password
+    command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
+  - name: create mysql client user
+    mysql_user:
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
+      name: "cluster-user"
+      password: "{{ mysql_user_password }}"
+      priv: '*.*:ALL,GRANT'
+      state: present
+      host: '%'
+...
