@@ -5,6 +5,13 @@
   - name: install mysql8 reposiroty from url
     yum:
       name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+  - name: copy hosts file to all hosts
+    copy:
+      src: etc/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0640
 - hosts: router
   become: yes
   tasks:
@@ -14,13 +21,6 @@
     with_items:
       - mysql-router
       - mysql-shell
-  - name: copy hosts file to all hosts
-    copy:
-      src: etc/hosts
-      dest: /etc/hosts
-      owner: root
-      group: root
-      mode: 0640
   - name: copy mysqlrouter.conf to router host
     copy:
       src: mysql-router/mysqlrouter.conf
@@ -33,21 +33,16 @@
       name: mysqlrouter
       state: restarted
       enabled: yes
-- hosts: nodes
+- hosts: ['node01','node02','node03']
   become: yes
   tasks:
   - name: Include vars of stuff.yaml into the 'stuff' variable (2.2).
     include_vars:
       file: vars.yml
-      name: stuff
   - name: install mysql8 server
     yum:
-      name: "{{ item }}"
+      name: ['mysql-community-devel*','mysql-community-server*','MySQL-python']
       state: present
-    with_items:
-      - mysql-community-devel*
-      - mysql-community-server*
-      - MySQL-python
   - name: copy my.cnf
     copy:
       src: mysql-server/my.cnf
@@ -59,7 +54,7 @@
       state: restarted
       enabled: yes
   - name: get root password
-    shell: "grep 'A temporary password is generated for root@localhost' /var/log/mysqld.log | awk -F ' ' '{print $(NF)}'"
+    shell: "grep 'A temporary password is generated for root@localhost' {{ mysql_log_file }} | awk -F ' ' '{print $(NF)}'"
     register: root_password
   - name: update expired root user password
     command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
