@@ -1,7 +1,9 @@
 ---
 mysql_root_password: 'Root#1234!'
+mysql_user: 'cluster-user'
 mysql_user_password: 'Cluster#1234!'
-mysql_users:
+mysql_log_file: '/var/log/messages'
+mysql_nodes:
   - node01
   - node02
   - node03

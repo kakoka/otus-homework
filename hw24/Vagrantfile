@@ -1,38 +1,29 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
-
   config.vm.provision "ansible" do |ansible|
-    ansible.verbose = "v"
+    ansible.verbose = "vv"
     ansible.playbook = "provisioning/playbook.yml"
     ansible.sudo = "true"
   end
-
-
   config.vm.provider "virtualbox" do |v|
-          v.memory = 256
+          v.memory = 1024
   end
-
   config.vm.define "router" do |router|
     router.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "private"
     router.vm.hostname = "router"
   end
-
   config.vm.define "node01" do |node01|
     node01.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: "private"
-    node01.vm.hostname = "node03"
+    node01.vm.hostname = "node01"
   end
-
   config.vm.define "node02" do |node02|
     node02.vm.network "private_network", ip: "192.168.50.102", virtualbox__intnet: "private"
     node02.vm.hostname = "node02"
   end
-
   config.vm.define "node03" do |node03|
     node03.vm.network "private_network", ip: "192.168.50.103", virtualbox__intnet: "private"
     node03.vm.hostname = "node03"
   end
-
 end

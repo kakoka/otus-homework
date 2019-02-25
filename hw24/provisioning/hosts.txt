@@ -1,7 +1,10 @@
-[router]
-router
-
-[nodes]
-node01
-node02
-node03
+all:
+  children:
+    routes:
+      hosts:
+        router
+    nodes:
+      hosts:
+        node01:
+        node02:
+        node03:

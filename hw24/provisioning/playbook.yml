@@ -4,23 +4,24 @@
   tasks:
   - name: install mysql8 reposiroty from url
     yum:
-      name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
+      name: https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
+  - name: disable old repository
+    shell: yum-config-manager {{ item }}
+    with_items:
+      - "--disable mysql57-community"
+      - "--enable mysql80-community"
+
 - hosts: router
   become: yes
   tasks:
+  # DNS server install
+  - include_tasks: dns-server.yml
   - name: install mysql8 router packages
     yum:
       name: "{{ item }}"
     with_items:
       - mysql-router
       - mysql-shell
-  - name: copy hosts file to all hosts
-    copy:
-      src: etc/hosts
-      dest: /etc/hosts
-      owner: root
-      group: root
-      mode: 0640
   - name: copy mysqlrouter.conf to router host
     copy:
       src: mysql-router/mysqlrouter.conf
@@ -33,6 +34,21 @@
       name: mysqlrouter
       state: restarted
       enabled: yes
+
+# Resolv conf
+- hosts: nodes
+  become: yes
+  tasks:
+  - name: copy resolv.conf to all hosts
+    copy:
+      src: etc/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+
+# Nodes
+
 - hosts: nodes
   become: yes
   tasks:
@@ -42,12 +58,8 @@
       name: stuff
   - name: install mysql8 server
     yum:
-      name: "{{ item }}"
+      name: ['mysql-community-devel*', 'mysql-community-server*', 'MySQL-python']
       state: present
-    with_items:
-      - mysql-community-devel*
-      - mysql-community-server*
-      - MySQL-python
   - name: copy my.cnf
     copy:
       src: mysql-server/my.cnf
