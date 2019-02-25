@@ -1,6 +1,0 @@
-192.168.50.10  router router.homework.local router
-192.168.50.101 node01 node01.homework.local node01
-192.168.50.102 node02 node02.homework.local node02
-192.168.50.103 node03 node03.homework.local node03
-127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6

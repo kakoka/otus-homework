@@ -1,0 +1,57 @@
+---
+  - name: install packages
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - bind
+      - bind-utils
+      - ntp
+  - name: copy named.conf
+    copy:
+      src: etc/named.conf
+      dest: /etc/named.conf
+      owner: root
+      group: named
+      mode: 0640
+  - name: copy zonetransfer.key
+    copy:
+      src: etc/named.zonetransfer.key
+      dest: /etc/named.zonetransfer.key
+      owner: root
+      group: named
+      mode: 0640
+  - name: copy zones
+    copy:
+      src: "{{ item }}"
+      dest: /etc/named/
+      owner: root
+      group: named
+      mode: 0670
+    with_fileglob:
+      - etc/named.otus.test
+      - etc/named.otus.test.rev
+  - name: copy resolv.conf to master
+    copy:
+      src: etc/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: ensure named is running and enabled
+    service:
+      name: named
+      state: restarted
+      enabled: yes
+  - name: SElinux fix for /etc/named
+    sefcontext:
+      target: "/etc/named(/.*)?"
+      setype: named_zone_t
+      state: present
+  - name: Apply new SELinux file context to filesystem
+    command: restorecon -R -v /etc/named
+  - name: Enable SELinux
+    selinux:
+      policy: targeted
+      state: enforcing
+...

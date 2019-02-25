@@ -1,0 +1,10 @@
+all:
+  children:
+    routes:
+      hosts:
+        router
+    nodes:
+      hosts:
+        node01:
+        node02:
+        node03:
