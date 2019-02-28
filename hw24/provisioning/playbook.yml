@@ -4,85 +4,25 @@
   tasks:
   - name: install mysql8 reposiroty from url
     yum:
-<<<<<<< HEAD
-      name: https://dev.mysql.com/get/mysql80-community-release-el7-1.noarch.rpm
-  - name: copy hosts file to all hosts
-    copy:
-      src: etc/hosts
-      dest: /etc/hosts
-      owner: root
-      group: root
-      mode: 0640
-=======
       name: https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
   - name: disable old repository
     shell: yum-config-manager {{ item }}
     with_items:
       - "--disable mysql57-community"
       - "--enable mysql80-community"
-
->>>>>>> adbd9d5a40328d09213d84c5eaecdaa0bc24a8f8
-- hosts: router
-  become: yes
-  tasks:
-  # DNS server install
-  - include_tasks: dns-server.yml
-  - name: install mysql8 router packages
-    yum:
-      name: "{{ item }}"
-    with_items:
-      - mysql-router
-      - mysql-shell
-  - name: copy mysqlrouter.conf to router host
-    copy:
-      src: mysql-router/mysqlrouter.conf
-      dest: /etc/mysqlrouter/mysqlrouter.conf
-      owner: root
-      group: root
-      mode: 0640
-  - name: ensure mysqlrouter service is running and enabled
-    service:
-      name: mysqlrouter
-      state: restarted
-      enabled: yes
-<<<<<<< HEAD
-- hosts: ['node01','node02','node03']
-=======
-
-# Resolv conf
+#
+#  Set up nodes for mysql innodb cluster
+#
 - hosts: nodes
   become: yes
   tasks:
-  - name: copy resolv.conf to all hosts
-    copy:
-      src: etc/resolv.conf
-      dest: /etc/resolv.conf
-      owner: root
-      group: root
-      mode: 0644
-
-# Nodes
-
-- hosts: nodes
->>>>>>> adbd9d5a40328d09213d84c5eaecdaa0bc24a8f8
-  become: yes
-  tasks:
-  - name: Include vars of stuff.yaml into the 'stuff' variable (2.2).
+  - name: Include some variables
     include_vars:
       file: vars.yml
   - name: install mysql8 server
     yum:
-<<<<<<< HEAD
-      name: ['mysql-community-devel*','mysql-community-server*','MySQL-python']
-=======
-      name: ['mysql-community-devel*', 'mysql-community-server*', 'MySQL-python']
->>>>>>> adbd9d5a40328d09213d84c5eaecdaa0bc24a8f8
+      name: ['mysql-community-server', 'mysql-shell', 'policycoreutils-python']
       state: present
-  - name: copy my.cnf
-    copy:
-      src: mysql-server/my.cnf
-      dest: /etc/my.cnf
-      mode: 0644
   - name: enable mysql
     systemd:
       name: mysqld
@@ -92,14 +32,58 @@
     shell: "grep 'A temporary password is generated for root@localhost' {{ mysql_log_file }} | awk -F ' ' '{print $(NF)}'"
     register: root_password
   - name: update expired root user password
-    command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}';"
-  - name: create mysql client user
-    mysql_user:
-      login_user: root
-      login_password: "{{ mysql_root_password }}"
-      name: "cluster-user"
-      password: "{{ mysql_user_password }}"
-      priv: '*.*:ALL,GRANT'
+    command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{{ mysql_root_password }}';"
+  - name: copy resolv.conf
+    copy:
+      src: etc/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy hosts file
+    copy:
+      src: etc/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0600
+  - include_tasks: selinux.yml
+  - name: Prepare host to InnoDB Cluster
+    shell:  mysqlsh -- dba configure-instance { --port=3306 --host=localhost --user=root --password={{ mysql_root_password }} } --clusterAdmin={{ mysql_cluster_admin_user }} --clusterAdminPassword={{ mysql_cluster_admin_password }} --restart=true --clearReadOnly=true --interactive=false
+# setup DNS server
+- hosts: dns
+  become: yes
+  tasks:
+  - include_tasks: dns-server.yml
+# setup Router
+- hosts: routers
+  become: yes
+  tasks:
+  - name: Include some variables
+    include_vars:
+      file: vars.yml
+  - name: install mysql8 router packages
+    yum:
+      name: ['mysql-router','mysql-shell','mysql-community-client']
       state: present
-      host: '%'
+  - name: copy resolv.conf
+    copy:
+      src: etc/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy js
+    copy:
+      src: mysql-router/cluster-setup.js
+      dest: /tmp/cluster-setup.js
+  - name: create and start cluster
+    shell: mysqlsh -f /tmp/cluster-setup.js
+  - name: mysqlrouter config
+    shell: mysqlrouter --bootstrap '{{ mysql_cluster_admin_user }}:{{ mysql_cluster_admin_password }}'@node01 --user=mysqlrouter
+  - name: ensure mysqlrouter service is running and enabled
+    service:
+      name: mysqlrouter
+      state: restarted
+      enabled: yes
 ...

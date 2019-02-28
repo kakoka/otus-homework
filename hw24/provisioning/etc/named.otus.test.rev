@@ -12,7 +12,7 @@ $ORIGIN 50.168.192.in-addr.arpa.
 ; DNS Servers
 10               IN      PTR     ns.otus.test.
 ; Hosts
-10               IN      PTR     router.otus.test.
+100               IN      PTR     router.otus.test.
 101              IN      PTR     node01.otus.test.
 102              IN      PTR     node02.otus.test.
 103              IN      PTR     node03.otus.test.

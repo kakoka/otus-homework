@@ -1,13 +1,11 @@
 ---
-mysql_root_password: 'Root#1234!'
-mysql_user: 'cluster-user'
-mysql_user_password: 'Cluster#1234!'
-mysql_log_file: '/var/log/messages'
-<<<<<<< HEAD
-mysql_users:
-=======
+mysql_root_password: 'playable8-Congenial0'
+mysql_cluster_admin_user: 'cadmin'
+mysql_cluster_admin_password: 'convoy-Punk0'
+mysql_cluster_dbuser: cuser
+mysql_cluster_dbuser_password: Prods8-3Upstage
+mysql_log_file: '/var/log/mysqld.log'
 mysql_nodes:
->>>>>>> adbd9d5a40328d09213d84c5eaecdaa0bc24a8f8
   - node01
   - node02
   - node03

@@ -11,7 +11,7 @@ $ORIGIN otus.test.
 ; DNS Servers
 ns              IN      A       192.168.50.10
 ; Hosts
-router          IN      A       192.168.50.10
+router          IN      A       192.168.50.100
 node01          IN      A       192.168.50.101
 node02          IN      A       192.168.50.102
 node03          IN      A       192.168.50.103
