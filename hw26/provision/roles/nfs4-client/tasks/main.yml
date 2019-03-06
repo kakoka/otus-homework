@@ -1,0 +1,38 @@
+---
+# tasks file for samba-client
+- name: install nfs server packages
+  yum:
+    name: ['nfs-utils','autofs']
+    state: present
+
+- name: enable and start nfs client
+  service:
+    name: nfs-client.target
+    state: restarted
+    enabled: true
+
+# - name: create folder to mount
+#   file:
+#     path: /mnt/nfs
+#     state: directory
+#     mode: 0777
+# - name: mount nfs share
+#   shell: mount.nfs4 -o sec=krb5 ns.otus.test:/opt/share/nfs-test /mnt/nfs -v
+
+- name: autofs config step 1
+  copy:
+    src: auto.master
+    dest: /etc/auto.master
+
+- name: autofs config step 2
+  copy:
+    src: auto.nfs
+    dest: /etc/auto.nfs
+
+- name: enable and start autofs
+  service:
+    name: autofs
+    state: restarted
+    enabled: true
+
+...

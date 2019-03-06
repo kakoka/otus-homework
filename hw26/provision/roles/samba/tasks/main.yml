@@ -1,0 +1,19 @@
+---
+# tasks file for samba
+- name: install samba server packages
+  yum:
+    name: ['samba']
+    state: present
+- name:
+  copy:
+    src: smb.conf
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0640
+- name:
+  file:
+    path: /opt/share/smb-test
+    state: directory
+    owner: vagrant
+    mode: 0755

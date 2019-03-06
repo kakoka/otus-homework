@@ -1,0 +1,44 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: Install epel-relese
+    yum:
+      name: epel-release
+      state: present
+  - name: copy resolv.conf to master
+    copy:
+      src: locale.conf
+      dest: /etc/locale.conf
+      owner: root
+      group: root
+      mode: 0644
+- hosts: ns
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: dns }
+    - { role: ntp }
+    - { role: kerberos }
+    - { role: nfs4 }
+    # TODO - { role: samba }
+- hosts: client
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: copy resolv.conf to master
+    copy:
+      src: roles/dns/files/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+- hosts: client
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: ntp-client }
+    - { role: kerberos-client }
+    - { role: nfs4-client }
+...
