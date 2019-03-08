@@ -26,5 +26,5 @@
 * [#23. Nginx.](https://github.com/kakoka/otus-homework/tree/master/hw23)
 * [#24. MySQL cluster.](https://github.com/kakoka/otus-homework/tree/master/hw24)
 * [#25. MySQL репликация.](https://github.com/kakoka/otus-homework/tree/master/hw25)
-* [#26. Samba, NFS, Kerberos.](https://github.com/kakoka/otus-homework/tree/master/hw26)
+* [#26. NFS, Kerberos.](https://github.com/kakoka/otus-homework/tree/master/hw26)
 * [#27. Postfix, Dovecot.](https://github.com/kakoka/otus-homework/tree/master/hw27)
