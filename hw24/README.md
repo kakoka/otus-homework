@@ -1,7 +1,12 @@
 ## MySQL InnoDB Cluster
 
 ### 1. DNS
+
+
+
 ### 2. MySQL nodes
+
+SELinux:
 
 grep mysqld /var/log/audit/audit.log | audit2allow -M mysqld
 semodule -mysqld.pp
@@ -10,7 +15,15 @@ semodule -mysqld.pp
 
 dba.configureInstance('cluster-user@192.168.50.101:3306', {clusterAdmin: "'cluster-user'@'node01'%", clusterAdminPassword: 'Cluster#1234!'});
 
-### 3. Ссылки
+### 4. MySQL shell
+
+
+
+### 5. Использование
+
+Любым клиентом (DBeaver, например) можно подключиться на localhost:3306 с парой логин/пароль `cuser/Prods8-3Upstage` и получить доступ к кластеру.
+
+### 6. Ссылки
 
 - https://lefred.be/content/mysql-innodb-cluster-mysql-shell-starter-guide/
 - https://www.soudegesu.com/en/mysql/mysql8-password/
