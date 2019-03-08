@@ -58,14 +58,14 @@
   with_items:
    - host/ns.otus.test@OTUS.TEST
    - nfs/ns.otus.test@OTUS.TEST
-   - cifs/ns.otus.test@OTUS.TEST
+#    - cifs/ns.otus.test@OTUS.TEST
 
 - name: add all entires to keytab file on KDC server
   shell: kadmin.local -q "ktadd {{ item }}"
   with_items:
    - host/ns.otus.test
    - nfs/ns.otus.test
-   - cifs/ns.otus.test
+#    - cifs/ns.otus.test
 
 # - name: 
 #   shell: 

@@ -1,0 +1,37 @@
+---
+# tasks file for firewall
+- name: firewalld enabled and started
+  service:
+    name: firewalld
+    enabled: true
+    state: started
+- name: copy additional kerberos.xml fwd config
+  copy:
+    src: kerberos.xml
+    dest: /etc/firewalld/services/kerberos.xml
+- name: add services to firewall to public zone
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+    zone: public
+  with_items:
+    - ssh
+    - ntp
+    - dns
+    - kerberos
+    - nfs
+    - rpc-bind
+    - mountd
+- name: add ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  with_items:
+    - 2049/tcp
+    - 2049/udp
+- name: restart firewall
+  service: 
+    name: firewalld
+    state: restarted

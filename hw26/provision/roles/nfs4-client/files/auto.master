@@ -1,1 +1,1 @@
-/autofs /etc/auto.nfs --timeout=60
+/mnt /etc/auto.nfs --timeout=60

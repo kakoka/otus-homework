@@ -1,4 +1,4 @@
 Role Name
 =========
 
-Setup DNS server.
+Setup Firewall.

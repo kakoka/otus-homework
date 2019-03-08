@@ -6,11 +6,7 @@
     state: present
 - name:
   file:
-    path: /opt/share
-    state: directory
-- name:
-  file:
-    path: /opt/share/nfs-test
+    path: /opt/upload
     state: directory
     mode: 0777
 - name: start and enable nfs4 services

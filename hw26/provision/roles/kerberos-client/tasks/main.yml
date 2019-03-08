@@ -2,7 +2,7 @@
 # tasks file for kerberos-client
 - name: install kerberos client packages
   yum:
-    name: ['krb5-workstation','pam_krb5']
+    name: ['krb5-workstation'] # for auto kinit on ssh login,'pam_krb5','krb5-libs'
     state: present
 
 - name: copy config files
@@ -18,14 +18,14 @@
   with_items:
    - host/client.otus.test@OTUS.TEST
    - nfs/client.otus.test@OTUS.TEST
-   - cifs/client.otus.test@OTUS.TEST
+#    - cifs/client.otus.test@OTUS.TEST
 
 - name: add entires to keytab on client
   shell: kadmin -p {{ kadmin_user }} -w {{ kadmin_pass }} -q "ktadd {{ item }}"
   with_items:
    - host/client.otus.test
    - nfs/client.otus.test
-   - cifs/client.otus.test
+#    - cifs/client.otus.test
 
 - name: obtain kerberos ticket for root
   shell: echo "{{ kadmin_pass }}" | kinit -p {{ kadmin_user }}
