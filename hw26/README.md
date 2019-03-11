@@ -143,6 +143,7 @@ NB: that legacy Arc4 is still legit in many corporate Active Directory directori
 
 #### Kerberos
 
+- main - http://www.citi.umich.edu/projects/nfsv4/linux/
 - https://www.ixbt.com/comm/kerberos5.shtml
 - https://pikabu.ru/story/kak_rabotaet_kerberos_5_v_kartinkakh_5271729
 - https://www.systutorials.com/docs/linux/man/8-pam_krb5/
