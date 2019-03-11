@@ -23,6 +23,12 @@ dba.configureInstance('cluster-user@192.168.50.101:3306', {clusterAdmin: "'clust
 
 Любым клиентом (DBeaver, например) можно подключиться на localhost:3306 с парой логин/пароль `cuser/Prods8-3Upstage` и получить доступ к кластеру.
 
+### 6. Docker
+
+- https://hub.docker.com/_/mysql
+- https://hub.docker.com/r/mysql/mysql-router
+- https://hub.docker.com/r/neumayer/mysql-shell-batch
+
 ### 6. Ссылки
 
 - https://lefred.be/content/mysql-innodb-cluster-mysql-shell-starter-guide/
