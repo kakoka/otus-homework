@@ -1,19 +1,35 @@
 version: '3'
 services:
   node01:
-    env_file:
-      - ./env/server.env
     image: mysql/mysql-server:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_HOST
     ports:
       - "3301:3306"
-    command: ["mysqld","--server_id=1","--binlog_checksum=NONE","--gtid_mode=ON","--enforce_gtid_consistency=ON","--log_bin","--log_slave_updates=ON","--master_info_repository=TABLE","--relay_log_info_repository=TABLE","--transaction_write_set_extraction=XXHASH64","--user=mysql","--skip-host-cache","--skip-name-resolve", "--default_authentication_plugin=mysql_native_password"]
-
+      - "33061:33060"
+    command: ["mysqld",
+    "--server_id=1",
+    "--binlog_checksum=NONE",
+    "--gtid_mode=ON",
+    "--enforce_gtid_consistency=ON",
+    "--log_bin",
+    "--log_slave_updates=ON",
+    "--master_info_repository=TABLE",
+    "--relay_log_info_repository=TABLE",
+    "--transaction_write_set_extraction=XXHASH64",
+    "--user=mysql",
+    "--skip-host-cache",
+    "--skip-name-resolve",
+    "--default_authentication_plugin=mysql_native_password"]
   node02:
-    env_file:
-      - ./env/server.env
     image: mysql/mysql-server:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_HOST
     ports:
       - "3302:3306"
+      - "33062:33060"
     command: ["mysqld",
     "--server_id=2",
     "--binlog_checksum=NONE",
@@ -30,17 +46,36 @@ services:
     "--default_authentication_plugin=mysql_native_password"]
 
   node03:
-    env_file:
-      - ./env/server.env
     image: mysql/mysql-server:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_HOST
     ports:
       - "3303:3306"
-    command: ["mysqld","--server_id=3","--binlog_checksum=NONE","--gtid_mode=ON","--enforce_gtid_consistency=ON","--log_bin","--log_slave_updates=ON","--master_info_repository=TABLE","--relay_log_info_repository=TABLE","--transaction_write_set_extraction=XXHASH64","--user=mysql","--skip-host-cache","--skip-name-resolve", "--default_authentication_plugin=mysql_native_password"]
-
+      - "33063:33060"
+    command: ["mysqld",
+    "--server_id=3",
+    "--binlog_checksum=NONE",
+    "--gtid_mode=ON",
+    "--enforce_gtid_consistency=ON",
+    "--log_bin",
+    "--log_slave_updates=ON",
+    "--master_info_repository=TABLE",
+    "--relay_log_info_repository=TABLE",
+    "--transaction_write_set_extraction=XXHASH64",
+    "--user=mysql",
+    "--skip-host-cache",
+    "--skip-name-resolve",
+    "--default_authentication_plugin=mysql_native_password"]
+  
   shell:
-    env_file:
-      - ./env/shell.env
     image: neumayer/mysql-shell-batch
+    environment:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_HOST
+      - MYSQL_PORT
+      - MYSQL_INNODB_NUM_MEMBERS
     volumes:
         - ./js/:/scripts/
         - ./dump/:/dump/
@@ -50,9 +85,8 @@ services:
       - node03
 
   router:
-    env_file:
-      - ./env/router.env
     image: mysql/mysql-router:8.0
+    environment: *other-environment
     ports:
       - "6446:6446"
     depends_on:

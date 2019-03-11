@@ -9,7 +9,6 @@ try {
    print('.');
    cluster.addInstance({user: "cadmin", host: "node03", port: 3306, password: dbPass});
    print('.\nInstances successfully added to the cluster.');
-
    print('\nInnoDB cluster deployed successfully.\n');
 } catch(e) {
    print('\nThe InnoDB cluster could not be created.\n\nError: ' +
