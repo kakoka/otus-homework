@@ -22,6 +22,13 @@ services:
     "--skip-host-cache",
     "--skip-name-resolve",
     "--default_authentication_plugin=mysql_native_password"]
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 256M
   node02:
     image: mysql/mysql-server:latest
     environment:
@@ -44,6 +51,13 @@ services:
     "--skip-host-cache",
     "--skip-name-resolve",
     "--default_authentication_plugin=mysql_native_password"]
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 256M
   node03:
     image: mysql/mysql-server:latest
     environment:
@@ -66,7 +80,14 @@ services:
     "--skip-host-cache",
     "--skip-name-resolve",
     "--default_authentication_plugin=mysql_native_password"]
-  
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 256M
+
   shell:
     image: mysql/mysql-server:latest
     entrypoint: "/bin/shell-entrypoint"
@@ -80,13 +101,20 @@ services:
       - MYSQL_SCRIPT
     volumes:
         - "./shell-entrypoint.sh:/bin/shell-entrypoint"
-        - "./js/cluster-setup.js:/tmp/cluster-setup.js"
-        - "./dump/:/tmp/dump/"
+        - "./cluster-setup.js:/tmp/cluster-setup.js"
     depends_on: &node-depends
       - node01
       - node02
       - node03
-
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 256M
   router:
     image: mysql/mysql-router:latest
     environment: *other-environment
@@ -95,3 +123,12 @@ services:
       - "6447:6447"
     depends_on: *node-depends
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 256M

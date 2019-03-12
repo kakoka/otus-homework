@@ -1,0 +1,81 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Install epel-relese
+    yum:
+      name: epel-release
+      state: present
+  - name: copy docker-ce.repo
+    copy:
+      src: docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      owner: root
+      group: root
+      mode: 0644
+  - name: Install epel-relese
+    yum:
+      name: ['yum-utils','device-mapper-persistent-data','lvm2','docker-ce','docker-ce-cli','containerd.io','python-setuptools']
+      state: present
+  - name: Install Pypi
+    easy_install:
+      name: pip
+  - name: Install docker
+    pip:
+      name: docker
+  - name: Make sure Docker is running
+    service:
+      name: docker
+      state: started
+      enabled: true
+  - name: Ensure docker users are added to the docker group.
+    user:
+      name: vagrant
+      groups: docker
+      append: true
+- hosts: master
+  become: yes
+  tasks:
+  - name: Init a new docker swarm cluster
+    docker_swarm:
+      state: present
+      advertise_addr: 192.168.50.101
+  - name: Inspect swarm swarm cluster
+    docker_swarm:
+      state: inspect
+    register: swarm_info
+  - name: obtain token for workers to join into swarm
+    local_action: copy content="worker_token:{{ ' ' }}\'{{ swarm_info.swarm_facts.JoinTokens.Worker }}\'" dest=./worker_token.yml
+  - name: copy files
+    copy:
+      src: "{{ item }}"
+      dest: /tmp
+    with_fileglob:
+      - swdocker/mysql-cluster.yml
+      - swdocker/cluster-setup.js
+      - swdocker/shell-entrypoint.sh
+- hosts: node01
+  become: yes
+  tasks:
+  - name: Include worker_token variable
+    include_vars:
+      file: worker_token.yml
+  - name: Join node01 into cluster
+    docker_swarm:
+      state: join
+      advertise_addr: 192.168.50.102
+      join_token: "{{ worker_token }}"
+      remote_addrs: [ '192.168.50.101:2377' ]
+- hosts: node02
+  become: yes
+  tasks:
+  - name: Include worker_token variable
+    include_vars:
+      file: worker_token.yml
+  - name: Join node02 into cluster
+    docker_swarm:
+      state: join
+      advertise_addr: 192.168.50.103
+      join_token: "{{ worker_token }}"
+      remote_addrs: [ '192.168.50.101:2377' ]
+...

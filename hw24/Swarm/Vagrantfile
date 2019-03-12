@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+    config.vm.box = "centos/7"
+    config.vm.provision "ansible" do |ansible|
+    ansible.groups = {
+        "master" => ["master"],
+        "nodes" => ["node01","node02"]
+        }
+    ansible.verbose = "v"
+    ansible.playbook = "playbook.yml"
+    ansible.sudo = "true"
+    end
+    config.vm.provider "virtualbox" do |v|
+            v.memory = 1024
+    end
+    config.vm.define "master" do |master|
+    master.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: "private"
+    master.vm.network "forwarded_port", guest: 6446, host: 3306
+    master.vm.hostname = "master"
+    end
+    config.vm.define "node01" do |node01|
+    node01.vm.network "private_network", ip: "192.168.50.102", virtualbox__intnet: "private"
+    node01.vm.hostname = "node01"
+    end
+    config.vm.define "node02" do |node02|
+    node02.vm.network "private_network", ip: "192.168.50.103", virtualbox__intnet: "private"
+    node02.vm.hostname = "node02"
+    end
+end
