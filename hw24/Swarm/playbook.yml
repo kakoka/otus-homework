@@ -13,7 +13,7 @@
       owner: root
       group: root
       mode: 0644
-  - name: Install epel-relese
+  - name: Install utils
     yum:
       name: ['yum-utils','device-mapper-persistent-data','lvm2','docker-ce','docker-ce-cli','containerd.io','python-setuptools']
       state: present
@@ -52,8 +52,7 @@
       dest: /tmp
     with_fileglob:
       - swdocker/mysql-cluster.yml
-      - swdocker/cluster-setup.js
-      - swdocker/shell-entrypoint.sh
+      - swdocker/port.yml
 - hosts: node01
   become: yes
   tasks:

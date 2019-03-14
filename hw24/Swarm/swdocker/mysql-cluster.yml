@@ -1,13 +1,13 @@
-version: '3.7'
+version: '3.2'
+
 services:
-  node01: &nodes
+
+  node01:
     image: mysql/mysql-server:latest
+    hostname: '{{.Service.Name}}'
     environment:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_ROOT_HOST
-    ports:
-      - "3301:3306"
-      - "33061:33060"
+      MYSQL_ROOT_PASSWORD: "swimming3"
+      MYSQL_ROOT_HOST: "%"
     command: ["mysqld",
     "--server_id=1",
     "--binlog_checksum=NONE",
@@ -19,24 +19,21 @@ services:
     "--relay_log_info_repository=TABLE",
     "--transaction_write_set_extraction=XXHASH64",
     "--user=mysql",
-    "--skip-host-cache",
     "--skip-name-resolve",
+    "--skip-host-cache",
     "--default_authentication_plugin=mysql_native_password"]
     deploy:
       mode: replicated
       replicas: 1
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 256M
+    networks:
+      - mycluster
+
   node02:
+    hostname: '{{.Service.Name}}'
     image: mysql/mysql-server:latest
     environment:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_ROOT_HOST
-    ports:
-      - "3302:3306"
-      - "33062:33060"
+      MYSQL_ROOT_PASSWORD: "swimming3"
+      MYSQL_ROOT_HOST: "%"
     command: ["mysqld",
     "--server_id=2",
     "--binlog_checksum=NONE",
@@ -48,24 +45,21 @@ services:
     "--relay_log_info_repository=TABLE",
     "--transaction_write_set_extraction=XXHASH64",
     "--user=mysql",
-    "--skip-host-cache",
     "--skip-name-resolve",
+    "--skip-host-cache",
     "--default_authentication_plugin=mysql_native_password"]
     deploy:
       mode: replicated
       replicas: 1
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 256M
+    networks:
+      - mycluster
+
   node03:
+    hostname: '{{.Service.Name}}'
     image: mysql/mysql-server:latest
     environment:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_ROOT_HOST
-    ports:
-      - "3303:3306"
-      - "33063:33060"
+      MYSQL_ROOT_PASSWORD: "swimming3"
+      MYSQL_ROOT_HOST: "%"
     command: ["mysqld",
     "--server_id=3",
     "--binlog_checksum=NONE",
@@ -77,32 +71,38 @@ services:
     "--relay_log_info_repository=TABLE",
     "--transaction_write_set_extraction=XXHASH64",
     "--user=mysql",
-    "--skip-host-cache",
     "--skip-name-resolve",
+    "--skip-host-cache",
     "--default_authentication_plugin=mysql_native_password"]
     deploy:
       mode: replicated
       replicas: 1
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 256M
+    networks:
+      - mycluster
 
   shell:
+    hostname: '{{.Service.Name}}'
     image: mysql/mysql-server:latest
-    entrypoint: "/bin/shell-entrypoint"
-    environment: &other-environment
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_HOST
-      - MYSQL_PORT
-      - MYSQL_INNODB_NUM_MEMBERS
-      - MYSQLSH_SCRIPT
-      - MYSQL_SCRIPT
-    volumes:
-        - "./shell-entrypoint.sh:/bin/shell-entrypoint"
-        - "./cluster-setup.js:/tmp/cluster-setup.js"
-    depends_on: &node-depends
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        sleep 80
+        mysqlsh -- dba configure-instance { --port=3306 --host=mc_node01 --user=root --password=swimming3 }
+        sleep 5
+        mysqlsh -- dba configure-instance { --port=3306 --host=mc_node02 --user=root --password=swimming3 }
+        sleep 5
+        mysqlsh -- dba configure-instance { --port=3306 --host=mc_node03 --user=root --password=swimming3 }
+        sleep 5
+        mysqlsh root@mc_node01:3306 --password=swimming3 -- dba create-cluster otuscluster --multiPrimary=false --force=true --memberWeight=80
+        sleep 10
+        mysqlsh root@mc_node01:3306 --password=swimming3 -- cluster add-instance root@mc_node02:3306 --password=swimming3 --memberWeight=60
+        sleep 10
+        mysqlsh root@mc_node01:3306 --password=swimming3 -- cluster add-instance root@mc_node03:3306 --password=swimming3 --memberWeight=60
+        sleep 10
+        mysqlsh root@mc_node01:3306 --password=swimming3 -- cluster status
+    depends_on:
       - node01
       - node02
       - node03
@@ -111,24 +111,42 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 256M
+        delay: 60s
+        max_attempts: 8
+        window: 120s
+    networks:
+      - mycluster
+
   router:
+    hostname: '{{.Service.Name}}'
     image: mysql/mysql-router:latest
-    environment: *other-environment
+    environment:
+       MYSQL_USER: "root"
+       MYSQL_PASSWORD: "swimming3"
+       MYSQL_HOST: "mc_node01"
+       MYSQL_PORT: "3306"
+       MYSQL_INNODB_NUM_MEMBERS: "3"
     ports:
       - "6446:6446"
-      - "6447:6447"
-    depends_on: *node-depends
-    restart: always
+    depends_on:
+      - node01
+      - node02
+      - node03
+      - shell
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.role == manager]
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 8
+        window: 120s
+    networks:
+      - mycluster
+
+networks:
+  mycluster:
+    driver: overlay
+    attachable: true

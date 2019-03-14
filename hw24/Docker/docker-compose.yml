@@ -89,7 +89,8 @@ services:
 
   router:
     image: mysql/mysql-router:latest
-    environment: *other-environment
+    env_file:
+      router.env
     ports:
       - "6446:6446"
       - "6447:6447"
