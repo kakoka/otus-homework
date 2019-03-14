@@ -56,7 +56,7 @@ $ mysql -u root -pPool-swimming3 -e "start slave;"
 Видим в логе репликации:
 
 <pre>
-2019-03-14T10:28:27.988218Z 8 [System] [MY-010562] [Repl] Slave I/O thread for channel '': c      onnected to master 'repl@master:3306',replication started in log 'FIRST' at position 4
+2019-03-14T10:28:27.988218Z 8 [System] [MY-010562] [Repl] Slave I/O thread for channel '': connected to master 'repl@master:3306',replication started in log 'FIRST' at position 4
 </pre>
 
 Таблицы, на мастере:
