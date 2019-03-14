@@ -1,0 +1,14 @@
+- name: Copy SELinux type enforcement file
+  copy: 
+    src: mysql-server/mysqld.te
+    dest: /tmp
+- name: Compile SELinux module file
+  command: checkmodule -M -m -o /tmp/mysqld.mod /tmp/mysqld.te
+- name: Build SELinux policy package
+  command: semodule_package -o /tmp/mysqld.pp -m /tmp/mysqld.mod
+- name: Load SELinux policy package
+  command: semodule -i /tmp/mysqld.pp
+- name: Remove temporary files
+  file: 
+    path: /tmp/mysqld.*
+    state: absent

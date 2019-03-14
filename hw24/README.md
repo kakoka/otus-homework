@@ -94,9 +94,9 @@ $ docker-compose up -d
 
 ### 7. Docker swarm
 
-Написан [vagrantfile](Swarm/Vagrantfile) и [плейбук](Swarm/playbook.yml) для разворачивания docker swarm на нескольких виртуальных машинах (master, node01, node02).
+Написан [vagrantfile](Swarm/Vagrantfile) и [плейбук](Swarm/playbook.yml) для развертывания docker swarm на нескольких виртуальных машинах (master, node01, node02).
 
-Так же написан [mysql-cluster.yml](Swarm/swdocker/mysql-cluster.yml) для разворачивания сервисов - три mysql ноды и роутер.
+Так же написан [mysql-cluster.yml](Swarm/swdocker/mysql-cluster.yml) для развертывания сервисов - три mysql ноды и роутер.
 После старта ВМ (`vagrant up` в каталоге `Swarm`) - `vagrant ssh master`, далее:
 
 <pre>

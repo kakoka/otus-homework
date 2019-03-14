@@ -1,0 +1,19 @@
+[mysqld]
+
+binlog-checksum=crc32
+gtid-mode=on
+enforce-gtid-consistency=true
+log-slave-updates=true
+server-id = 1
+replicate-do-db=bet
+replicate-do-table=bet.bookmaker
+replicate-do-table=bet.competition
+replicate-do-table=bet.market
+replicate-do-table=bet.odds
+replicate-do-table=bet.outcome
+
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid

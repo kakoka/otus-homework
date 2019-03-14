@@ -1,0 +1,14 @@
+
+module mysqld 1.0;
+
+require {
+	type ephemeral_port_t;
+	type mysqld_t;
+	class tcp_socket name_connect;
+}
+
+#============= mysqld_t ==============
+
+#!!!! This avc can be allowed using one of the these booleans:
+#     nis_enabled, mysql_connect_any
+allow mysqld_t ephemeral_port_t:tcp_socket name_connect;

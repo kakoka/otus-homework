@@ -1,0 +1,105 @@
+---
+- hosts: master
+  become: yes
+  tasks:
+  - include_tasks: dns-server.yml
+- hosts: all
+  become: yes
+  tasks:
+  - name: Include some variables
+    include_vars:
+      file: vars.yml
+  - name: install mysql8 reposiroty from url
+    yum:
+      name: https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
+  - name: disable old repository
+    shell: yum-config-manager {{ item }}
+    with_items:
+      - "--disable mysql57-community"
+      - "--enable mysql80-community"
+  - name: install mysql8 server
+    yum:
+      name: ['mysql-community-server', 'mysql-shell', 'policycoreutils-python']
+      state: present
+  - name: enable mysql
+    systemd:
+      name: mysqld
+      state: restarted
+      enabled: yes
+  - name: get root password
+    shell: "grep 'A temporary password is generated for root@localhost' {{ mysql_log_file }} | awk -F ' ' '{print $(NF)}'"
+    register: root_password
+  - name: update expired root user password
+    command: mysql --user root --password={{ root_password.stdout }} --connect-expired-password --execute="ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{{ mysql_root_password }}';"
+
+  - name: say Network Manager do NOT touch resolv.conf
+    copy:
+      src: etc/NetworkManager.conf
+      dest: /etc/NetworkManager/NetworkManager.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: copy resolv.conf
+    copy:
+      src: etc/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: reload config NetworkManager
+    service:
+      name: NetworkManager
+      daemon_reload: yes
+  - name: copy hosts file
+    copy:
+      src: etc/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0600
+  - include_tasks: selinux.yml
+- hosts: master
+  become: yes
+  tasks:
+  - name: copy master config
+    copy:
+      src: mysql-server/master.my.cnf
+      dest: /etc/my.cnf
+  - name: restart mysqld on master
+    service:
+      name: mysqld
+      state: restarted
+      enabled: yes
+  - name: create repl user
+    command: mysql -u root -pPool-swimming3 -e "CREATE USER 'repl'@'%' IDENTIFIED BY 'Pool-swimming3';"
+  - name: grant repl user
+    command: mysql -u root -pPool-swimming3 -e "GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';"
+  - name: create db
+    command: mysql -u root -pPool-swimming3 -e "CREATE DATABASE bet;"
+  - name: copy dump
+    copy:
+      src: dump/db.sql
+      dest: /tmp/db.sql
+  - name: load db dump
+    command: mysql -u root -pPool-swimming3 bet -e "source /tmp/db.sql"
+  - name: insert values into bet
+    command: mysql -u root -pPool-swimming3 bet -e "INSERT INTO bookmaker (id,bookmaker_name) VALUES(1,'1xbet');"
+- hosts: slave
+  become: yes
+  tasks:
+  - name: copy slave config
+    copy:
+      src: mysql-server/slave.my.cnf
+      dest: /etc/my.cnf
+  - name: restart mysqld on slave
+    service:
+      name: mysqld
+      state: restarted
+      enabled: yes
+  - name: enable replication
+    command: mysql -u root -pPool-swimming3 -e "change master to master_host='master', master_auto_position=1, Master_User='repl', master_password='Pool-swimming3';"
+  - name: enable replication
+    command: mysql -u root -pPool-swimming3 -h master -e "show master status\G"
+  - name: enable replication
+    command: mysql -u root -pPool-swimming3 -e "start slave;"
+...
