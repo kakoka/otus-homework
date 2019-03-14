@@ -35,28 +35,24 @@ replicate-do-table=bet.outcome
 
 Так же мы заводим пользователя `repl`, которому даем права на репликацию, создаем базу `bet`, и заливаем в нее файл дампа.
 
-`
+<pre>
 $ mysql -u root -pPool-swimming3 -e "CREATE USER 'repl'@'%' IDENTIFIED BY 'Pool-swimming3';"
-$
 $ mysql -u root -pPool-swimming3 -e "GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';"
-$
 $ mysql -u root -pPool-swimming3 -e "CREATE DATABASE bet;"
-$
 $ mysql -u root -pPool-swimming3 -e "INSERT INTO bookmaker (id,bookmaker_name) VALUES(1,'1xbet');"
-$
 $ mysql -u root -pPool-swimming3 bet < db.dump
-`
+</pre>
 
 ### 3. Slave
 
 Разворачиваем slave при помощи [плейбука](provisioning/playbook.yml), переносим [конфигурационные файлы](provisioning/mysql-server/slave.my.cnf) сервера.
 Включаем репликацию на слейв:
 
-`
+<pre>
 $ mysql -u root -pPool-swimming3 -e "change master to master_host='master', master_auto_position=1, Master_User='repl', master_password='Pool-swimming3';"
-$
 $ mysql -u root -pPool-swimming3 -e "start slave;"
-`
+</pre>
+
 Видим в логе репликации:
 
 <pre>
