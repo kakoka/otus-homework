@@ -126,3 +126,7 @@ $ docker stack deploy --compose-file=mysql-cluster.yml mc
 - https://github.com/neumayer/mysql-docker-compose-examples/blob/master/innodb-cluster/docker-compose.yml
 - https://github.com/rubberydub/mysql-innodb-cluster-docker-compose/blob/master/docker-compose.yml
 - https://github.com/neumayer/docker-images/tree/master/mysql-shell-batch
+- https://thesubtlepath.com/blog/mysql/innodb-cluster-devops-mysqlsh-command-usage/
+- http://ayoubensalem.me/tutorials/2018-04-03/Mysql-replication-in-Swarm-Mode/
+- https://lefred.be/content/mysql-innodb-cluster-mysql-shell-and-the-adminapi/
+- https://mysqlhighavailability.com/setting-up-mysql-group-replication-with-mysql-docker-images/⏎ 
