@@ -99,7 +99,7 @@
   - name: enable replication
     command: mysql -u root -pPool-swimming3 -e "change master to master_host='master', master_auto_position=1, Master_User='repl', master_password='Pool-swimming3';"
   - name: enable replication
-    command: mysql -u root -pPool-swimming3 -h master -e "show master status\G"
+    command: mysql -u repl -pPool-swimming3 -h master -e "show master status\G"
   - name: enable replication
     command: mysql -u root -pPool-swimming3 -e "start slave;"
 ...
