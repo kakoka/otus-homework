@@ -96,7 +96,7 @@ $ docker-compose up -d
 
 Написан [vagrantfile](Swarm/Vagrantfile) и [плейбук](Swarm/playbook.yml) для разворачивания docker swarm на нескольких виртуальных машинах (master, node01, node02).
 
-Так же написан [mysql-cluster.yml](swdocker/mysql-cluster.yml) для разворачивания сервисов - три mysql ноды и роутер.
+Так же написан [mysql-cluster.yml](Swarm/swdocker/mysql-cluster.yml) для разворачивания сервисов - три mysql ноды и роутер.
 После старта ВМ (`vagrant up` в каталоге `Swarm`) - `vagrant ssh master`, далее:
 
 <pre>
@@ -110,6 +110,8 @@ $ docker stack deploy --compose-file=mysql-cluster.yml mc
 ![](pic/pic04.png)
 
 ![](pic/pic05.png)
+
+Подключение к кластеру - любым клиентом на порт 3306, пара логин/пароль: `root/swimming3`.
 
 ### 8. Ссылки
 
