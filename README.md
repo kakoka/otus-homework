@@ -28,3 +28,4 @@
 * [#25. MySQL репликация.](https://github.com/kakoka/otus-homework/tree/master/hw25)
 * [#26. NFS, Kerberos.](https://github.com/kakoka/otus-homework/tree/master/hw26)
 * [#27. Postfix, Dovecot.](https://github.com/kakoka/otus-homework/tree/master/hw27)
+* [#28. PostgreSQL, replication, backup.](https://github.com/kakoka/otus-homework/tree/master/hw28)
