@@ -56,14 +56,19 @@ trigger_file = '/tmp/postgresql.trigger.5432'
 
 primary
 
+![](pic/pic01.png)
+
 psql -c "select application_name, state, sync_priority, sync_state from pg_stat_replication;"
 psql -x -c "select * from pg_stat_replication;"
+
+![](pic/pic02.png)
 
 create table testtable( id serial primary_key, name varchar(50);
 insert into testtable values (2,'vasya'),(3,'petya');
 
 standby
 
+![](pic/pic03.png)
 select * from testtable;
 
 ### 4. pg_basebackup
