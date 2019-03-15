@@ -1,0 +1,74 @@
+---
+# tasks file for add_pgsql11
+- name: install postgres reposiroty from url
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
+
+- name: PostgreSQL 11 server install
+  yum:
+    name: 
+      - postgresql11-server
+      - postgresql11
+      - python-psycopg2
+    state: latest
+
+- name: Set postgresql as a service
+  systemd:
+    name: postgresql-11
+    enabled: yes
+    masked: no
+
+- name: Check if postgres database dir exsits
+  stat:
+    path: /var/lib/pgsql/11/initdb.log
+  register: pg_data_exist
+
+- name: Postgres init database
+  action: command
+    /usr/pgsql-11/bin/postgresql-11-setup
+    initdb  
+  when: pg_data_exist.stat.exists == False
+
+- name: Start PostgreSQL server
+  systemd:
+    name: postgresql-11
+    state: started
+
+- name: Stop PostgreSQL server
+  systemd:
+    name: postgresql-11
+    state: stopped
+
+- name: Ansible delete files on standby data dir
+  file:
+    path: /var/lib/pgsql/11/data
+    state: absent
+
+- name: Ansible delete files on standby data dir
+  file:
+    path: /var/lib/pgsql/11/data
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: get data from primary
+  become_user: postgres
+  command: pg_basebackup -h 192.168.50.100 -U replication -D /var/lib/pgsql/11/data -P --wal-method=stream
+
+- name: Add postgres.conf to standby data directory
+  template: 
+    src: postgresql.standby.conf.j2
+    dest: /var/lib/pgsql/11/data/postgresql.conf
+    owner: postgres
+    group: postgres
+    mode: 0700
+- name: Add recovery.conf to standby data directory
+  template: 
+    src: recovery.conf.j2
+    dest: /var/lib/pgsql/11/data/recovery.conf
+    owner: postgres
+    group: postgres
+    mode: 0700
+  notify: Restart postgres
+...

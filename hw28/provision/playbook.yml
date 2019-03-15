@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: Install epel-relese
+    yum:
+      name: epel-release
+      state: present
+  - name: setup locale
+    copy:
+      src: locale.conf
+      dest: /etc/locale.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: say Network Manager do NOT touch resolv.conf
+    copy:
+      src: roles/dns/files/NetworkManager.conf
+      dest: /etc/NetworkManager/NetworkManager.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: reload config NetworkManager
+    service:
+      name: NetworkManager
+      daemon_reload: yes
+
+- hosts: primary
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: dns }
+    - { role: pgsql11-primary }
+    # - { role: ntp }
+    # - { role: kerberos }
+- hosts: standby
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: copy resolv.conf to client
+    copy:
+      src: roles/dns/files/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+- hosts: standby
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: pgsql11-standby }
+    # - { role: ntp-client }
+    # - { role: kerberos-client }
+...

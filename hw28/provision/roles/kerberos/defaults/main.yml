@@ -1,0 +1,8 @@
+---
+# defaults file for kerberos
+db_pass: pass
+realm: OTUS.TEST
+kadmin_user: root/admin
+kadmin_pass: pass
+kuser_user: vagrant
+kuser_pass: vagrant
