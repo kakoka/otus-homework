@@ -83,7 +83,7 @@
     mode: 0700
   notify: Restart postgres
 
-# vi /etc/environment /etc/locale.conf
-# pgbackrest --stanza=backup --log-level-console=info check
-# pgbackrest --stanza=backup --log-level-console=info backup
+- name: create incremental backup from standby
+  become_user: postgres
+  shell: pgbackrest --stanza=backup --log-level-console=info --type=incr backup
 ...

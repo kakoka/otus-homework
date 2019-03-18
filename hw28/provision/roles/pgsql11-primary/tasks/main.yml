@@ -116,13 +116,7 @@
   become_user: postgres
   shell: pgbackrest --stanza=backup --log-level-console=info stanza-create
 
-- name: create backup
+- name: create backup from primary
   become_user: postgres
   shell: pgbackrest --stanza=backup --log-level-console=info backup
-
-# vi /etc/environment /etc/locale.conf
-# pgbackrest --stanza=primary --log-level-console=info stanza-create
-# pgbackrest --stanza=primary --log-level-console=info check
-# pgbackrest --stanza=primary --log-level-console=info backup
-
 ...

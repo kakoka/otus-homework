@@ -76,8 +76,13 @@ select * from testtable;
 
 mkdir /opt/backup
 
+Full backup
+
 ![](pic/pic04.png)
 
+Incremental backup
+
+![](pic/pic05.png)
 ### 5. Ссылки
 
 - https://blog.vpscheap.net/how-to-setup-replication-for-postgresql-in-centos-7/
