@@ -107,6 +107,11 @@
     path: /opt/backup
     owner: postgres
 
+- name: Start PostgreSQL server
+  systemd:
+    name: postgresql-11
+    state: restarted
+
 - name: create stanza
   become_user: postgres
   shell: pgbackrest --stanza=backup --log-level-console=info stanza-create
