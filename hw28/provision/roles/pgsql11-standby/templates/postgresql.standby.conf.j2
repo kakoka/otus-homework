@@ -221,7 +221,10 @@ min_wal_size = 80MB
 
 archive_mode = on		# enables archiving; off, on, or always
 				# (change requires restart)
-archive_command = 'cp %p /var/lib/pgsql/11/archive/%f'		# command to use to archive a logfile segment
+
+archive_command = 'pgbackrest --stanza=backup archive-push %p'
+
+#archive_command = 'cp %p /var/lib/pgsql/11/archive/%f'		# command to use to archive a logfile segment
 				# placeholders: %p = path of file to archive
 				#               %f = file name only
 				# e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'

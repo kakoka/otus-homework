@@ -1,0 +1,35 @@
+---
+# tasks file for nfs4
+- name: install nfs server packages
+  yum:
+    name: "@file-server"
+    state: present
+- name:
+  file:
+    path: /opt/backup
+    state: directory
+    mode: 0777
+- name: start and enable nfs4 services
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  with_items:
+    - rpcbind
+    - nfs-server
+    - nfs-secure
+- name: copy config files
+  copy:
+    src: exports
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0600
+- name: restart nfs4 services
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - rpcbind
+    - nfs-server
+    - nfs-secure

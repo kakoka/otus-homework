@@ -10,6 +10,7 @@
       - postgresql11-server
       - postgresql11
       - python-psycopg2
+      - pgbackrest
     state: latest
 
 - name: Set postgresql as a service
@@ -52,9 +53,13 @@
     group: postgres
     mode: 0700
 
+- name: obtain kerberos ticket for postgres
+  become_user: postgres
+  shell: echo "postgres" | kinit -p postgres
+
 - name: get data from primary
   become_user: postgres
-  command: pg_basebackup -h 192.168.50.100 -U replication -D /var/lib/pgsql/11/data -P --wal-method=stream
+  command: pg_basebackup -h primary.otus.test -U replication -D /var/lib/pgsql/11/data -P --wal-method=stream
 
 - name: Add postgres.conf to standby data directory
   template: 
@@ -63,6 +68,12 @@
     owner: postgres
     group: postgres
     mode: 0700
+
+- name: Add pgbackrest.conf to standby data directory
+  template: 
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest.conf
+
 - name: Add recovery.conf to standby data directory
   template: 
     src: recovery.conf.j2
@@ -71,4 +82,8 @@
     group: postgres
     mode: 0700
   notify: Restart postgres
+
+# vi /etc/environment /etc/locale.conf
+# pgbackrest --stanza=backup --log-level-console=info check
+# pgbackrest --stanza=backup --log-level-console=info backup
 ...

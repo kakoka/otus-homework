@@ -28,6 +28,10 @@
 - name: obtain kerberos ticket for root
   shell: echo "{{ kadmin_pass }}" | kinit -p {{ kadmin_user }}
 
-- name: enable pam kerberos auth
-  shell: authconfig --enablekrb5 --update
+# - name: obtain kerberos ticket for postgres
+#   become_user: postgres
+#   shell: echo "postgres" | kinit -p postgres
+
+# - name: enable pam kerberos auth
+#   shell: authconfig --enablekrb5 --update
 ...

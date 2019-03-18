@@ -11,5 +11,6 @@ host    all             all             ::1/128                 ident
 local   replication     all                                     peer
 host    replication     all             127.0.0.1/32            ident
 host    replication     all             ::1/128                 ident
-host	replication	replication	192.168.50.101/32	trust
-host	replication	replication	192.168.50.100/32	trust
+host    replication     replication     standby.otus.test       trust
+host    replication     replication     primary.otus.test       trust
+host    all             all             192.168.50.0/24         gss map=mymap include_realm=0 krb_realm=OTUS.TEST

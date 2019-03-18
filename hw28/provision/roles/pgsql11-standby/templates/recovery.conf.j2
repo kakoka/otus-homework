@@ -1,3 +1,5 @@
 standby_mode = on
-primary_conninfo = 'host=192.168.50.100 port=5432 user=replication password=swimming3 application_name=standby'
+primary_conninfo = 'host=primary.otus.test port=5432 user=replication password=swimming3 application_name=standby'
+restore_command = 'pgbackrest --stanza=backup archive-get %f "%p"'
 trigger_file = '/tmp/postgresql.trigger.5432'
+recovery_target_timeline = 'latest'

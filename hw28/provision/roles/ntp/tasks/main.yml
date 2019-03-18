@@ -9,7 +9,7 @@
     dest: /etc/chrony.conf
     owner: root
     group: root
-    mode: 0644
+    mode: 0700
 
 - name: chronyd service restarted
   service:

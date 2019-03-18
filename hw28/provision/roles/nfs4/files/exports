@@ -1,0 +1,1 @@
+/opt/backup *(rw,sync,no_root_squash,sec=krb5)

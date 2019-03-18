@@ -90,7 +90,7 @@ max_connections = 100			# (change requires restart)
 #db_user_namespace = off
 
 # GSSAPI using Kerberos
-#krb_server_keyfile = ''
+krb_server_keyfile = '/usr/local/pgsql/etc/krb5.keytab'
 #krb_caseins_users = off
 
 # - SSL -
@@ -221,7 +221,10 @@ min_wal_size = 80MB
 
 archive_mode = on		# enables archiving; off, on, or always
 				# (change requires restart)
-archive_command = 'cp %p /var/lib/pgsql/11/archive/%f'		# command to use to archive a logfile segment
+# archive_command = 'cp %p /var/lib/pgsql/11/archive/%f'		# command to use to archive a logfile segment
+
+archive_command = 'pgbackrest --stanza=backup archive-push %p'
+
 				# placeholders: %p = path of file to archive
 				#               %f = file name only
 				# e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'

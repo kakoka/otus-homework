@@ -14,6 +14,13 @@
       owner: root
       group: root
       mode: 0644
+  - name: setup locale
+    copy:
+      src: environment
+      dest: /etc/environment
+      owner: root
+      group: root
+      mode: 0644
   - name: say Network Manager do NOT touch resolv.conf
     copy:
       src: roles/dns/files/NetworkManager.conf
@@ -31,9 +38,11 @@
   gather_facts: no
   roles:
     - { role: dns }
+    - { role: ntp }
+    - { role: kerberos }
+    - { role: nfs4 }
     - { role: pgsql11-primary }
-    # - { role: ntp }
-    # - { role: kerberos }
+    # - { role: pgbackrest-primary }
 - hosts: standby
   become: yes
   gather_facts: no
@@ -49,7 +58,9 @@
   become: yes
   gather_facts: no
   roles:
+    - { role: ntp-client }
+    - { role: kerberos-client }
+    - { role: nfs4-client }
     - { role: pgsql11-standby }
-    # - { role: ntp-client }
-    # - { role: kerberos-client }
+    # - { role: pgbackrest-standby }
 ...

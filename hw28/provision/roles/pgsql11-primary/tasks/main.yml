@@ -10,6 +10,7 @@
       - postgresql11-server
       - postgresql11
       - python-psycopg2
+      - pgbackrest
     state: latest
 
 - name: Set postgresql as a service
@@ -38,10 +39,6 @@
   become_user: postgres  
   command: psql -c "CREATE USER replication REPLICATION LOGIN CONNECTION LIMIT 5 ENCRYPTED PASSWORD 'swimming3';"
 
-- name: Add replica connections
-  become_user: postgres  
-  command: psql -c "ALTER ROLE replication CONNECTION LIMIT 2;"
-
 - name: Add pg_hba.conf to primary data directory
   template: 
     src: pg_hba.conf.j2
@@ -58,12 +55,69 @@
     group: postgres
     mode: 0700
 
-- name: Create archive dir
-  file: 
-    path: /var/lib/pgsql/11/archive
+- name: Add pg_ident.conf to primary data directory
+  template: 
+    src: pg_ident.conf.j2
+    dest: /var/lib/pgsql/11/data/pg_ident.conf
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: Add pgbackrest.conf to primary data directory
+  template: 
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest.conf
+
+- name: create /usr/local/pgsql
+  file:
+    path: /usr/local/pgsql
     state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: create /usr/local/pgsql/etc
+  file:
+    path: /usr/local/pgsql/etc
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: create /var/log/pgbackrest
+  file:
+    path: /var/log/pgbackrest
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0700
+
+- name: copy krb5.keytab
+  copy:
+    remote_src: true
+    src: /etc/krb5.keytab
+    dest: /usr/local/pgsql/etc/krb5.keytab
     group: postgres
     owner: postgres
-    mode: 0700
+    mode: 0644
   notify: Restart postgres
+
+- name: change owner on network share
+  file:
+    path: /opt/backup
+    owner: postgres
+
+- name: create stanza
+  become_user: postgres
+  shell: pgbackrest --stanza=backup --log-level-console=info stanza-create
+
+- name: create backup
+  become_user: postgres
+  shell: pgbackrest --stanza=backup --log-level-console=info backup
+
+# vi /etc/environment /etc/locale.conf
+# pgbackrest --stanza=primary --log-level-console=info stanza-create
+# pgbackrest --stanza=primary --log-level-console=info check
+# pgbackrest --stanza=primary --log-level-console=info backup
+
 ...

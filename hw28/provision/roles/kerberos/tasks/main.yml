@@ -35,12 +35,15 @@
     name: krb5kdc
     state: restarted
     enabled: true
-    
+
 - name: Create admin for administering Kerberos server
   shell: kadmin.local -q "addprinc -pw {{ kadmin_pass }} {{ kadmin_user }}"
 
-- name: Create test user  Kerberos server
+- name: Create test user on Kerberos server
   shell: kadmin.local -q "addprinc -pw {{ kuser_pass }} {{ kuser_user }}"
+
+- name: Create postgres user on Kerberos server
+  shell: kadmin.local -q "addprinc -pw postgres postgres"
 
 - name: Create keytab for administering Kerberos server
   shell: kadmin.local -q "ktadd -k /var/kerberos/krb5kdc/kadm5.keytab kadmin/admin"
@@ -56,12 +59,14 @@
 - name: create a principal for KDC server
   shell: kadmin.local -q "addprinc -randkey -kvno 3 {{ item }}"
   with_items:
-   - host/ns.otus.test@OTUS.TEST
-   - postgres/ns.otus.test@OTUS.TEST
+   - nfs/primary.otus.test@OTUS.TEST
+   - host/primary.otus.test@OTUS.TEST
+   - postgres/primary.otus.test@OTUS.TEST
 
 - name: add all entires to keytab file on KDC server
   shell: kadmin.local -q "ktadd {{ item }}"
   with_items:
-   - host/ns.otus.test
-   - postgres/ns.otus.test
+   - nfs/primary.otus.test@OTUS.TEST
+   - host/primary.otus.test
+   - postgres/primary.otus.test
 ...

@@ -1,0 +1,1 @@
+backup -fstype=nfs4,rw,sec=krb5 primary.otus.test:/opt/backup
