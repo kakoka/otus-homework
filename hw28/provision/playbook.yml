@@ -42,7 +42,6 @@
     - { role: kerberos }
     - { role: nfs4 }
     - { role: pgsql11-primary }
-    # - { role: pgbackrest-primary }
 - hosts: standby
   become: yes
   gather_facts: no
@@ -62,5 +61,4 @@
     - { role: kerberos-client }
     - { role: nfs4-client }
     - { role: pgsql11-standby }
-    # - { role: pgbackrest-standby }
 ...
