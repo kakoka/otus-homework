@@ -283,16 +283,7 @@ $ sudo -iu postgres pgbackrest --stanza=backup --delta restore
 
 **NB:** Утилита позволяет реализовать нам все возможные стратегии резервного копирования, путем включения в запуск по расписанию, типы бэкапа, синхронное и асинхронное исполнение и т.д., невероятное богатство возможностей.
 
-Разумной стратегией для нормальных рабочих нагрузок может быть полное резервное копирование каждую неделю с последующим ежедневным добавочным резервным копированием. `repo1-retention-full=1` означает, что за один раз будет храниться только одна полная резервная копия. Срок действия инкрементных резервных копий истекает только после истечения срока их полной или дифференциальной резервной копии. Настройка cron на сервере резервного копирования требует минимальных усилий для создания еженедельной полной резервной копии и ежедневной инкрементной.
-
-Например:
-
-<pre>
-# weekly full, executed at midnight,saturday
-00 00 * * 6 pgbackrest backup --stanza backup --type full
-# daily incremental, executed at midnight except saturday
-00 00 * * 0-5 pgbackrest backup --stanza backup
-</pre>
+Нар
 
 ### 5. Использование стенда
 
@@ -321,5 +312,4 @@ $ sudo -iu postgres pgbackrest info
 - https://pgstef.github.io
 - https://info.crunchydata.com/blog/pgbackrest-performing-backups-on-a-standby-cluster
 - https://pgbackrest.org/user-guide.html#replication/hot-standby
-- http://www.pgdba.org/post/restoring_data
-- https://severalnines.com/blog/integrating-postgresql-authentication-systems
+- http://www.pgdba.org/post/restoring_data/
