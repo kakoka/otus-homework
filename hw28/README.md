@@ -252,7 +252,7 @@ delta=y
 Полный бэкап с primary:
 
 ```bash
-$ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
+$ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=full backup
 ```
 
 ![](pic/pic04.png)
@@ -263,7 +263,15 @@ $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=i
 $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
 ```
 
-![](pic/pic05.png)
+![](pic/pic05-1.png)
+
+Информация о бекапах в репозитории:
+
+```bash
+$ sudo -iu postgres pgbackrest info
+```
+![](pic/pic05-2.png)
+
 
 Восстановление primary:
 
@@ -300,3 +308,5 @@ $ sudo -iu postgres pgbackrest info
 - https://shiningapples.net/%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0-%D0%B1%D0%B5%D0%BA%D0%B0%D0%BF%D0%B0-postgresql-%D0%B2-ubuntu-server-%D0%BF%D1%80%D0%B8-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8-pgbackrest-%D1%81/
 - https://pgconf.ru/media/2017/04/04/EgorRogov_pg_probackup_script.txt
 - https://pgstef.github.io
+- https://info.crunchydata.com/blog/pgbackrest-performing-backups-on-a-standby-cluster
+- https://pgbackrest.org/user-guide.html#replication/hot-standby
