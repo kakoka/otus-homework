@@ -42,9 +42,9 @@
 
 После установки сервера, инициализации БД и старта сервера, заведем пользователя `replication` от имени которого будет выполянться репликация, установим пароль и ограничение на количество одновременных активных соединений:
 
-`sql
+```sql
 $ sudo -iu postgres psql -c "CREATE USER replication REPLICATION LOGIN CONNECTION LIMIT 5 ENCRYPTED PASSWORD 'swimming3';"
-`
+```
 
 ##### 1.1 pg_hba.conf
 
@@ -121,11 +121,15 @@ mymap           vagrant                 postgres
 
 Выполняем команду, которая создаст репозиторий для бэкапа:
 
-`pgbackrest --stanza=backup --log-level-console=info stanza-create`
+```bash
+$ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info stanza-create
+```
 
 и сделаем первый бэкап:
 
-`pgbackrest --stanza=backup --log-level-console=info backup`.
+```bash
+pgbackrest --stanza=backup --log-level-console=info backup
+```
 
 #### 2. Настройка standby
 
@@ -133,11 +137,11 @@ mymap           vagrant                 postgres
 
 Выполняем со `standby.otus.test` резервное копирование базы сервера `primary.otus.test` в директорию `/var/lib/pgsql/11/data`:
 
-`bash
+```bash
 $ sudo -iu postgres kinit 
 $ sudo -iu postgres pg_basebackup -h primary.otus.test \
   -U replication -D /var/lib/pgsql/11/data -P --wal-method=stream
-`
+```
 
 Вносим правки в postgres.conf:
 
@@ -164,33 +168,33 @@ recovery_target_timeline = 'latest'
 
 Вывод запросов к серверу о статусе репликации:
 
-`bash
+```bash
 $ sudo -iu postgres psql -c "select application_name, state, sync_priority, sync_state from pg_stat_replication;"
 $ sudo -iu postgres psql -x -c "select * from pg_stat_replication;"
-`
+```
 ![](pic/pic01.png)
 
 Подключимся к базе данных:
 
-`
+```bash
 $ sudo -iu postgres
 $ psql
-`
+```
 
 Создаем базу данных и подключимся к ней:
 
-`sql
+```sql
 postgres=# create database test;
 postgres=# \c test
-`
+```
 
 Создадим таблицу testtable и добавим в нее данные:
 
-`sql
+```sql
 test=# create table testtable( id serial primary_key, name varchar(50);
 test=# insert into testtable values (1,'pasha');
 test=# insert into testtable values (2,'vasya'),(3,'petya');
-`
+```
 
 ![](pic/pic02.png)
 
@@ -198,12 +202,12 @@ test=# insert into testtable values (2,'vasya'),(3,'petya');
 
 Подключимся к базе данных и сделаем запрос на выборку:
 
-`
+```bash
 $ sudo -iu postgres
 $ psql
 postgres=# \c test
 postgres=# select * from testtable;
-`
+```
 
 ![](pic/pic03.png)
 
@@ -256,25 +260,25 @@ postgres=# select * from testtable;
 
 Полный бэкап с primary:
 
-`bash
+```bash
 $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
-`
+```
 
 ![](pic/pic04.png)
 
 Инкрементальный бэкап со standby:
 
-`bash
+```bash
 $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
-`
+```
 
 ![](pic/pic05.png)
 
 Восстановление primary:
 
-`bash
+```bash
 $ sudo -iu postgres pgbackrest --stanza=backup --delta restore
-`
+```
 
 ![](pic/pic06.png)
 
@@ -289,6 +293,7 @@ $vagrant up
 $ vagrant ssh standby
 $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
 $ sudo -iu postgres pgbackrest info
+</pre>
 
 Все настроено через провижн при старте ВМ, должен произойти инкрементальный бэкап, командной `sudo -iu postgres pgbackrest info` можно посмотреть статус репозитория для бэкапа.
 
