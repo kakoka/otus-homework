@@ -288,10 +288,10 @@ $ sudo -iu postgres pgbackrest --stanza=backup --delta restore
 Например:
 
 <pre>
-# weekly full, executed at midnight,saturday
-00 00 * * 6 pgbackrest backup --stanza backup --type full
-# daily incremental, executed at midnight except saturday
-00 00 * * 0-5 pgbackrest backup --stanza backup
+# недельный полный, выполняется в полночь в субботу
+00 00 * * 6 pgbackrest --stanza backup --type full backup
+# дневной инкрементальный, выполняется каждый рабочий день в полночь
+00 00 * * 0-5 pgbackrest --stanza backup --type incr backup
 </pre>
 
 ### 5. Использование стенда
