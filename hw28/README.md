@@ -70,16 +70,16 @@ krb_server_keyfile = '/usr/local/pgsql/etc/krb5.keytab'
 
 # WRITE-AHEAD LOG
 
-wal_level = hot_standby 		# minimal, replica, or logical
-synchronous_commit = local		# synchronization level;
-								# off, local, remote_write, remote_apply, or on
-archive_mode = on 				# enables archiving; off, on, or always
+wal_level = hot_standby 	# minimal, replica, or logical
+synchronous_commit = local 	# synchronization level;
+							# off, local, remote_write, remote_apply, or on
+archive_mode = on 			# enables archiving; off, on, or always
 
 archive_command = 'pgbackrest --stanza=backup archive-push %p' 
 
-								# command to use to archive a logfile segment
-								# placeholders: %p = path of file to archive
-								#               %f = file name only
+							# command to use to archive a logfile segment
+							# placeholders: %p = path of file to archive
+							#               %f = file name only
 
 # REPLICATION - Sending Servers 
 
@@ -97,9 +97,9 @@ synchronous_standby_names = 'standby'	# standby servers that provide sync rep
 Здесь мы определим варианты сопоставления пользователей, т.е. какой пользователь под каким именем может соединятся с БД. Документация [тут](https://postgrespro.ru/docs/postgresql/11/auth-username-maps).
 
 <pre>
-	mymap           portgres                replication
-	mymap           postgres                postgres
-	mymap           vagrant                 postgres
+mymap           portgres                replication
+mymap           postgres                postgres
+mymap           vagrant                 postgres
 </pre>
 
 После всех изменений выполняем `systemctl restart postgresql-11`.
@@ -109,14 +109,14 @@ synchronous_standby_names = 'standby'	# standby servers that provide sync rep
 Этот файл имеет отношения к резервному копированию. Нам необходимо инициализировать репозиторий с резервными копиями. Его основные параметры определяются в файле `/etc/pgbackrest.conf`.
 
 <pre>
-	[global]
-		repo1-path=/opt/backup
-		repo1-retention-full=2
-		process-max=2
-		log-level-console=info
-		log-level-file=debug
-	[backup]
-		pg1-path=/var/lib/pgsql/11/data
+[global]
+	repo1-path=/opt/backup
+	repo1-retention-full=2
+	process-max=2
+	log-level-console=info
+	log-level-file=debug
+[backup]
+	pg1-path=/var/lib/pgsql/11/data
 </pre>
 
 Выполняем команду, которая создаст репозиторий для бэкапа:
@@ -149,11 +149,11 @@ $ sudo -iu postgres pg_basebackup -h primary.otus.test \
 Добавляем recovery.conf:
 
 <pre>
-	standby_mode = on
-	primary_conninfo = 'host=primary.otus.test port=5432 user=replication password=swimming3 application_name=standby'
-	restore_command = 'pgbackrest --stanza=backup archive-get %f "%p"'
-	trigger_file = '/tmp/postgresql.trigger.5432'
-	recovery_target_timeline = 'latest'
+standby_mode = on
+primary_conninfo = 'host=primary.otus.test port=5432 user=replication password=swimming3 application_name=standby'
+restore_command = 'pgbackrest --stanza=backup archive-get %f "%p"'
+trigger_file = '/tmp/postgresql.trigger.5432'
+recovery_target_timeline = 'latest'
 </pre>
 
 И запускаем постгрес.
@@ -232,26 +232,26 @@ postgres=# select * from testtable;
 Для standby:
 
 <pre>
-	[backup]
-		pg1-host=primary.otus.test
-		pg1-path=/var/lib/pgsql/11/data
-		pg2-path=/var/lib/pgsql/11/data
-		recovery-option=standby_mode=on
-		recovery-option=primary_conninfo=host=primary.otus.test user=replication
-		recovery-option=recovery_target_timeline=latest
+[backup]
+	pg1-host=primary.otus.test
+	pg1-path=/var/lib/pgsql/11/data
+	pg2-path=/var/lib/pgsql/11/data
+	recovery-option=standby_mode=on
+	recovery-option=primary_conninfo=host=primary.otus.test user=replication
+	recovery-option=recovery_target_timeline=latest
 </pre>
 
 В секции [global] описывается репозиторий, который находится в /opt/backup на primary.otus.test, и подключен через NFS к standby.otus.test:
 
 <pre>
-	[global]
-		repo1-path=/opt/backup
-		repo1-retention-full=1
-		process-max=2
-		log-level-console=info
-		log-level-file=debug
-		backup-standby=y
-		delta=y
+[global]
+	repo1-path=/opt/backup
+	repo1-retention-full=1
+	process-max=2
+	log-level-console=info
+	log-level-file=debug
+	backup-standby=y
+	delta=y
 </pre>
 
 Полный бэкап с primary:
@@ -284,10 +284,11 @@ $ sudo -iu postgres pgbackrest --stanza=backup --delta restore
 
 После клонирования репозитория:
 
-`$vagrant up`
-`$ vagrant ssh standby`
-`$ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup`
-`$ sudo -iu postgres pgbackrest info `
+<pre>
+$vagrant up
+$ vagrant ssh standby
+$ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
+$ sudo -iu postgres pgbackrest info
 
 Все настроено через провижн при старте ВМ, должен произойти инкрементальный бэкап, командной `sudo -iu postgres pgbackrest info` можно посмотреть статус репозитория для бэкапа.
 
