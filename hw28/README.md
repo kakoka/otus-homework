@@ -12,29 +12,29 @@
 Две виртуальные машины:
 
 - primary.otus.test - серверы DNS, NTP, Kerberos, NFS и PostgresSQL в режиме primary.
-- standby.otus.test - PostgresSQL в режиме standby.
+- standby.otus.test - PostgresSQL в режиме hot_standby.
 
 Для резервного копирования будем использовать `pgbackrest`.
 
-Общая идея: 
+**Общая идея:**
 
 Поскольку Postgres умеет авторизовать пользователей через керберос, используем это для настройки авторизации в Postgres. На primary.otus.test разворачиваем Postgres, настраиваем его в режиме primary, так же настраиваем потоковую репликацию с использованием слотов. 
 
-На standby.otus.test разворачиваем Postgres в режиме hot_standby.
+На standby.otus.test разворачиваем Postgres в режиме `hot_standby`.
 
-На обоих хостах развернем `pgbackrest` для того, что бы была возможность инкрементального резервного копирования как с primary, так и со standby сервера. Для этого нужен общий репозиторий, который должен находиться на NFS ресурсе, для чего нам необходим работающий NFS сервер.
+На обоих хостах установим `pgbackrest`, что бы была возможность инкрементального резервного копирования как с primary, так и со standby сервера. Для этого необходим общий репозиторий, который должен находиться на NFS ресурсе, для чего нужен работающий NFS сервер.
 
 ### 0. Подготовка
 
 Развертывание сервисов NTP, DNS и NFS описана в [домашнем задании 26](https://github.com/kakoka/otus-homework/tree/master/hw26). Внесены небольшие поправки:
 
-- записи A в файлах зон DNS сервера (primary, standby)
-- standby синхронизируется primary по времени - изменение в конфиге chronyd
-- добавлены принципалы в базу данных Kerberos (postgres@OTUS.TEST, postgres/primary.otus.test@OTUS.TEST и тд.)
-- экспортируется папка `/opt/backup` в настройках NFS сервра на primary.otus.test
-- на standby.otus.test монитруется папка с primary.otus.test в `/opt/standby`
+- записи A в файлах зон DNS сервера (primary, standby);
+- standby синхронизируется primary по времени - изменение в конфиге chronyd;
+- добавлены принципалы в базу данных Kerberos (postgres@OTUS.TEST, postgres/primary.otus.test@OTUS.TEST и тд.);
+- экспортируется папка `/opt/backup` в настройках NFS сервра primary.otus.test;
+- на standby.otus.test в `/opt/standby` монтируется папка с primary.otus.test;
 
-Отметим, что написаны [**ansible роли**](https://github.com/kakoka/otus-homework/tree/master/hw28/provision/roles) для всех компонентов стенда.
+Написаны [**ansible роли**](https://github.com/kakoka/otus-homework/tree/master/hw28/provision/roles) для всех компонентов стенда.
 
 ### 1. Репликация
 
@@ -51,9 +51,9 @@ $ sudo -iu postgres psql -c "CREATE USER replication REPLICATION LOGIN CONNECTIO
 Внесем следующие изменения:
 
 <pre>
-host    replication     replication     primary.otus.test       trust
-host    replication     replication     standby.otus.test       trust
-host    all             all             192.168.50.0/24         gss map=mymap include_realm=0 krb_realm=OTUS.TEST
+host replication replication primary.otus.test trust
+host replication replication standby.otus.test trust
+host all         all         192.168.50.0/24   gss map=mymap include_realm=0 krb_realm=OTUS.TEST
 </pre>
 
 Для доступа реплики к мастеру используем `trust`, для остальных пользователей из нашей подсети используем Kereberos авторизацию.
@@ -64,32 +64,20 @@ host    all             all             192.168.50.0/24         gss map=mymap in
 
 <pre>
 # CONNECTIONS AND AUTHENTICATION
-
 listener_address   = 192.168.50.100
 krb_server_keyfile = '/usr/local/pgsql/etc/krb5.keytab'
 
 # WRITE-AHEAD LOG
-
-wal_level = hot_standby 	# minimal, replica, or logical
-synchronous_commit = local 	# synchronization level;
-							# off, local, remote_write, remote_apply, or on
-archive_mode = on 			# enables archiving; off, on, or always
-
+wal_level = hot_standby
+synchronous_commit = local
+archive_mode = on
 archive_command = 'pgbackrest --stanza=backup archive-push %p' 
 
-							# command to use to archive a logfile segment
-							# placeholders: %p = path of file to archive
-							#               %f = file name only
-
 # REPLICATION - Sending Servers 
-
-max_wal_senders = 2		 				# max number of walsender processes
-wal_keep_segments = 10 					# in logfile segments;
-max_replication_slots = 10 
-synchronous_standby_names = 'standby'	# standby servers that provide sync rep
-										# method to choose sync standbys, number of sync standbys,
-										# and comma-separated list of application_name
-										# from standby(s); '*' = all
+max_wal_senders = 2
+wal_keep_segments = 10
+max_replication_slots = 10
+synchronous_standby_names = 'standby'
 </pre>
 
 ##### 1.3 pg_ident.conf
@@ -97,9 +85,9 @@ synchronous_standby_names = 'standby'	# standby servers that provide sync rep
 Здесь мы определим варианты сопоставления пользователей, т.е. какой пользователь под каким именем может соединятся с БД. Документация [тут](https://postgrespro.ru/docs/postgresql/11/auth-username-maps).
 
 <pre>
-mymap           portgres                replication
-mymap           postgres                postgres
-mymap           vagrant                 postgres
+mymap portgres replication
+mymap postgres postgres
+mymap vagrant  postgres
 </pre>
 
 После всех изменений выполняем `systemctl restart postgresql-11`.
@@ -110,13 +98,14 @@ mymap           vagrant                 postgres
 
 <pre>
 [global]
-	repo1-path=/opt/backup
-	repo1-retention-full=2
-	process-max=2
-	log-level-console=info
-	log-level-file=debug
+repo1-path=/opt/backup
+repo1-retention-full=2
+process-max=2
+log-level-console=info
+log-level-file=debug
+
 [backup]
-	pg1-path=/var/lib/pgsql/11/data
+pg1-path=/var/lib/pgsql/11/data
 </pre>
 
 Выполняем команду, которая создаст репозиторий для бэкапа:
@@ -146,8 +135,8 @@ $ sudo -iu postgres pg_basebackup -h primary.otus.test \
 Вносим правки в postgres.conf:
 
 <pre>
-	listener_address = 192.168.50.101
-	hot_standby = on
+listener_address = 192.168.50.101
+hot_standby = on
 </pre>
 
 Добавляем recovery.conf:
@@ -213,49 +202,51 @@ postgres=# select * from testtable;
 
 #### 4. Backup: pgbackrest
 
-Поиски решения для **правильного** резервного копирования привели к утилите `pgbackrest`, которая имеет черезвычайно богатый функционал при очень простой настройке. 
+Поиски решения для **правильного** резервного копирования привели к утилите `pgbackrest`, которая имеет черезвычайно богатый функционал при достаточно простой настройке. 
 
-- параллельный бэкап и восстановление
-- операции на локальном и удаленном сервере
-- полный, инкрементальный и дифференциальный бэкап
-- ротация бэкапов и проверка целостности
-- компрессия и шифрование
-- поддержка tablespace
-- поддержка Amazon S3
+- параллельный бэкап и восстановление;
+- операции на локальном и удаленном сервере;
+- полный, инкрементальный и дифференциальный бэкап;
+- ротация бэкапов и проверка целостности;
+- компрессия и шифрование;
+- поддержка tablespace;
+- поддержка Amazon S3;
 - и т.д.
 
-Будем настраивать резервное копирование с реплики на NFS ресурс на сервере :-] (конечно в реальной жизни NFS сервер будет отдельно стоящий). Для этого нам нужно написать два конфигурационных файла, выполнить первый полный бэкап на primary и далее выполнить инкрементальный бэкап на standby. Конфиги [primary](provision/roles/pgsql11-primary/templates/pgbackrest.conf.j2) и [standby](provision/roles/pgsql11-standby/templates/pgbackrest.conf.j2). Утилита оперирует понятием `stanza`, которое эквивалентно понятию "сервер, который мы бэкапим". Описывается этот параметр в конфигурационном файле:
+Будем настраивать резервное копирование с реплики (standby) на NFS ресурс на сервере (primary) :-] (конечно в реальной жизни это отдельно стоящий NFS сервер). Создаем два конфигурационных файла, и выполним первый полный бэкап на primary и инкрементальный бэкап на standby. Конфиги [primary](provision/roles/pgsql11-primary/templates/pgbackrest.conf.j2) и [standby](provision/roles/pgsql11-standby/templates/pgbackrest.conf.j2). 
 
-Для primary:
+Утилита оперирует понятием `stanza`, которое эквивалентно понятию "сервер(ы), который мы бэкапим". Описывается этот параметр в конфигурационном файле:
 
-<pre>
-	[backup]
-	pg1-path=/var/lib/pgsql/11/data
-</pre>
-
-Для standby:
+Для `primary.otus.test`:
 
 <pre>
 [backup]
-	pg1-host=primary.otus.test
-	pg1-path=/var/lib/pgsql/11/data
-	pg2-path=/var/lib/pgsql/11/data
-	recovery-option=standby_mode=on
-	recovery-option=primary_conninfo=host=primary.otus.test user=replication
-	recovery-option=recovery_target_timeline=latest
+pg1-path=/var/lib/pgsql/11/data
+</pre>
+
+Для `standby.otus.test`:
+
+<pre>
+[backup]
+pg1-host=primary.otus.test
+pg1-path=/var/lib/pgsql/11/data
+pg2-path=/var/lib/pgsql/11/data
+recovery-option=standby_mode=on
+recovery-option=primary_conninfo=host=primary.otus.test user=replication
+recovery-option=recovery_target_timeline=latest
 </pre>
 
 В секции [global] описывается репозиторий, который находится в /opt/backup на primary.otus.test, и подключен через NFS к standby.otus.test:
 
 <pre>
 [global]
-	repo1-path=/opt/backup
-	repo1-retention-full=1
-	process-max=2
-	log-level-console=info
-	log-level-file=debug
-	backup-standby=y
-	delta=y
+repo1-path=/opt/backup
+repo1-retention-full=1
+process-max=2
+log-level-console=info
+log-level-file=debug
+backup-standby=y
+delta=y
 </pre>
 
 Полный бэкап с primary:
@@ -282,20 +273,22 @@ $ sudo -iu postgres pgbackrest --stanza=backup --delta restore
 
 ![](pic/pic06.png)
 
-**NB:** Утилита позволяет реализовать нам все возможные стратегии резервного копирования, путем включения в крон или написания скриптов, типы бэкапа, синхронно и асинхронно и тд., невероятноебогатство возможносте.
+**NB:** Утилита позволяет реализовать нам все возможные стратегии резервного копирования, путем включения в запуск по расписанию, типы бэкапа, синхронное и асинхронное исполнение и т.д., невероятное богатство возможностей.
 
 ### 5. Использование стенда
 
 После клонирования репозитория:
 
 <pre>
-$vagrant up
+$ vagrant up
 $ vagrant ssh standby
 $ sudo -iu postgres pgbackrest --stanza=backup --log-level-console=info --type=incr backup
 $ sudo -iu postgres pgbackrest info
 </pre>
 
-Все настроено через провижн при старте ВМ, должен произойти инкрементальный бэкап, командной `sudo -iu postgres pgbackrest info` можно посмотреть статус репозитория для бэкапа.
+Через провижн при старте ВМ выполнится полный бэкап primary, при вводе вышеприведенных команд должен произойти инкрементальный бэкап.
+
+Командной `sudo -iu postgres pgbackrest info` можно посмотреть статус репозитория, какие резеврные копии он содержит.
 
 ### 6. Ссылки
 
