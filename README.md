@@ -29,3 +29,4 @@
 * [#26. NFS, Kerberos.](https://github.com/kakoka/otus-homework/tree/master/hw26)
 * [#27. Postfix, Dovecot.](https://github.com/kakoka/otus-homework/tree/master/hw27)
 * [#28. PostgreSQL, replication, backup.](https://github.com/kakoka/otus-homework/tree/master/hw28)
+* [#29. PostgreSQL, patroni cluster.](https://github.com/kakoka/otus-homework/tree/master/hw28)

@@ -1,0 +1,25 @@
+---
+# tasks file for pgsql11
+- name: install postgres reposiroty from url
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
+
+- name: PostgreSQL 11 server install
+  yum:
+    name: 
+      - postgresql11-server
+      - postgresql11
+    state: latest
+
+- name: Check if postgres database dir exsits
+  stat:
+    path: /var/lib/pgsql/11/data
+  register: pg_dir_exist
+
+- name: check rights on datadir
+  file:
+    path: /var/lib/pgsql/11/data
+    state: directory
+    mode: 0700
+  when: pg_dir_exist.stat.exists == False
+...

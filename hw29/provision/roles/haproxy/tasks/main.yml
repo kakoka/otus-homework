@@ -1,0 +1,23 @@
+---
+# tasks file for haproxy
+- name: haproxy install
+  yum:
+    name: 
+      - haproxy
+    state: latest
+
+- name: Add haproxy.conf /etc directory
+  template: 
+    src: haproxy.conf.j2
+    dest: /etc/haproxy/haproxy.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Set haproxy as a service
+  systemd:
+    name: haproxy
+    enabled: yes
+    state: started
+    masked: no
+...

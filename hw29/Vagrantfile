@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "v"
+    ansible.playbook = "provision/playbook.yml"
+    ansible.sudo = "true"
+    ansible.host_vars = {
+      "pg01" => {"anshostname" => "pg01"},
+      "pg02" => {"anshostname" => "pg02"},
+      "pg03" => {"anshostname" => "pg03"}
+    }
+  end
+  config.vm.provider "virtualbox" do |v|
+          v.memory = 1024
+  end
+  config.vm.define "ns" do |ns|
+    ns.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "private"
+    ns.vm.hostname = "ns.otus.test"
+  end
+  config.vm.define "pg01" do |pg01|
+    pg01.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: "private"
+    pg01.vm.hostname = "pg01.otus.test"
+  end
+  config.vm.define "pg02" do |pg02|
+    pg02.vm.network "private_network", ip: "192.168.50.102", virtualbox__intnet: "private"
+    pg02.vm.hostname = "pg02.otus.test"
+  end
+  config.vm.define "pg03" do |pg03|
+    pg03.vm.network "private_network", ip: "192.168.50.103", virtualbox__intnet: "private"
+    pg03.vm.hostname = "pg03.otus.test"
+  end
+end

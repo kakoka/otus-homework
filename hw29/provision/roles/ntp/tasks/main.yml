@@ -1,0 +1,19 @@
+---
+- name: set timezone
+  timezone: 
+    name: "{{ ntp_timezone }}"
+
+- name: config chrony daemon
+  copy: 
+    src: chrony.conf
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0700
+
+- name: chronyd service restarted
+  service:
+    name: chronyd
+    state: restarted
+    enabled: true
+...

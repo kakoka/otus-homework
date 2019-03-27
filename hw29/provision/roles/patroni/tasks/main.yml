@@ -1,0 +1,46 @@
+---
+# tasks file for patroni
+- name: patroni deps install
+  yum:
+    name:
+      - gcc
+      - python-devel
+      - python2-pip
+    state: latest
+
+- name: setuptools upgrade
+  pip:
+    name: setuptools
+    extra_args: --upgrade
+
+- name: pip install
+  pip:
+    name:
+      - patroni
+      - python-etcd
+      - python-consul
+      - psycopg2-binary
+
+- name: Add patroni.service
+  template: 
+    src: patroni.service.j2
+    dest:  /etc/systemd/system/patroni.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add patroni.yml
+  template: 
+    src: patroni.yml.j2
+    dest:  /etc/patroni.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start patroni service
+  systemd:
+    name: patroni
+    enabled: yes
+    state: started
+    masked: no
+...
