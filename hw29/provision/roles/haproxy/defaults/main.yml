@@ -1,4 +1,7 @@
 ---
 # defaults file for haproxy
 
-pg_hosts: ['pg01.otus.test','pg02.otus.test','pg03.otus.test']
+pg_hosts: 
+  - { name: 'pg01.otus.test', status: 'rw' }
+  - { name: 'pg02.otus.test', status: 'ro' }
+  - { name: 'pg03.otus.test', status: 'ro' }

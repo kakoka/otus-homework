@@ -14,5 +14,5 @@
   hosts: servers
 
   roles:
-  - { role: add_pgsql11 }
+  - { role: pgsql11 }
   ```

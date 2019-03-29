@@ -1,6 +1,6 @@
 ### Role Name
 
-Установка PostgreSQL 11.
+Установка patroni.
 
 #### 1. Requirements
 
@@ -14,5 +14,5 @@
   hosts: servers
 
   roles:
-  - { role: add_pgsql11 }
+  - { role: patroni }
   ```

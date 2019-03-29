@@ -4,15 +4,27 @@
   yum:
     name: 
       - haproxy
+      - policycoreutils
     state: latest
 
-- name: Add haproxy.conf /etc directory
+- name: Add haproxy.conf /etc/haproxy directory
   template: 
-    src: haproxy.conf.j2
-    dest: /etc/haproxy/haproxy.conf
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
     owner: root
     group: root
     mode: 0644
+
+- name: Add haproxy.conf /etc/rsyslog.d directory for logging
+  template: 
+    src: haproxy.conf.j2
+    dest: /etc/rsyslog.d/haproxy.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: SELinux for HAproxy
+  command: setsebool -P haproxy_connect_any=1
 
 - name: Set haproxy as a service
   systemd:
@@ -20,4 +32,9 @@
     enabled: yes
     state: started
     masked: no
+
+- name: Restart rsyslog service
+  systemd:
+    name: rsyslog
+    state: restarted
 ...
