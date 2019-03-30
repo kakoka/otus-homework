@@ -40,7 +40,7 @@
 
 #### 1. Настройка primary
 
-После установки сервера, инициализации БД и старта сервера, заведем пользователя `replication` от имени которого будет выполянться репликация, установим пароль и ограничение на количество одновременных активных соединений:
+После установки сервера, инициализации БД и старта сервера, заведем пользователя `replication` от имени которого будет выполняться репликация, установим пароль и ограничение на количество одновременных активных соединений:
 
 ```sql
 $ sudo -iu postgres psql -c "CREATE USER replication REPLICATION LOGIN CONNECTION LIMIT 5 ENCRYPTED PASSWORD 'swimming3';"
@@ -180,9 +180,8 @@ postgres=# \c test
 Создадим таблицу testtable и добавим в нее данные:
 
 ```sql
-test=# create table testtable( id serial primary_key, name varchar(50);
-test=# insert into testtable values (1,'pasha');
-test=# insert into testtable values (2,'vasya'),(3,'petya');
+test=# create table testtable(id serial primary key, name varchar(50));
+test=# insert into testtable values (1,'pasha'),(2,'vasya'),(3,'petya');
 ```
 
 ![](pic/pic02.png)
@@ -323,3 +322,4 @@ $ sudo -iu postgres pgbackrest info
 - https://pgbackrest.org/user-guide.html#replication/hot-standby
 - http://www.pgdba.org/post/restoring_data
 - https://severalnines.com/blog/integrating-postgresql-authentication-systems
+- https://developers.redhat.com/blog/2016/03/31/no-cost-rhel-developer-subscription-now-available/

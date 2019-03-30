@@ -38,29 +38,40 @@ Etcd слушает на порту 2379:
 ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://<host_ip_addr_here>:2379"
 ```
 
-HAproxy готов принимать подключения клиентов postgres на порты 5432 (read-write) и 5433 (read-only).
+HAproxy готов принимать подключения клиентов postgres на порт 5432. Заметим, что для лучшей балансировки нагрузки можно разделить backends в haproxy на 5432 read-write и 5433 read-only. Пример такой конфигурации ниже:
 
 ```
-listen postgres_rw *:5432
-    mode tcp
-    balance roundrobin
-    option pgsql-check user admin
-{% for host in pg_hosts %}
-{% if host.status == "rw"%}
-    server {{ host.name }} {{ host.name }}:5432 check
-{% endif %}
-{% endfor %}
-
+listen postgres *:5432
+    option httpchk
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+    server {{ host.name }} {{ host.name }}:5432 maxconn 100 check port 8008
+    server {{ host.name }} {{ host.name }}:5432 maxconn 100 check port 8008    server {{ host.name }} {{ host.name }}:5432 maxconn 100 check port 8008
 listen postgres_ro *:5433
     mode tcp
     balance roundrobin
-    option pgsql-check user admin
-{% for host in pg_hosts %}
-{% if host.status == "ro" %}
+    
+    # expect: query result data
+    #
+    # "f" means node in master mode
+    # "t" means node in standby mode (read-only)
+    #
+    tcp-check expect binary 44 # data row packet
+    tcp-check expect binary 0000000b # packet lenght: 11 (0x0b)
+    tcp-check expect binary 0001 # field count: 1
+    tcp-check expect binary 00000001 # column length in bytes: 1
+    tcp-check expect binary 66 # column data, "f"
+    
     server {{ host.name }} {{ host.name }}:5432 check
-{% endif %}
-{% endfor %}
+    server {{ host.name }} {{ host.name }}:5432 check
 ```
+
+Но поскольку мы работаем с кластером, который сообщает свое состояния в etcd и в зависимости от этого состояния выбирается primary, то конфигурация бэкенда будет другой, основанной на http-check, где код http со статусом 200 сообщает о том, какой сервер primary, и соответственно с ним и соединяются клиенты.
+
+<pre>
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+</pre>
 
 ### 1. Patroni
 
@@ -167,7 +178,9 @@ test=# select * from testtable;
 
 ![](pic/pic02.png)
 
-И убеждаемся, что в данной конфигурации переключение на нового primary происходит автоматически (можно это делать и вручную, patronictl switchover postgres, если нам, например, нужно что-то сделать с нодой).
+И убеждаемся, что в данной конфигурации переключение на нового primary происходит автоматически (можно это делать и вручную, patronictl switchover postgres, если нам, например, нужно что-то сделать с нодой). На скриншоте видно, что pg02 теперь primary.
+
+![](pic/pic03.png)
 
 ### 5. Изменения конфигурации PostgreSQL, требующие рестарта
 
