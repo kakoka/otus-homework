@@ -1,0 +1,58 @@
+---
+- name: install dovecot
+  yum:
+    name: ['dovecot']
+    state: present
+
+- name: dovecot config
+  copy: 
+    src: dovecot.conf
+    dest: /etc/dovecot/dovecot.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: dovecot mail location config
+  copy: 
+    src: 10-mail.conf
+    dest: /etc/dovecot/conf.d/10-mail.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: dovecot auth config
+  copy: 
+    src: 10-auth.conf
+    dest: /etc/dovecot/conf.d/10-auth.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: dovecot ssl config
+  copy: 
+    src: 10-ssl.conf
+    dest: /etc/dovecot/conf.d/10-ssl.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create users creds
+  template: 
+    src: users.j2
+    dest:  /etc/dovecot/users
+    owner: root
+    group: root
+    mode: 0755
+
+- name: SELinux context
+  command: restorecon -v /etc/dovecot/users
+
+- name: folder rights for dovecot
+  command: chmod 0600 /var/mail/vagrant -R
+
+- name: dovecot service restarted
+  service:
+    name: dovecot
+    state: restarted
+    enabled: true
+...

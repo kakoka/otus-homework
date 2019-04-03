@@ -1,0 +1,15 @@
+$TTL 3600
+$ORIGIN 50.168.192.in-addr.arpa.
+50.168.192.in-addr.arpa.  IN      SOA     ns.otus.test. root.otus.test. (
+                            1502201901 ; serial
+                            3600       ; refresh (1 hour)
+                            600        ; retry (10 minutes)
+                            86400      ; expire (1 day)
+                            600        ; minimum (10 minutes)
+                        )
+
+                 IN      NS      ns.otus.test.
+; DNS Servers
+10               IN      PTR     ns.otus.test.
+; Hosts
+100              IN      PTR     client.otus.test.

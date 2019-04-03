@@ -1,0 +1,35 @@
+alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/aliases
+command_directory = /usr/sbin
+config_directory = /etc/postfix
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+debug_peer_level = 2
+debugger_command = PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin ddd $daemon_directory/$process_name $process_id & sleep 5
+html_directory = no
+inet_interfaces = all
+inet_protocols = ipv4
+mail_owner = postfix
+mailq_path = /usr/bin/mailq.postfix
+manpage_directory = /usr/share/man
+myhostname = ns.otus.test
+mydomain = otus.test
+myorigin = $mydomain
+mydestination = $myhostname, localhost.$mydomain, $mydomain, localhost, mail.$mydomain, ns.$mydomain, client.$mydomain
+mail_spool_directory = /var/spool/mail
+mynetworks = 127.0.0.0/8, 192.168.50.0/24
+newaliases_path = /usr/bin/newaliases.postfix
+queue_directory = /var/spool/postfix
+readme_directory = /usr/share/doc/postfix-2.10.1/README_FILES
+sample_directory = /usr/share/doc/postfix-2.10.1/samples
+sendmail_path = /usr/sbin/sendmail.postfix
+setgid_group = postdrop
+unknown_local_recipient_reject_code = 550
+
+# dkim
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = inet:localhost:50055
+non_smtpd_milters = inet:localhost:50055
+recipient_delimiter = +
+header_checks = regexp:/etc/postfix/header_checks

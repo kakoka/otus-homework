@@ -1,0 +1,4 @@
+---
+# defaults file for ntp
+ntp_timezone: Europe/Moscow
+ntp_server: 0.rhel.pool.ntp.org

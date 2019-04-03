@@ -1,0 +1,5 @@
+---
+# defaults file for dovecot
+users:
+  - { name: vagrant, password: vagrant, id: 101 }
+  - { name: dovecot, password: dovecot, id: 102 }

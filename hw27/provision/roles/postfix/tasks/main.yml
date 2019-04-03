@@ -1,0 +1,48 @@
+---
+- name: install mailx package for test
+  yum:
+    name: ['mailx','opendkim']
+    state: present
+
+- name: config postfix
+  copy: 
+    src: main.cf
+    dest: /etc/postfix/main.cf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: opendkim config
+  copy:
+    src: opendkim.conf
+    dest: /etc/opendkim.conf
+
+- name: opendkim config
+  copy:
+    src: "{{ item }}"
+    dest: /etc/opendkim
+  with_fileglob:
+    - opendkim/TrustedHosts
+    - opendkim/SigningTable
+    - opendkim/KeyTable
+
+- name: add dkim private key
+  copy:
+    src: opendkim/keys/otus.test.private
+    dest: /etc/opendkim/keys
+    owner: opendkim
+    group: opendkim
+    mode: 0600
+
+- name: opendkim service restarted
+  service:
+    name: opendkim
+    state: started
+    enabled: true
+
+- name: postfix service restarted
+  service:
+    name: postfix
+    state: restarted
+    enabled: true
+...
