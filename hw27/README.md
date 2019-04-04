@@ -1,83 +1,111 @@
-## Postfix, Dovecot
+## Почтовый сервер: Postfix, Dovecot
 
+### Задача:
 
-1. Установить postfix+dovecot для приёма почты на виртуальный домен
-2. Отправить почту телнетом с хоста на виртуалку
-3. Принять почту на хост почтовым клиентом
+1. Установить postfix и dovecot для приёма почты на виртуальный домен;
+2. Отправить почту телнетом с клиента на сервер;
+3. Принять почту на клиент почтовым клиентом.
 
-Результат
-1. Полученное письмо со всеми заголовками
-2. Конфиги postfix и dovecot
+Соберем стенд из двух виртуальных машин `ns.otus.test` и `client.otus.test`. Развернем на `ns.otus.test` сервис DNS с записями в файле зоны относящимися к работе почтового сервера, настроим postfix, установим и настроим opendkim и dovecot. 
 
-`
-echo "qq" | mailx -s "test" -r "<vagrant@otus.test>" vagrant@otus.test
-echo "qq" | mailx -s "test" -r "<dovecot@otus.test>" vagrant@otus.test
-`
+### 1. DNS
+
+Конфигурацию DNS сервера и файлы зоны возьмем из [21 домашнего задания](https://github.com/kakoka/otus-homework/tree/master/hw21). Модифицируем [роль](provision/roles/dns) развертывания DNS сервера исходя из требований задачи. Будем использовать связку DKIM c spf.
+
+Изменим файл зоны `otus.test`, добавим MX и TXT записи:
 
 <pre>
-[root@client ~]# telnet ns 143
-Trying 192.168.50.10...
-Connected to ns.
-Escape character is '^]'.
-* OK [CAPABILITY IMAP4rev1 LITERAL+ SASL-IR LOGIN-REFERRALS ID ENABLE IDLE AUTH=PLAIN] Dovecot ready.
-a login vagrant vagrant
+$TTL 3600
+$ORIGIN otus.test.
+@               IN      SOA     ns.otus.test. root.otus.test. (
+                            1502201901 ; serial
+                            3600       ; refresh (1 hour)
+                            600        ; retry (10 minutes)
+                            86400      ; expire (1 day)
+                            600        ; minimum (10 minutes)
+                        )
+                        IN      NS      ns.otus.test.
+otus.test.              IN      MX      10 ns.otus.test.
+
+ns                      IN      A       192.168.50.10
+client                  IN      A       192.168.50.100
+
+otus.test.              IN      TXT     "v=spf1 mx a ip4:192.168.50.10 a:ns.otus.test -all"
+ns._domainkey.otus.test IN      TXT     "v=DKIM1\;k=rsa\;p=xxxxxx...xxxx"
 </pre>
 
-### 1. DNS, NTP
-
-Конфигурацию DNS сервера и файлы зоны возьмем из [21 домашнего задания](https://github.com/kakoka/otus-homework/tree/master/hw21). Модифицируем настройки исходя из конфигурации нашего стенда - домен `otus.test`, напишем [роль](provision/roles/dns) развертывания DNS сервера. Внесем изменения в [`/etc/resolv.conf`](provision/roles/dns/files/resolv.conf) на клиенте и на сервере.
-
-Настроим штатный сервис синхронизации времени для Centos/7 - `chronyd` как локальный сервер NTP. Сервер будет синхронизироваться с одним из серверов из пула `0.rhel.pool.ntp.org`, клиент будет синхронизироваться уже с нашим сервером. Роли для [сервера](provision/roles/ntp) и для [клиента](provision/roles/ntp-client).
-
-Конфигурация сервера:
-<pre>
-server 0.centos.pool.ntp.org iburst
-manual
-allow 192.168.0.0/16
-local stratum 8
-</pre>
-
-Конфигурация клиента:
-<pre>
-server ns.otus.test iburst
-driftfile /var/lib/chrony/drift
-logdir /var/log/chrony
-log measurements statistics tracking
-</pre>
-
-Соответствующие роли: [сервер](provision/roles/ntp), [клиент](provision/roles/ntp-client).
+Укажем в файле зоны, что `ns.otus.test` предназначен для работы в качестве почтового сервера (тип записи MX). В TXT записи `otus.test. IN TXT "v=spf1 mx a ip4:192.168.50.10 a:ns.otus.test -all"` укажем, что этот же сервер уполномочен отправлять почту от имени нашего домена. В другой TXT записи укажем публичный ключ домена `ns._domainkey.otus.test IN TXT "v=DKIM1\;k=rsa\;p=xxxxxx...xxxx"` (вместо `xxx.xxx` - в файле зоны прописан публичный ключ для дешифровки подписанных приватным ключом заголовков сообщений). Сгенерируем заранее приватный/публичный ключи и добавим приватный ключ в файлы роли настройки [postfix](provision/roles/postfix).
 
 ### 2. Postfix
 
-### 3. Dovecot
+Для настройки postfix написана [роль](provision/roles/postfix), которая копирует конфигурационный файл с настройками в `/etc/postfix/main.cf`. В нем указываем имя домена, доверенные сети, интерфейсы и т.д. 
 
-### 3. DKIM
-
-### 4. Firewalld
-
-Для корректной работы в сети NFS сервера с использованием Kerberos требуется открыть порты для сервисов:
-
-- SSH (22/tcp)
-- NTP (123/udp)
-- DNS (53/tcp, 53/udp)
-- Kerberos (88/tcp, 88/udp, 794/tcp - см. файл [kerberos.xml](provision/roles/firewall/files/kerberos.xml)) 
-- NFS (111/tcp, 111/upd - rpc-bind, 2049/tcp, 2049/udp - nfs сервер)
+Дополнительно вместе с postfix развернем opendkim сервис для работы с цифровой подписью. Добавим в main.cf настройки для совместной работы с postfix:
 
 <pre>
-firewall-cmd --permanent --add-service=rpc-bind
-firewall-cmd --permanent --add-service=mountd
-firewall-cmd --permanent --add-port=2049/tcp
-firewall-cmd --permanent --add-port=2049/udp
-firewall-cmd --reload
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = inet:localhost:50055
+non_smtpd_milters = inet:localhost:50055
+</pre> 
+
+Конфигурация opendkim:
+
+<pre>
+Domain                  otus.test
+Socket                  inet:50055@localhost
+Syslog                  Yes
+SyslogSuccess           Yes
+LogWhy                  Yes
+AutoRestart             Yes
+AutoRestartRate         10/1h
+Umask                   002
+Canonicalization        relaxed/simple
+ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
+InternalHosts           refile:/etc/opendkim/TrustedHosts
+KeyTable                refile:/etc/opendkim/KeyTable
+SigningTable            refile:/etc/opendkim/SigningTable
+Mode                    sv
+PidFile                 /var/run/opendkim/opendkim.pid
+SignatureAlgorithm      rsa-sha256
+UserID                  opendkim:opendkim
 </pre>
 
-Добавим их в правила файерволла, написана соответствующая [роль](provision/roles/firewall).
+В `/etc/opendkim/keys` положим наш приватный ключ и установим ему права только на чтение.
 
-### 5. Использование стенда
+### 3. Dovecot
 
-После клонирования репозитория, `vagrant up`, `vagrant ssh client`.
+Написана роль для установки [Dovecot](provision/roles/dovecot). В конфигурационных файлах включены протоколы pop3 и imap ([dovecot.conf](provision/roles/dovecot/files/dovecot.conf)), отключена возможность установки соединения по ssl (для упрощения работы - [10-ssl.conf](provision/roles/dovecot/files/10-ssl.conf)), определены каталоги для хранения почты пользователей `mail_location = mbox:~/mail:INBOX=/var/mail/%u` ([10-mail.conf](provision/roles/dovecot/files/10-mail.conf)), включена аутентификация с передачей незашифрованных паролей `disable_plaintext_auth = no` ([10-auth.conf](provision/roles/dovecot/files/10-auth.conf)). 
 
-### 6. Ссылки
+C помощью шаблона генерируется файл с учетными записями пользователей:
+
+```python
+{% for user in users %}
+{{ user.name }}:{PLAIN}{{ user.password }}:{{ user.uid }}:{{ user.gid }}::/home/{{ user.name }}
+{% endfor %}
+```
+
+### 4. Использование стенда
+
+После клонирования репозитория, `vagrant up`, `vagrant ssh client`. На клиент установлен почтовый клиент `alpine`, который уже пред настроен на работы с почтовым сервером по протоколу imap (логин/пароль: vagrant/vagrant).
+
+Тест отправки почты на сервере (с клиента тоже работает):
+
+![pic01](pic/pic01.png)
+
+В `/var/log/maillog` Видим, как добавилась цифровая подпись к отправляемому письму. Так же видим в логе, как подключился клиент по `imap` с `client.otus.test`.
+
+![pic02](pic/pic02.png)
+
+Список тестовых писем.
+
+![pic03](pic/pic03.png)
+
+Смотрим заголовки письма, видим DKIM-Signature:
+
+![pic04](pic/pic04.png)
+
+### 5. Ссылки
 
 - https://habr.com/ru/company/ruvds/blog/325356/
 - https://support.rackspace.com/how-to/dovecot-installation-and-configuration-on-centos/

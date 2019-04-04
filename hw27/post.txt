@@ -1,0 +1,7 @@
+postconf
+postconf -n > main.cf.new
+mv main.cf main.cf.old && mv main.cf.new main.cf
+
+
+mydestination =
+

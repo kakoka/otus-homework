@@ -15,7 +15,7 @@ manpage_directory = /usr/share/man
 myhostname = ns.otus.test
 mydomain = otus.test
 myorigin = $mydomain
-mydestination = $myhostname, localhost.$mydomain, $mydomain, localhost, mail.$mydomain, ns.$mydomain, client.$mydomain
+mydestination = $myhostname, localhost.$mydomain, $mydomain, localhost, ns.$mydomain, client.$mydomain
 mail_spool_directory = /var/spool/mail
 mynetworks = 127.0.0.0/8, 192.168.50.0/24
 newaliases_path = /usr/bin/newaliases.postfix
@@ -25,11 +25,11 @@ sample_directory = /usr/share/doc/postfix-2.10.1/samples
 sendmail_path = /usr/sbin/sendmail.postfix
 setgid_group = postdrop
 unknown_local_recipient_reject_code = 550
+recipient_delimiter = +
+header_checks = regexp:/etc/postfix/header_checks
 
 # dkim
 milter_protocol = 2
 milter_default_action = accept
 smtpd_milters = inet:localhost:50055
 non_smtpd_milters = inet:localhost:50055
-recipient_delimiter = +
-header_checks = regexp:/etc/postfix/header_checks

@@ -8,10 +8,8 @@ $ORIGIN otus.test.
                             600        ; minimum (10 minutes)
                         )
                         IN      NS      ns.otus.test.
-;otus.test.             IN      MX      10 mail.otus.test.
 otus.test.              IN      MX      10 ns.otus.test.
 ns                      IN      A       192.168.50.10
-;mail                   IN      A       192.168.50.10
 client                  IN      A       192.168.50.100
 otus.test.              IN      TXT     "v=spf1 mx a ip4:192.168.50.10 a:ns.otus.test -all"
 ns._domainkey.otus.test IN  TXT "v=DKIM1\;k=rsa\;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCyeNrIyxzvBIJT9Ap1NHmV8s1r+H4EK20SGy/fSozkBQy/1RiXL/7pp5k2E7PU8ErnzsTLsWacnBFmx8U2+VpZ7ElZ+EPI0V9xFwVKb6SK8rq8JYIN29QtGa3C0+sLGivURzJXEB4VJpybaCi63BYrWfAYVtGHECi17BwWUrS9dQIDAQAB"
