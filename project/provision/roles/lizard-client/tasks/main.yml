@@ -1,0 +1,41 @@
+---
+- name: wget add
+  yum:
+    name: ['lizardfs-client']
+    state: present
+
+- name: get lizard
+  command: wget -q https://lizardfs.com/wp-content/uploads/2018/07/{{ bundle }}.tar
+
+- name: untar lizard
+  command: tar -xvf {{ bundle }}.tar
+
+- name: install lizardfs-cgi
+  command: rpm -Uvh {{ bundle }}/lizardfs-cgi-3.13.0-0el7.x86_64.rpm
+
+- name: install lizardfs-cgiserv
+  command: rpm -Uvh {{ bundle }}/lizardfs-cgiserv-3.13.0-0el7.x86_64.rpm
+
+- name: Add mfsmount.cfg
+  template: 
+    src: mfsmount.cfg.j2
+    dest: /etc/mfs/mfsmount.cfg
+    owner: root
+    group: root
+    mode: 0755
+
+- name: copy mount.mfs
+  copy:
+    src: mount.mfs
+    dest: /sbin/mount.mfs
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Set lizardfs-cgiserv as a service
+  systemd:
+    name: lizardfs-cgiserv
+    enabled: yes
+    state: started
+    masked: no
+...

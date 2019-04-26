@@ -1,0 +1,15 @@
+#!/bin/sh
+echo "LizardFS mount options:" 1>&2
+echo $@ 1>&2
+TARGET=$1
+MNTPOINT=$2
+KEY=3
+while [ ${!KEY} != "-o" ]
+do
+  KEY=$(($KEY+1))
+done
+echo "key=${!KEY}"
+KEY=$(($KEY+1))
+OPTS=${!KEY}
+mfsmount $MNTPOINT -o $OPTS 1>&2
+exit $?

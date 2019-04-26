@@ -1,0 +1,19 @@
+---
+- name: config timescaledb.repo
+  copy: 
+    src: timescale_timescaledb.repo
+    dest: /etc/yum.repos.d/timescale_timescaledb.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: timescaledb install
+  yum:
+    name: timescaledb-postgresql-11
+    state: present
+
+# Create user monitoring
+# Create database monitoring
+# Create extension
+# CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+...

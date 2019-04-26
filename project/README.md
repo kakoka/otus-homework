@@ -174,6 +174,21 @@ $ terraform destroy -target target.name
 
 - LizardFS
 
+
+Поддерживаемые опции зависят от версии LizardFS, во втором варианте скорость чтения заметно выше. mfsmount по умолчанию берет IP мастера из /etc/hosts, но подключается ко всем chunk серверам параллельно. Опция big_writes считается устаревшей в новых FUSE клиентах и включена по умолчанию, для старых систем желательно указывать.
+
+mount:
+mfsmount -o big_writes,nosuid,nodev,noatime,allow_other -o cacheexpirationtime=500 -o readaheadmaxwindowsize=4096 /mnt/1
+запись:
+dd if=/dev/zero of=/mnt/1/test-aaa bs=64k count=10000 status=progress
+чтение
+dd if=/mnt/1/test-aaa of=/dev/null bs=64k count=10000 status=progress
+...
+
+- yum provides "*/pg_config"
+
 ### 4. Ссылки
 
 - http://www.micronarrativ.org/2016/2016-lizardfs.html
+- https://habr.com/ru/post/343326/
+- https://blogs.sungeek.net/unixwiz/2018/09/02/centos-7-postgresql-10-patroni/

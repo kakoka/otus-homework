@@ -1,0 +1,1 @@
+lizard -fstype=mfs,big_writes,nosuid,nodev,noatime,allow_other master:9421:/

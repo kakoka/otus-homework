@@ -1,0 +1,24 @@
+---
+- name: alerting rules file
+  template:
+    src: "alert.rules.j2"
+    dest: "{{ prom_conf_dir }}/alert.rules"
+    owner: root
+    group: prometheus
+    mode: 0640
+    # validate: "/usr/sbin/promtool check rules %s"
+  notify:
+    - Reload prometheus
+
+- name: configure prometheus
+  template:
+    src: "prometheus.yml.j2"
+    dest: "{{ prom_conf_dir }}/prometheus.yml"
+    force: true
+    owner: root
+    group: prometheus
+    mode: 0640
+    # validate: "/usr/sbin/promtool check config %s"
+  notify:
+    - Reload prometheus
+...

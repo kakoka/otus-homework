@@ -1,0 +1,42 @@
+---
+# defaults file
+netdata_git_repo: https://github.com/netdata/netdata.git
+netdata_source_dir: /usr/local/src/netdata
+netdata_installer: ./netdata-installer.sh
+netdata_config_file: /etc/netdata/netdata.conf
+netdata_stream_config_file: /etc/netdata/stream.conf
+netdata_default_port: 19999
+netdata_pre_reqs:
+  - autoconf
+  - automake
+  - cronie
+  - curl
+  - gcc
+  - iproute
+  - libmnl-devel
+  - libuuid-devel
+  - lm_sensors
+  - make
+  - MySQL-python
+  - nc
+  - pkgconfig
+  - python
+  - python-psycopg2
+  - PyYAML
+  - util-linux
+  - uuid
+  - uuid-devel
+  - zlib-devel
+netdata_user_info:
+  group: netdata
+  user: netdata
+netdata_stream_api_key: 11111111-2222-3333-4444-555555555555
+netdata_stream_master_node: "ns.otus.test:19999"
+
+clients:
+  - { name: 'master01', uuid: '5ea487dc-5c24-4298-8fe3-ff09467b34b3' }
+  - { name: 'master02', uuid: '08059694-520c-414d-8b86-e8f4c71b0908' }
+  - { name: 'master03', uuid: 'b957f6de-48a3-4706-934d-3412bb1d4b8c' }
+  - { name: 'node01', uuid: 'd16ac8c9-f9cf-4fa5-a0e5-39a7a2ecee04' }
+  - { name: 'node02', uuid: '1d463906-3dd4-4c98-935f-79cb19757765' }
+  - { name: 'node03', uuid: 'dfbdbfc0-c319-40a8-9b63-f0248f0980db' }

@@ -1,0 +1,49 @@
+# Ansible managed file: please do not touch
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+
+global
+    log         127.0.0.1 local2
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+    stats socket /var/lib/haproxy/stats
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+
+defaults
+    mode                    tcp
+    log                     global
+    retries                 3
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout check           10s
+    maxconn                 3000
+
+# stats
+
+listen stats *:7000
+    mode  http
+    stats enable
+    stats uri /
+    stats auth someuser:password
+    stats hide-version
+
+# postgres
+
+listen postgres *:5432
+    option httpchk
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+{% for host in pg_hosts %}
+    server {{ host.name }} {{ host.name }}:5432 maxconn 100 check port 8008
+{% endfor %}

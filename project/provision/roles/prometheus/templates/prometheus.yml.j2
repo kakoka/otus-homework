@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+alerting:
+  alertmanagers:
+  - scheme: http
+    timeout: 10s
+  - static_configs:
+    - targets:
+      - localhost:9093
+rule_files:
+  - {{ prom_conf_dir }}/alert.rules
+scrape_configs:
+  - job_name: nodes
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /api/v1/allmetrics
+    scheme: http
+    params:
+      format:
+      - prometheus
+    static_configs:
+{% for node in nodes %}
+    - targets:
+      - {{ node.name }}:19999
+      labels:
+        group: {{ node.label }}
+{% endfor %}
+  - job_name: master
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: /prometheus/metrics
+    scheme: http
+    static_configs:
+    - targets:
+      - {{ prom_ext_url }}
+      labels:
+        server: prometheus

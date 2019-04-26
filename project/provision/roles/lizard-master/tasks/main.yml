@@ -1,0 +1,86 @@
+---
+- name: install dependencies
+  yum:
+    name: ['boost-system','boost-devel','boost-program-options']
+    state: present
+
+- name: get lizard
+  command: wget -q https://lizardfs.com/wp-content/uploads/2018/07/{{ bundle }}.tar
+
+- name: untar lizard
+  command: tar -xvf {{ bundle }}.tar
+
+- name: install lizardfs-master
+  command: rpm -Uvh {{ bundle }}/lizardfs-master-3.13.0-0el7.x86_64.rpm
+
+- name: install lizardfs-adm
+  command: rpm -Uvh {{ bundle }}/lizardfs-adm-3.13.0-0el7.x86_64.rpm
+
+- name: install lizardfs-uraft
+  command: rpm -Uvh {{ bundle }}/lizardfs-uraft-3.13.0-0el7.x86_64.rpm
+
+- name: set values to sysctl arp
+  sysctl:
+    name: net.ipv4.conf.all.arp_accept
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: set values to sysctl nonlocal
+  sysctl:
+    name: net.ipv4.ip_nonlocal_bind
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: copy config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/mfs
+    owner: mfs
+    group: mfs
+    mode: 0755
+  with_fileglob:
+    - mfsgoals.cfg
+    - mfsexports.cfg
+    - mfstopology.cfg
+
+- name: copy empty metadata
+  copy:
+    src: metadata.nfs
+    dest: /var/lib/mfs/metadata.mfs
+    owner: mfs
+    group: mfs
+    mode: 0640
+
+- name: Add mfsmaster.cfg
+  template: 
+    src: mfsmaster.cfg.j2
+    dest: /etc/mfs/mfsmaster.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add lizardfs_uraft.cfg
+  template: 
+    src: lizardfs-uraft.cfg.j2
+    dest: /etc/mfs/lizardfs-uraft.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy service file
+  copy:
+    src: lizardfs-uraft.service
+    dest: /usr/lib/systemd/system/lizardfs-uraft.service
+    owner: root
+    group: root
+
+- name: Set lizardfs-uraft as a service
+  systemd:
+    name: lizardfs-uraft
+    enabled: yes
+    state: started
+    masked: no

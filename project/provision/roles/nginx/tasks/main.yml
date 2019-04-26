@@ -1,0 +1,42 @@
+---
+# tasks file for add_nginx_server
+
+- name: Deploy nginx from local repo
+  yum:
+    name: ['nginx']
+    state: latest
+
+# install and configure nginx service
+- name: Make default www root folder
+  file:
+    path: '{{ nginx_web_root }}'
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: 0755
+- name: SELinux
+  command: setsebool -P httpd_can_network_connect 1
+
+- name: enable service nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+
+- name: Start nginx  
+  service: 
+    name: nginx
+    state: started
+
+- name: Generate nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: '{{ nginx_conf_folder }}/nginx.conf'
+  notify: Restart nginx
+
+- name: Generate default.conf
+  template:
+    src: default.conf.j2
+    dest: '{{ nginx_conf_def_folder }}/default.conf'
+  notify: Restart nginx
+...

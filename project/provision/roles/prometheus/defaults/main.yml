@@ -1,0 +1,18 @@
+---
+# defaults file for add_prometheus
+prom_ver: 2.9.2
+prom_user: prometheus
+prom_group: prometheus
+prom_conf_dir: /etc/prom
+prom_db_dir: /var/lib/prom
+prom_listen_address: "0.0.0.0:9090"
+prom_ext_url: "192.168.50.10"
+prom_retention: "14d"
+nodes:
+  - { name: 'master01', label: 'masters'}
+  - { name: 'master02', label: 'masters'}
+  - { name: 'master03', label: 'masters'}
+  - { name: 'node01', label: 'nodes'}
+  - { name: 'node02', label: 'nodes'}
+  - { name: 'node03', label: 'nodes'}
+...

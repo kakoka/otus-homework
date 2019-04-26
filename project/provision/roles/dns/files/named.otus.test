@@ -1,0 +1,20 @@
+$TTL 3600
+$ORIGIN otus.test.
+@               IN      SOA     ns.otus.test. root.otus.test. (
+                            1502201901 ; serial
+                            3600       ; refresh (1 hour)
+                            600        ; retry (10 minutes)
+                            86400      ; expire (1 day)
+                            600        ; minimum (10 minutes)
+                        )
+              IN      NS       ns.otus.test.
+; DNS Servers
+ns            IN      A       192.168.50.10
+; Hosts
+master        IN      A       192.168.50.99
+master01      IN      A       192.168.50.21
+master02      IN      A       192.168.50.22
+master03      IN      A       192.168.50.23
+node01        IN      A       192.168.50.101
+node02        IN      A       192.168.50.102
+node03        IN      A       192.168.50.103

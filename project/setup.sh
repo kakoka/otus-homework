@@ -21,10 +21,10 @@ yum:
 packages:
   - epel-release
 runcmd:
-  - yum install -y tinyproxy wget unzip git ansible lsof tcpdump jq vim
+  - yum install -y tinyproxy wget unzip git ansible lsof tcpdump jq vim bind-utils
   - systemctl enable tinyproxy.service
   - sed -i 's/Allow 127.0.0.1/Allow 10.128.10.0\/24/' /etc/tinyproxy/tinyproxy.conf
-  - systemctl start tinyproxy.service
+  - systemctl restart tinyproxy.service
   - wget -q https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip
   - unzip terraform_0.11.13_linux_amd64.zip
   - mv ./terraform /usr/sbin && chmod a+x /usr/sbin/terraform
@@ -76,7 +76,7 @@ yc compute instance create \
   --memory 1 \
   --core-fraction 100 \
   --metadata-from-file user-data=./metadata.yml \
-  --description "Bastion host"
+  --description "Initial host"
 
 if [ $? -ne 0 ]; then
   echo "Failed to create instance $NAME"

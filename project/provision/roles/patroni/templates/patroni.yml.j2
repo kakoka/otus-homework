@@ -1,0 +1,77 @@
+{% for host in pg_hosts %}
+{% if host.alias == anshostname %}
+scope: otus
+name: {{ host.alias }}
+    
+restapi:
+  listen: {{ host.ip }}:8008
+  connect_address: {{ host.ip }}:8008
+
+etcd:
+  {% for etcd in etcd_hosts %}
+  host: {{ etcd.ip }}:2379
+  {% endfor %}
+
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    postgresql:
+      use_pg_rewind: true
+
+  initdb:
+  - encoding: UTF8
+  - data-checksums
+
+  pg_hba:
+  - host replication replication 127.0.0.1/32 md5
+  {% for pg_host in pg_hosts %}
+- host replication replication {{ pg_host.ip }}/0 md5
+  {% endfor %}
+- host all all 0.0.0.0/0 md5
+
+  users:
+    admin:
+      password: admin
+      options:
+        - createrole
+        - createdb
+
+postgresql:
+  listen: {{ host.ip }}:5432
+  bin_dir: {{ pg_bin_dir }}
+  connect_address: {{ host.ip }}:5432
+  data_dir: {{ pg_database_dir }}
+  pgpass: /tmp/pgpass
+  authentication:
+    replication:
+      username: replication
+      password: replication
+    superuser:
+      username: postgres
+      password: postgres
+  parameters:
+      unix_socket_directories: '.'
+      shared_preload_libraries: 'pg_stat_statements, timescaledb'
+      shared_buffers: 253743kB
+      effective_cache_size: 761229kB
+      maintenance_work_mem: 126871kB
+      work_mem: 2537kB
+      wal_buffers: 7611kB
+      min_wal_size: 4GB
+      max_wal_size: 8GB
+      default_statistics_target: 500
+      random_page_cost: 1.1
+      checkpoint_completion_target: 0.9
+      max_connections: 50
+      max_locks_per_transaction: 64
+      effective_io_concurrency: 200
+tags:
+  nofailover: false
+  noloadbalance: false
+  clonefrom: false
+  nosync: false
+{% endif %}
+{% endfor %}

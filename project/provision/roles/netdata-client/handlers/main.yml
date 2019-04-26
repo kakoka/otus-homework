@@ -1,0 +1,26 @@
+---
+# handlers file for netdata
+#
+- name: reload systemd netdata
+  systemd:
+    name: "netdata"
+    daemon_reload: true
+
+- name: restart netdata
+  service:
+    name: "netdata"
+    state: "restarted"
+    enabled: true
+    sleep: 10
+
+- name: start netdata
+  service:
+    name: "netdata"
+    state: "started"
+    enabled: true
+
+- name: stop netdata
+  service:
+    name: "netdata"
+    state: "stopped"
+    enabled: true

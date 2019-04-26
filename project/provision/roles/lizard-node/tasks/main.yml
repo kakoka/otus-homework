@@ -1,0 +1,57 @@
+---
+- name: get lizard
+  command: wget -q https://lizardfs.com/wp-content/uploads/2018/07/{{ bundle }}.tar
+
+- name: untar lizard
+  command: tar -xvf {{ bundle }}.tar
+
+- name: install lizardfs-chunkserver
+  command: rpm -Uvh {{ bundle }}/lizardfs-chunkserver-3.13.0-0el7.x86_64.rpm
+
+- name: install lizardfs-metalogger
+  command: rpm -Uvh {{ bundle }}/lizardfs-metalogger-3.13.0-0el7.x86_64.rpm
+
+- name: set mfs rights
+  file:
+    path: "{{ mountpoint }}"
+    mode: 0777
+    owner: mfs
+    group: mfs
+
+- name: Add mfschunkserver.cfg
+  template: 
+    src: mfschunkserver.cfg.j2
+    dest: /etc/mfs/mfschunkserver.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add mfshdd.cfg
+  template: 
+    src: mfshdd.cfg.j2
+    dest: /etc/mfs/mfshdd.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add mfsmetalogger.conf
+  template: 
+    src: mfsmetalogger.cfg.j2
+    dest: /etc/mfs/mfsmetalogger.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Set lizardfs-chunkserver as a service
+  systemd:
+    name: lizardfs-chunkserver
+    enabled: yes
+    state: started
+    masked: no
+
+- name: Set lizardfs-metalogger as a service
+  systemd:
+    name: lizardfs-metalogger
+    enabled: yes
+    state: started
+    masked: no

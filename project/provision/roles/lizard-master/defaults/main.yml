@@ -1,0 +1,8 @@
+---
+bundle: lizardfs-bundle-CentOS-7.5.1804
+masters:
+  - { name: 'master01', ip: '192.168.50.21', port: '19427', id: '0' }
+  - { name: 'master02', ip: '192.168.50.22', port: '19427', id: '1' }
+  - { name: 'master03', ip: '192.168.50.23', port: '19427', id: '2' }
+float_ip: 192.168.50.99
+float_if: eth1

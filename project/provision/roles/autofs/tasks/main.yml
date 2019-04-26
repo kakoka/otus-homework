@@ -1,0 +1,21 @@
+---
+# tasks file for nfs-client
+- name: install autofs
+  yum:
+    name: ['autofs']
+    state: present
+
+- name: autofs config
+  copy:
+    src: "{{ item }}"
+    dest: /etc
+  with_fileglob:
+    - auto.data
+    - auto.master
+
+- name: automount service enabled and started
+  service:
+    name: autofs
+    enabled: true
+    state: restarted
+...

@@ -1,0 +1,9 @@
+---
+# defaults file for deploy_nginx_server
+server_ip: 192.168.50.10
+server_name: ns.otus.test
+nginx_port: 80
+nginx_web_root: /var/www/
+nginx_conf_folder: /etc/nginx
+nginx_conf_def_folder: /etc/nginx/conf.d
+...

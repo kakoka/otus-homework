@@ -1,0 +1,41 @@
+---
+- name: Installing Pre-Reqs
+  yum:
+    name: "{{ netdata_pre_reqs }}"
+    state: present
+
+- name: Cloning {{ netdata_git_repo }} to {{ netdata_source_dir }}
+  git:
+    repo: "{{ netdata_git_repo }}"
+    dest: "{{ netdata_source_dir }}"
+    depth: 1
+
+- name: install | Installing Netdata ({{ netdata_installer }}) From {{ netdata_source_dir }}
+  command: "{{ netdata_installer }} --dont-wait"
+  args:
+    chdir: "{{ netdata_source_dir }}"
+    creates: /usr/sbin/netdata
+
+- name: Configuring Netdata netdata.conf
+  template:
+    src: netdata.conf.j2
+    dest: "{{ netdata_config_file }}"
+    owner: "{{ netdata_user_info['user'] }}"
+    group: root
+    mode: 0644
+
+- name:  Configuring Netdata stream.conf
+  template:
+    src: stream.conf.j2
+    dest: "{{ netdata_stream_config_file }}"
+    owner: "{{ netdata_user_info['user'] }}"
+    group: root
+    mode: 0644
+  notify: restart netdata
+
+# - name: generate a uuid for something 
+#   local_action: shell uuidgen 
+#   register: my_uuid 
+# 644
+# netdata
+# netdata

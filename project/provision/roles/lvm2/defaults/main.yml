@@ -1,0 +1,8 @@
+---
+mountpoint: /mnt/data
+vgname: vg
+lvname: lv
+filesystem: xfs
+size: 100%FREE
+disk: /dev/sdb
+...

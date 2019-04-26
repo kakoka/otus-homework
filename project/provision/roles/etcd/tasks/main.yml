@@ -1,0 +1,24 @@
+---
+# tasks file for etcd
+
+- name: etcd install
+  yum:
+    name: ['etcd']
+    state: latest
+
+- name: Add etcd.conf
+  template:
+    src: etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart etcd
+
+- name: Set and start etcd as a service
+  systemd:
+    name: etcd
+    enabled: yes
+    state: started
+    masked: no
+...

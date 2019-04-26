@@ -1,0 +1,103 @@
+---
+
+- name: Create prometheus group
+  group:
+    name: prometheus
+    system: true
+    state: present
+
+- name: Create prometheus user
+  user:
+    name: prometheus
+    system: true
+    shell: "/sbin/nologin"
+    group: prometheus
+    createhome: false
+    home: /tmp
+
+- name: Create prometheus data directory
+  file:
+    path: "{{ prom_db_dir }}"
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: Create prometheus configuration directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: prometheus
+    mode: 0750
+  with_items:
+    - "{{ prom_conf_dir }}"
+    - "{{ prom_conf_dir }}/conf.d"
+    - "{{ prom_conf_dir }}/rules"
+    - "{{ prom_conf_dir }}/file_sd"
+
+- name: Download prometheus binary to local folder
+  become: false
+  get_url:
+    url: "https://github.com/prometheus/prometheus/releases/download/v{{ prom_ver }}/prometheus-{{ prom_ver }}.linux-amd64.tar.gz"
+    dest: "/tmp/prometheus-{{ prom_ver }}.tar.gz"
+  run_once: true
+  delegate_to: localhost
+
+- name: Unpack prometheus binaries
+  become: false
+  unarchive:
+    src: "/tmp/prometheus-{{ prom_ver }}.tar.gz"
+    dest: "/tmp"
+    creates: "/tmp/prometheus-{{ prom_ver }}.linux-amd64/prometheus"
+  delegate_to: localhost
+  check_mode: false
+
+- name: propagate prometheus and promtool binaries
+  copy:
+    src: "/tmp/prometheus-{{ prom_ver }}.linux-amd64/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    mode: 0755
+    owner: root
+    group: root
+  with_items:
+    - prometheus
+    - promtool
+  # notify:
+  #   - Restart prometheus
+
+- name: propagate console templates
+  copy:
+    src: "/tmp/prometheus-{{ prom_ver }}.linux-amd64/{{ item }}/"
+    dest: "{{ prom_conf_dir }}/{{ item }}/"
+    mode: 0755
+    owner: root
+    group: root
+  with_items:
+    - console_libraries
+    - consoles
+  # notify:
+  #   - Restart prometheus
+
+- name: create systemd service unit
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable prometheus service
+  systemd:
+    name: prometheus
+    enabled: yes
+    masked: no
+
+- name: Start prometheus service
+  systemd:
+    name: prometheus
+    state: started
+
+  # notify:
+  #   - Restart prometheus
+...

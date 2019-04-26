@@ -1,0 +1,11 @@
+---
+# defaults file for haproxy
+etcd_hosts: 
+  - { name: 'ns.otus.test', ip: '192.168.50.10' }
+pg_hosts:
+  - { name: 'master01.otus.test', ip: '192.168.50.21', alias: 'master01' }
+  - { name: 'master02.otus.test', ip: '192.168.50.22', alias: 'master02' }
+  - { name: 'master03.otus.test', ip: '192.168.50.23', alias: 'master03' }
+
+pg_bin_dir: /usr/pgsql-11/bin
+pg_database_dir: /var/lib/pgsql/11/data

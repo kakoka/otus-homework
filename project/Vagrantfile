@@ -1,0 +1,82 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+disk01 = './disk01.vmdk'
+disk02 = './disk02.vmdk'
+disk03 = './disk03.vmdk'
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  # config.vm.box_version = "1804.02"
+  # config.vm.box_url = "https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "v"
+    ansible.playbook = "provision/playbook.yml"
+    ansible.sudo = "true"
+    ansible.host_vars = {
+      "master01" => {"anshostname" => "master01"},
+      "master02" => {"anshostname" => "master02"},
+      "master03" => {"anshostname" => "master03"},
+      "node01" => {"anshostname" => "node01"},
+      "node02" => {"anshostname" => "node02"},
+      "node03" => {"anshostname" => "node03"}
+    }
+  end
+  config.vm.provider "virtualbox" do |v|
+          v.memory = 1024
+  end
+  config.vm.define "ns" do |ns|
+    ns.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "private"
+    ns.vm.hostname = "ns.otus.test"
+    ns.vm.network "forwarded_port", guest: 80, host: 80
+    ns.vm.network "forwarded_port", guest: 7000, host: 7000
+    ns.vm.network "forwarded_port", guest: 9425, host: 9425
+    ns.vm.network "forwarded_port", guest: 9090, host: 9090
+    ns.vm.network "forwarded_port", guest: 19999, host: 19999
+  end
+  config.vm.define "master01" do |master01|
+    master01.vm.network "private_network", ip: "192.168.50.21", virtualbox__intnet: "private"
+    master01.vm.hostname = "master01.otus.test"
+  end
+  config.vm.define "master02" do |master02|
+    master02.vm.network "private_network", ip: "192.168.50.22", virtualbox__intnet: "private"
+    master02.vm.hostname = "master02.otus.test"
+  end
+  config.vm.define "master03" do |master03|
+    master03.vm.network "private_network", ip: "192.168.50.23", virtualbox__intnet: "private"
+    master03.vm.hostname = "master03.otus.test"
+  end
+  config.vm.define "node01" do |node01|
+    node01.vm.provider "virtualbox" do |vb|
+      vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
+      unless File.exist?(disk01)
+        vb.customize ['createhd', '--filename', disk01, '--variant', 'Standard', '--size', 2 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk01]
+    end
+    node01.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: "private"
+    node01.vm.hostname = "node01.otus.test"
+  end
+  config.vm.define "node02" do |node02|
+    node02.vm.provider "virtualbox" do |vb|
+      vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
+      unless File.exist?(disk02)
+        vb.customize ['createhd', '--filename', disk02, '--variant', 'Standard', '--size', 2 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk02]
+    end
+    node02.vm.network "private_network", ip: "192.168.50.102", virtualbox__intnet: "private"
+    node02.vm.hostname = "node02.otus.test"
+  end
+  config.vm.define "node03" do |node03|
+    node03.vm.provider "virtualbox" do |vb|
+      vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
+      unless File.exist?(disk03)
+        vb.customize ['createhd', '--filename', disk03, '--variant', 'Standard', '--size', 2 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk03]
+    end
+    node03.vm.network "private_network", ip: "192.168.50.103", virtualbox__intnet: "private"
+    node03.vm.hostname = "node03.otus.test"
+  end
+end

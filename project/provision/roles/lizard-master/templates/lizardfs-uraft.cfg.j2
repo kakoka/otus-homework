@@ -1,0 +1,39 @@
+{% for host in masters %}
+{% if host.name == anshostname %}
+
+# URAFT_PORT = 19427
+# URAFT_STATUS_PORT = 19428
+
+{% for node in masters %}
+URAFT_NODE_ADDRESS = {{ node.ip }}
+{% endfor %}
+
+URAFT_ID = {{ host.id }}
+
+# URAFT_ELECTOR_MODE = 0
+## Address of local master server (controlled by uRaft node)
+# LOCAL_MASTER_ADDRESS = localhost
+## Local master server MATOCL port
+# LOCAL_MASTER_MATOCL_PORT = 19421
+## Minimum election timeout (ms)
+# ELECTION_TIMEOUT_MIN = 400
+## Maximum election timeout (ms)
+# ELECTION_TIMEOUT_MAX = 600
+## Period between hearbeat messages (ms)
+# HEARTBEAT_PERIOD = 20
+## How often uRaft checks if local master is alive (ms)
+# LOCAL_MASTER_CHECK_PERIOD = 250
+## Floating IP address at which cluster will be available to the world
+
+URAFT_FLOATING_IP = {{ float_ip }}
+
+## Netmask for floating IP address
+
+URAFT_FLOATING_NETMASK = 255.255.255.0
+
+## Interface of floating IP address
+
+URAFT_FLOATING_IFACE = {{ float_if }}
+
+{% endif %}
+{% endfor %}

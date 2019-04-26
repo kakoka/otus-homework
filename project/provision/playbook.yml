@@ -1,0 +1,79 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: Install common utils
+    yum:
+      name: ['epel-release','git','lsof','tcpdump','policycoreutils','wget','unzip','telnet']
+      state: present
+  - name: setup locale
+    copy:
+      src: locale.conf
+      dest: /etc/locale.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: setup locale
+    copy:
+      src: environment
+      dest: /etc/environment
+      owner: root
+      group: root
+      mode: 0644
+  - name: say Network Manager do NOT touch resolv.conf
+    copy:
+      src: roles/dns/files/NetworkManager.conf
+      dest: /etc/NetworkManager/NetworkManager.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: reload config NetworkManager
+    service:
+      name: NetworkManager
+      daemon_reload: yes
+
+- hosts: ns
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: dns }
+    - { role: ntp }
+    - { role: lizard-client }
+    - { role: autofs }
+    - { role: etcd }
+    - { role: haproxy }
+    - { role: prometheus }
+    - { role: netdata-central }
+    # - { role: grafana }
+    - { role: nginx }
+- hosts: master01,master02,master03,node01,node02,node03
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: copy resolv.conf to client
+    copy:
+      src: roles/dns/files/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      mode: 0644
+- hosts: master01,master02,master03
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: ntp-client }
+    - { role: lizard-master }
+    - { role: pgsql11 }
+    - { role: timescaledb }
+    - { role: patroni }
+    - { role: netdata-client }
+- hosts: node01,node02,node03
+  become: yes
+  gather_facts: no
+  roles:
+    - { role: ntp-client }
+    - { role: lvm2 }
+    - { role: lizard-node }
+    - { role: netdata-client }
+...

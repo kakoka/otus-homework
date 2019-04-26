@@ -1,0 +1,7 @@
+---
+# defaults file for haproxy
+
+pg_hosts: 
+  - { name: 'master01.otus.test', status: 'rw' }
+  - { name: 'master02.otus.test', status: 'ro' }
+  - { name: 'master03.otus.test', status: 'ro' }

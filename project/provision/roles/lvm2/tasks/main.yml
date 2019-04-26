@@ -1,0 +1,45 @@
+---
+- name: install lvm2
+  yum:
+    name: ['lvm2']
+    state: present
+
+- name: creating new volume group
+  lvg:
+    vg: "{{ vgname }}"
+    pvs: "{{ disk }}"
+    state: present
+
+- name: creating new logical volume
+  lvol:
+    pvs: "{{ disk }}"
+    vg: "{{ vgname }}"
+    lv: "{{ lvname }}"
+    size: "{{ size }}"
+
+- name: creating new filesystem on logical volume
+  filesystem: 
+    fstype: "{{ filesystem }}"
+    dev: /dev/{{ vgname }}/{{ lvname }}
+    opts: "-L mfsdata"
+
+- name: create mountpoint
+  file:
+    path: "{{ mountpoint }}"
+    state: directory
+    mode: 0777
+    owner: root
+    group: root
+
+- name: add line into /etc/fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "LABEL=mfsdata /mnt/data xfs rw,noexec,nodev,noatime,nodiratime,largeio,inode64 0 0"
+
+- name: mounting new filesystem
+  mount: 
+    name: "{{ mountpoint }}"
+    src: LABEL=mfsdata
+    fstype: "{{ filesystem }}" 
+    state: mounted
+...
