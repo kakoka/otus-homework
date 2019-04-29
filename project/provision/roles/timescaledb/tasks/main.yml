@@ -12,8 +12,22 @@
     name: timescaledb-postgresql-11
     state: present
 
-# Create user monitoring
-# Create database monitoring
-# Create extension
+- name: copy bin files
+  copy:
+    src: pg_prometheus.tar.gz
+    dest: /tmp
+
+- name: extract bin files
+  shell:
+    cmd: tar -zxvf pg_prometheus.tar.gz
+    chdir: /tmp
+
+- name: install pg_prometheus
+  shell: 
+    cmd: ./install.sh
+    chdir: /tmp/pg_prometheus
+
+# CREATE DATABASE monitoring;
 # CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+# CREATE EXTENSION IF NOT EXISTS pg_prometheus CASCADE;
 ...

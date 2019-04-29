@@ -1,14 +1,16 @@
 ---
 # defaults file for add_prometheus
 prom_ver: 2.9.2
+prom_sql_ad_ver: 0.4.1
 prom_user: prometheus
 prom_group: prometheus
 prom_conf_dir: /etc/prom
 prom_db_dir: /var/lib/prom
 prom_listen_address: "0.0.0.0:9090"
-prom_ext_url: "192.168.50.10"
+prom_ext_url: "http://localhost/prometheus/"
 prom_retention: "14d"
 nodes:
+  - { name: 'ns', label: 'masters'}
   - { name: 'master01', label: 'masters'}
   - { name: 'master02', label: 'masters'}
   - { name: 'master03', label: 'masters'}

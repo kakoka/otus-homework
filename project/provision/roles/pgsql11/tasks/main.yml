@@ -6,7 +6,7 @@
 
 - name: PostgreSQL 11 server install
   yum:
-    name: ['postgresql11-server','postgresql11','postgresql11-contrib']
+    name: ['postgresql11-server','postgresql11','postgresql11-contrib','pgbackrest']
     state: latest
 
 - name: Check if postgres database dir exsits

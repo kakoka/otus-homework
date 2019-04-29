@@ -192,3 +192,17 @@ dd if=/mnt/1/test-aaa of=/dev/null bs=64k count=10000 status=progress
 - http://www.micronarrativ.org/2016/2016-lizardfs.html
 - https://habr.com/ru/post/343326/
 - https://blogs.sungeek.net/unixwiz/2018/09/02/centos-7-postgresql-10-patroni/
+- https://superuser.com/questions/1388611/unable-to-install-postgres-extension-pg-prometheus-and-prometheus-postgresql-ada
+
+# Prometheus+pg_prometheus+timescaledb+postgres
+
+- https://github.com/timescale/pg_prometheus
+- https://github.com/timescale/prometheus-postgresql-adapter
+- https://github.com/timescale/timescaledb
+- https://github.com/runejuhl/grafana-timescaledb
+- https://docs.timescale.com/v1.2/tutorials/prometheus-adapter
+
+# Auditd
+
+- https://luppeng.wordpress.com/2016/08/06/setting-up-centralized-logging-with-auditd/
+- https://gist.githubusercontent.com/Neo23x0/9fe88c0c5979e017a389b90fd19ddfee/raw/f37173a62e2d54325b0e5d496ac51c37dfb4e37f/audit.rules

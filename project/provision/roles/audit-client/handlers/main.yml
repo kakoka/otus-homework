@@ -1,0 +1,6 @@
+---
+# handlers file for conf_audit_client
+
+- name: Restart auditd
+  command: service auditd restart
+...

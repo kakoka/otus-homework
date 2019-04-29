@@ -5,17 +5,18 @@ After=network-online.target
 
 [Service]
 Type=simple
-User={{ prom_user }}
-Group={{ prom_group }}
+User=prometheus
+Group=prometheus
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/sbin/prometheus \
---config.file={{ prom_conf_dir }}/prometheus.yml \
---storage.tsdb.path={{ prom_db_dir }}/data \
---storage.tsdb.retention={{ prom_retention }} \
---web.listen-address={{ prom_listen_address }} \
---web.external-url=http://{{ prom_ext_url }}/prometheus/ \
---web.console.templates={{ prom_conf_dir }}/consoles \
---web.console.libraries={{ prom_conf_dir }}/console_libraries
+--config.file=/etc/prom/prometheus.yml \
+--storage.tsdb.path=/var/lib/prom/data \
+--storage.tsdb.retention=14d \
+--web.listen-address=0.0.0.0:9090 \
+--web.external-url=http://ns.otus.test:8080/prometheus/ \
+--web.route-prefix=/ \
+--web.console.templates=/etc/prom/consoles \
+--web.console.libraries=/etc/prom/console_libraries
 SyslogIdentifier=prometheus
 Restart=always
 

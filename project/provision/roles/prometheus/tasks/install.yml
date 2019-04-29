@@ -44,6 +44,14 @@
   run_once: true
   delegate_to: localhost
 
+- name: Download prometheus-postgresql-adapter binary to local folder
+  become: false
+  get_url:
+    url: "https://github.com/timescale/prometheus-postgresql-adapter/releases/download/{{ prom_sql_ad_ver }}/prometheus-postgresql-adapter-{{ prom_sql_ad_ver }}-linux-amd64.tar.gz"
+    dest: /tmp/prometheus-postgresql-adapter-{{ prom_sql_ad_ver }}-linux-amd64.tar.gz
+  run_once: true
+  delegate_to: localhost
+
 - name: Unpack prometheus binaries
   become: false
   unarchive:
@@ -53,7 +61,16 @@
   delegate_to: localhost
   check_mode: false
 
-- name: propagate prometheus and promtool binaries
+- name: Unpack prometheus-postgresql-adapter binaries
+  become: false
+  unarchive:
+    src: "/tmp/prometheus-postgresql-adapter-{{ prom_sql_ad_ver }}-linux-amd64.tar.gz"
+    dest: "/tmp"
+    creates: "/tmp/prometheus-{{ prom_ver }}.linux-amd64/prometheus-postgresql-adapter"
+  delegate_to: localhost
+  check_mode: false
+
+- name: propagate prometheus binaries
   copy:
     src: "/tmp/prometheus-{{ prom_ver }}.linux-amd64/{{ item }}"
     dest: "/usr/sbin/{{ item }}"
@@ -63,6 +80,7 @@
   with_items:
     - prometheus
     - promtool
+    - prometheus-postgresql-adapter
   # notify:
   #   - Restart prometheus
 
@@ -87,16 +105,27 @@
     group: root
     mode: 0644
 
-- name: Enable prometheus service
+- name: create systemd service unit prometheus-postgresql-adapter
+  template:
+    src: prometheus-postgresql-adapter.service.j2
+    dest: /etc/systemd/system/prometheus-postgresql-adapter.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable prometheus-postgresql-adapter service
   systemd:
-    name: prometheus
+    name: prometheus-postgresql-adapter
+    state: started
     enabled: yes
     masked: no
 
-- name: Start prometheus service
+- name: Enable prometheus service
   systemd:
     name: prometheus
     state: started
+    enabled: yes
+    masked: no
 
   # notify:
   #   - Restart prometheus

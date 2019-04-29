@@ -1,0 +1,19 @@
+SELECT DISTINCT labels->'instance' FROM metrics_labels WHERE metric_name = 'netdata_disk_iotime_milliseconds_persec_average';
+
+
+SELECT
+  time_bucket ('1m', time) AS time,
+  avg(value) as load_1m
+FROM
+  metrics
+WHERE
+  time BETWEEN $__timeFrom() AND $__timeTo()
+  AND name = 'netdata_disk_iotime_milliseconds_persec_average'
+  AND labels @> '{"instance": $instance}'
+  GROUP BY 1
+  ORDER BY 1 ASC;
+
+  netdata_disk_io_KiB_persec_average
+
+
+  http://10.10.10.105:8080/lizard/mfs.cgi?masterport=9421&masterhost=master&CCdata=cpu&sections=CS

@@ -44,6 +44,7 @@ postgresql:
   bin_dir: {{ pg_bin_dir }}
   connect_address: {{ host.ip }}:5432
   data_dir: {{ pg_database_dir }}
+  archive_command: 'pgbackrest --stanza=backup archive-push %p' 
   pgpass: /tmp/pgpass
   authentication:
     replication:
@@ -54,7 +55,7 @@ postgresql:
       password: postgres
   parameters:
       unix_socket_directories: '.'
-      shared_preload_libraries: 'pg_stat_statements, timescaledb'
+      shared_preload_libraries: 'pg_stat_statements, timescaledb, pg_prometheus'
       shared_buffers: 253743kB
       effective_cache_size: 761229kB
       maintenance_work_mem: 126871kB

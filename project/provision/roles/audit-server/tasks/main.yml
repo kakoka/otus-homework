@@ -1,0 +1,10 @@
+---
+# tasks file for conf_auditd_server
+
+- name: Client audit daemon config file
+  template:
+    src: auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+
+- name: Restart auditd
+  command: service auditd restart

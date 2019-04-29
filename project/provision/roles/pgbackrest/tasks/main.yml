@@ -1,0 +1,26 @@
+---
+# tasks file for add_pgsql11
+- name: install postgres reposiroty from url
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
+
+- name: Ppgbackrest install
+  yum:
+    name:
+      - pgbackrest
+    state: latest
+
+
+- name: Add pgbackrest.conf to primary data directory
+  template: 
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest.conf
+
+# - name: create stanza
+#   become_user: postgres
+#   shell: pgbackrest --stanza=backup --log-level-console=info stanza-create
+
+# - name: create backup from primary
+#   become_user: postgres
+#   shell: pgbackrest --stanza=backup --log-level-console=info backup
+...

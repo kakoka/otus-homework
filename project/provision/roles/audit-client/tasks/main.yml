@@ -1,0 +1,35 @@
+---
+# tasks file for conf_auditd_client
+- name: audisp-remote install
+  yum:
+    name: ['audit','audispd-plugins']
+    state: present
+
+- name: Client audit daemon config file
+  template:
+    src: auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+
+- name: Client audit rules config
+  template:
+    src: audit.rules.j2
+    dest: /etc/audit/rules.d/audit.rules
+
+- name: Client audisp daemon config file
+  template:
+    src: audispd.conf.j2
+    dest: /etc/audisp/audispd.conf
+
+- name: Client au-remote plugin config
+  template:
+    src: au-remote.conf.j2
+    dest: /etc/audisp/plugins.d/au-remote.conf
+
+- name: Client audisp-remote config - send logs to remote server
+  template:
+    src: audisp-remote.conf.j2
+    dest: /etc/audisp/audisp-remote.conf
+
+- name: Restart auditd
+  command: service auditd restart
+...

@@ -1,0 +1,8 @@
+# Remove any existing rules
+-D
+-b 8192
+-f 1
+-i
+{% for rule in audit_rules %}
+{{ rule }}
+{% endfor %}

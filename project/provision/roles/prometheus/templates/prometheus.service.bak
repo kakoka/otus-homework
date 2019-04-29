@@ -1,0 +1,23 @@
+[Unit]
+Description=Prometheus systemd service unit
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ prom_user }}
+Group={{ prom_group }}
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/sbin/prometheus \
+--config.file={{ prom_conf_dir }}/prometheus.yml \
+--storage.tsdb.path={{ prom_db_dir }}/data \
+--storage.tsdb.retention={{ prom_retention }} \
+--web.listen-address={{ prom_listen_address }} \
+--web.external-url=http://{{ prom_ext_url }} \
+--web.console.templates={{ prom_conf_dir }}/consoles \
+--web.console.libraries={{ prom_conf_dir }}/console_libraries
+SyslogIdentifier=prometheus
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

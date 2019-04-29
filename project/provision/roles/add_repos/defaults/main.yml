@@ -1,7 +1,0 @@
----
-# defaults file for add_repos
-
-repo:
-  - { name: 'grafana', key: 'https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana', url: 'https://packagecloud.io/grafana/stable/el/7/$basearch/', file: '/etc/yum.repos.d/grafana.repo'}
-  - { name: 'nginx repo', key: 'https://nginx.org/keys/nginx_signing.key', url: 'https://nginx.org/packages/mainline/cenotos/7/$basearch', file: '/etc/yum.repos.d/nginx.repo'}
-...

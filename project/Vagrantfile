@@ -4,6 +4,7 @@
 disk01 = './disk01.vmdk'
 disk02 = './disk02.vmdk'
 disk03 = './disk03.vmdk'
+disk_size = '4096'
 
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -26,12 +27,16 @@ Vagrant.configure(2) do |config|
           v.memory = 1024
   end
   config.vm.define "ns" do |ns|
+    ns.vm.provider "virtualbox" do |vb|
+      vb.memory = 2048
+    end
     ns.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "private"
     ns.vm.hostname = "ns.otus.test"
-    ns.vm.network "forwarded_port", guest: 80, host: 80
+    ns.vm.network "forwarded_port", guest: 8080, host: 8080
+    ns.vm.network "forwarded_port", guest: 3000, host: 3000
     ns.vm.network "forwarded_port", guest: 7000, host: 7000
-    ns.vm.network "forwarded_port", guest: 9425, host: 9425
     ns.vm.network "forwarded_port", guest: 9090, host: 9090
+    ns.vm.network "forwarded_port", guest: 9425, host: 9425
     ns.vm.network "forwarded_port", guest: 19999, host: 19999
   end
   config.vm.define "master01" do |master01|
@@ -48,9 +53,10 @@ Vagrant.configure(2) do |config|
   end
   config.vm.define "node01" do |node01|
     node01.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
       vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
       unless File.exist?(disk01)
-        vb.customize ['createhd', '--filename', disk01, '--variant', 'Standard', '--size', 2 * 1024]
+        vb.customize ['createhd', '--filename', disk01, '--variant', 'Standard', '--size', disk_size]
       end
       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk01]
     end
@@ -59,9 +65,10 @@ Vagrant.configure(2) do |config|
   end
   config.vm.define "node02" do |node02|
     node02.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
       vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
       unless File.exist?(disk02)
-        vb.customize ['createhd', '--filename', disk02, '--variant', 'Standard', '--size', 2 * 1024]
+        vb.customize ['createhd', '--filename', disk02, '--variant', 'Standard', '--size', disk_size]
       end
       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk02]
     end
@@ -70,9 +77,10 @@ Vagrant.configure(2) do |config|
   end
   config.vm.define "node03" do |node03|
     node03.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
       vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
       unless File.exist?(disk03)
-        vb.customize ['createhd', '--filename', disk03, '--variant', 'Standard', '--size', 2 * 1024]
+        vb.customize ['createhd', '--filename', disk03, '--variant', 'Standard', '--size', disk_size]
       end
       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk03]
     end

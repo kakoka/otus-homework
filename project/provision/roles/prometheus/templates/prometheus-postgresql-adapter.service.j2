@@ -1,0 +1,23 @@
+[Unit]
+Description=Prometheus postgresql adapter service unit
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ prom_user }}
+Group={{ prom_group }}
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/sbin/prometheus-postgresql-adapter \
+    -pg.host ns.otus.test \
+    -pg.port 5432 \
+    -pg.user 'postgres' \
+    -pg.password 'postgres' \
+    -pg.database 'postgres' \
+    -log.level 'info'
+SyslogIdentifier=prometheus
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

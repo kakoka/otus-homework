@@ -1,0 +1,8 @@
+---
+# handlers file for add_grafana
+
+- name: Restart grafana
+  service:
+     name: grafana-server
+     state: restarted
+...
