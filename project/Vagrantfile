@@ -33,11 +33,6 @@ Vagrant.configure(2) do |config|
     ns.vm.network "private_network", ip: "192.168.50.10", virtualbox__intnet: "private"
     ns.vm.hostname = "ns.otus.test"
     ns.vm.network "forwarded_port", guest: 8080, host: 8080
-    ns.vm.network "forwarded_port", guest: 3000, host: 3000
-    ns.vm.network "forwarded_port", guest: 7000, host: 7000
-    ns.vm.network "forwarded_port", guest: 9090, host: 9090
-    ns.vm.network "forwarded_port", guest: 9425, host: 9425
-    ns.vm.network "forwarded_port", guest: 19999, host: 19999
   end
   config.vm.define "master01" do |master01|
     master01.vm.network "private_network", ip: "192.168.50.21", virtualbox__intnet: "private"
